@@ -8,6 +8,7 @@ interface ReviewCardProps {
   rating: number;
   text: string;
   createdAt: string;
+  isAnonymous?: boolean;
 }
 
 export const ReviewCard = ({
@@ -16,6 +17,7 @@ export const ReviewCard = ({
   rating,
   text,
   createdAt,
+  isAnonymous = false,
 }: ReviewCardProps) => {
   return (
     <Card className="p-6 border-border bg-card/50 backdrop-blur">
@@ -35,9 +37,10 @@ export const ReviewCard = ({
         </div>
       </div>
       <p className="text-muted-foreground mb-3">{text}</p>
-      <p className="text-sm text-muted-foreground">
-        {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
-      </p>
+      <div className="flex items-center justify-between text-sm text-muted-foreground">
+        <span>{isAnonymous ? "Anonymous student" : "Verified student"}</span>
+        <span>{formatDistanceToNow(new Date(createdAt), { addSuffix: true })}</span>
+      </div>
     </Card>
   );
 };

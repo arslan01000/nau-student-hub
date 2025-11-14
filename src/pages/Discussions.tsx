@@ -77,6 +77,14 @@ export default function Discussions() {
           <Button onClick={handleCreatePost}>Create Post</Button>
         </div>
 
+        {!user && (
+          <div className="mb-8 p-4 bg-muted/50 rounded-lg border border-border">
+            <p className="text-sm text-muted-foreground">
+              Want to ask a question or post a review? Log in to participate. You can still post anonymously after logging in.
+            </p>
+          </div>
+        )}
+
         <div className="mb-8">
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger className="w-full sm:w-64">
@@ -108,6 +116,8 @@ export default function Discussions() {
                 isAnonymous={post.is_anonymous}
                 upvotes={post.upvotes}
                 createdAt={post.created_at}
+                displayName={post.displayName}
+                email={post.email}
               />
             ))}
           </div>

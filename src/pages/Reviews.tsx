@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ReviewCard } from "@/components/ReviewCard";
 import { Card } from "@/components/ui/card";
 import {
@@ -44,6 +45,7 @@ export default function Reviews() {
   const [courseCode, setCourseCode] = useState("");
   const [rating, setRating] = useState("");
   const [reviewText, setReviewText] = useState("");
+  const [isAnonymous, setIsAnonymous] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -62,7 +64,7 @@ export default function Reviews() {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from("reviews")
+        .from("reviews_view")
         .select("*")
         .order("created_at", { ascending: false });
 
@@ -110,6 +112,7 @@ export default function Reviews() {
         rating: parseInt(rating),
         text: reviewText.trim(),
         user_id: user.id,
+        is_anonymous: isAnonymous,
       });
 
       if (error) throw error;
@@ -118,6 +121,7 @@ export default function Reviews() {
       setCourseCode("");
       setRating("");
       setReviewText("");
+      setIsAnonymous(false);
       fetchReviews();
     } catch (error: any) {
       toast.error(error.message || "Failed to submit review");
@@ -193,9 +197,26 @@ export default function Reviews() {
                 maxLength={1000}
               />
             </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="anonymous-review"
+                checked={isAnonymous}
+                onCheckedChange={(checked) => setIsAnonymous(checked as boolean)}
+                disabled={!user}
+              />
+              <Label htmlFor="anonymous-review" className="cursor-pointer text-sm text-muted-foreground">
+                Post anonymously
+                <span className="block text-xs mt-1">When enabled, your name and email are hidden from other users.</span>
+              </Label>
+            </div>
             <Button type="submit" disabled={!user || submitting}>
               {submitting ? "Submitting..." : user ? "Submit Review" : "Login to Submit"}
             </Button>
+            {!user && (
+              <p className="text-sm text-muted-foreground italic">
+                Want to post a review? Log in to participate. You can still post anonymously after logging in.
+              </p>
+            )}
           </form>
         </Card>
 
@@ -227,6 +248,7 @@ export default function Reviews() {
                 rating={review.rating}
                 text={review.text}
                 createdAt={review.created_at}
+                isAnonymous={review.is_anonymous}
               />
             ))}
           </div>
