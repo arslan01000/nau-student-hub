@@ -57,6 +57,9 @@ export default function Discussions() {
   };
 
   const handleCreatePost = () => {
+    if (!user) {
+      return; // Button is already hidden for non-logged-in users
+    }
     navigate("/create");
   };
 

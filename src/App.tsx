@@ -18,6 +18,7 @@ import Privacy from "./pages/Privacy";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Settings from "./pages/Settings";
+import AIAssistant from "./pages/AIAssistant";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -49,6 +50,7 @@ const AppContent = () => {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/ai-assistant" element={<AIAssistant />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
