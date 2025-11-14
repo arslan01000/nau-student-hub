@@ -141,11 +141,13 @@ export default function Reviews() {
     }
   };
 
-  const filteredReviews = reviews.filter(
-    (review) =>
-      review.professor_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      review.course_code.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredReviews = searchQuery.trim()
+    ? reviews.filter(
+        (review) =>
+          review.professor_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          review.course_code.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : reviews;
 
   return (
     <div className="min-h-screen py-8 px-4">
@@ -270,7 +272,9 @@ export default function Reviews() {
         {!loading && filteredReviews.length === 0 && (
           <div className="text-center py-12">
             <p className="text-muted-foreground text-lg">
-              {searchQuery ? "No reviews found matching your search." : "No reviews yet. Be the first to add one!"}
+              {searchQuery.trim() 
+                ? "No reviews match your search." 
+                : "No reviews yet. Be the first to add one!"}
             </p>
           </div>
         )}

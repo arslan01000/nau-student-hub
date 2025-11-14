@@ -75,7 +75,7 @@ export default function Privacy() {
           <div className="mt-8 p-4 bg-muted/50 rounded-lg border border-border">
             <p className="text-sm text-muted-foreground">
               <strong>Remember:</strong> NAU Student Hub is unofficial and student-run. 
-              This is not affiliated with Northern Arizona University. 
+              This is not affiliated with North American University (NAU). 
               Always verify important information with official NAU resources.
             </p>
           </div>
