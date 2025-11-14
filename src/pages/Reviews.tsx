@@ -17,6 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, Search } from "lucide-react";
 import { z } from "zod";
+import { useAuth } from "@/contexts/AuthContext";
 
 const reviewSchema = z.object({
   professor_name: z.string()
@@ -38,9 +39,9 @@ const reviewSchema = z.object({
 });
 
 export default function Reviews() {
+  const { user } = useAuth();
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
   const [professorName, setProfessorName] = useState("");
   const [courseCode, setCourseCode] = useState("");
   const [rating, setRating] = useState("");
@@ -51,25 +52,35 @@ export default function Reviews() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    checkUser();
     fetchReviews();
   }, []);
-
-  const checkUser = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    setUser(session?.user || null);
-  };
 
   const fetchReviews = async () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
         .from("reviews_view")
-        .select("*")
+        .select(`
+          *,
+          profiles!reviews_view_user_id_fkey (
+            display_name
+          ),
+          email:user_id (
+            email
+          )
+        `)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      setReviews(data || []);
+      
+      // Map the data to include display_name and email at the top level
+      const mappedData = data?.map((review: any) => ({
+        ...review,
+        display_name: review.profiles?.display_name || null,
+        email: review.email?.email || null,
+      })) || [];
+      
+      setReviews(mappedData);
     } catch (error) {
       console.error("Error fetching reviews:", error);
     } finally {
@@ -249,6 +260,8 @@ export default function Reviews() {
                 text={review.text}
                 createdAt={review.created_at}
                 isAnonymous={review.is_anonymous}
+                displayName={review.display_name}
+                email={review.email}
               />
             ))}
           </div>

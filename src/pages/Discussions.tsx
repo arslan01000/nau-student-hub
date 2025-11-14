@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { PostCard } from "@/components/PostCard";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Select,
   SelectContent,
@@ -26,18 +27,12 @@ export default function Discussions() {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [user, setUser] = useState<any>(null);
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    checkUser();
     fetchPosts();
   }, [selectedCategory]);
-
-  const checkUser = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    setUser(session?.user || null);
-  };
 
   const fetchPosts = async () => {
     setLoading(true);
@@ -62,10 +57,6 @@ export default function Discussions() {
   };
 
   const handleCreatePost = () => {
-    if (!user) {
-      alert("Please login to create a post");
-      return;
-    }
     navigate("/create");
   };
 
@@ -74,16 +65,14 @@ export default function Discussions() {
       <div className="container mx-auto max-w-6xl">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <h1 className="text-4xl font-bold">Discussions</h1>
-          <Button onClick={handleCreatePost}>Create Post</Button>
+          {user ? (
+            <Button onClick={handleCreatePost}>Create Post</Button>
+          ) : (
+            <div className="text-sm text-muted-foreground">
+              Please log in to create a post
+            </div>
+          )}
         </div>
-
-        {!user && (
-          <div className="mb-8 p-4 bg-muted/50 rounded-lg border border-border">
-            <p className="text-sm text-muted-foreground">
-              Want to ask a question or post a review? Log in to participate. You can still post anonymously after logging in.
-            </p>
-          </div>
-        )}
 
         <div className="mb-8">
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
@@ -116,7 +105,8 @@ export default function Discussions() {
                 isAnonymous={post.is_anonymous}
                 upvotes={post.upvotes}
                 createdAt={post.created_at}
-                displayName={post.displayName}
+                replyCount={post.reply_count || 0}
+                displayName={post.display_name}
                 email={post.email}
               />
             ))}

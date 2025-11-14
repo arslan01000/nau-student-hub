@@ -15,6 +15,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useAuth } from "@/contexts/AuthContext";
 
 const categories = [
   { value: "professors", label: "Professors & Courses" },
@@ -39,27 +40,21 @@ const postSchema = z.object({
 });
 
 export default function CreatePost() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState<any>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const navigate = useNavigate();
 
   useEffect(() => {
-    checkUser();
-  }, []);
-
-  const checkUser = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
+    if (!user) {
       toast.error("Please login to create a post");
       navigate("/");
     }
-    setUser(session?.user);
-  };
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
