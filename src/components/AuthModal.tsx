@@ -185,6 +185,9 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
           </TabsContent>
           <TabsContent value="signup">
             <form onSubmit={handleSignUp} className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Login is used for basic security and moderation. You can still post anonymously.
+              </p>
               <div className="space-y-2">
                 <Label htmlFor="signup-email">Email</Label>
                 <Input
