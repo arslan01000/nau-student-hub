@@ -15,6 +15,26 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, Search } from "lucide-react";
+import { z } from "zod";
+
+const reviewSchema = z.object({
+  professor_name: z.string()
+    .trim()
+    .min(1, "Professor name is required")
+    .max(100, "Professor name must be less than 100 characters"),
+  course_code: z.string()
+    .trim()
+    .min(1, "Course code is required")
+    .max(20, "Course code must be less than 20 characters"),
+  rating: z.number()
+    .int()
+    .min(1, "Please select a rating")
+    .max(5, "Rating must be between 1 and 5"),
+  text: z.string()
+    .trim()
+    .min(1, "Review text is required")
+    .max(1000, "Review must be less than 1000 characters"),
+});
 
 export default function Reviews() {
   const [reviews, setReviews] = useState<any[]>([]);
@@ -26,6 +46,7 @@ export default function Reviews() {
   const [reviewText, setReviewText] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     checkUser();
@@ -61,13 +82,33 @@ export default function Reviews() {
       return;
     }
 
+    // Validate input
+    const result = reviewSchema.safeParse({
+      professor_name: professorName,
+      course_code: courseCode,
+      rating: parseInt(rating),
+      text: reviewText,
+    });
+
+    if (!result.success) {
+      const newErrors: Record<string, string> = {};
+      result.error.issues.forEach((err) => {
+        if (err.path[0]) {
+          newErrors[err.path[0].toString()] = err.message;
+        }
+      });
+      setErrors(newErrors);
+      return;
+    }
+    setErrors({});
+
     setSubmitting(true);
     try {
       const { error } = await supabase.from("reviews").insert({
-        professor_name: professorName,
-        course_code: courseCode,
+        professor_name: professorName.trim(),
+        course_code: courseCode.trim(),
         rating: parseInt(rating),
-        text: reviewText,
+        text: reviewText.trim(),
         user_id: user.id,
       });
 

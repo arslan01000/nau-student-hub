@@ -31,10 +31,10 @@ export default function PostDetail() {
   const fetchPost = async () => {
     try {
       const { data, error } = await supabase
-        .from("posts")
+        .from("posts_view")
         .select("*")
         .eq("id", id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       setPost(data);
