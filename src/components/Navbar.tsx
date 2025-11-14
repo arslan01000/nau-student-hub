@@ -37,6 +37,9 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
             <Link to="/contact" className="text-sm font-medium hover:text-primary transition-colors">
               Contact
             </Link>
+            <Link to="/ai-assistant" className="text-sm font-medium hover:text-primary transition-colors">
+              AI Assistant
+            </Link>
             {user && (
               <Link to="/settings" className="text-sm font-medium hover:text-primary transition-colors">
                 Settings
@@ -97,6 +100,13 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
               onClick={() => setIsMenuOpen(false)}
             >
               Contact
+            </Link>
+            <Link
+              to="/ai-assistant"
+              className="block text-sm font-medium hover:text-primary transition-colors py-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              AI Assistant
             </Link>
             {user && (
               <Link
