@@ -16,7 +16,7 @@ export default function Home() {
   const fetchPosts = async () => {
     try {
       const { data, error } = await supabase
-        .from("posts")
+        .from("posts_view")
         .select("*")
         .order("created_at", { ascending: false })
         .limit(6);
