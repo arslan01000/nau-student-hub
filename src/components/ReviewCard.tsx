@@ -1,6 +1,7 @@
 import { Card } from "./ui/card";
 import { Star } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { getUserDisplayName } from "@/utils/userDisplay";
 
 interface ReviewCardProps {
   professorName: string;
@@ -8,7 +9,9 @@ interface ReviewCardProps {
   rating: number;
   text: string;
   createdAt: string;
-  isAnonymous?: boolean;
+  isAnonymous: boolean;
+  displayName?: string | null;
+  email?: string | null;
 }
 
 export const ReviewCard = ({
@@ -17,8 +20,12 @@ export const ReviewCard = ({
   rating,
   text,
   createdAt,
-  isAnonymous = false,
+  isAnonymous,
+  displayName,
+  email,
 }: ReviewCardProps) => {
+  const reviewerName = getUserDisplayName(isAnonymous, displayName, email);
+  
   return (
     <Card className="p-6 border-border bg-card/50 backdrop-blur">
       <div className="flex items-start justify-between mb-3">
@@ -38,7 +45,7 @@ export const ReviewCard = ({
       </div>
       <p className="text-muted-foreground mb-3">{text}</p>
       <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <span>{isAnonymous ? "Anonymous student" : "Verified student"}</span>
+        <span>Review by {reviewerName}</span>
         <span>{formatDistanceToNow(new Date(createdAt), { addSuffix: true })}</span>
       </div>
     </Card>
