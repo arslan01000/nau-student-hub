@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { z } from "zod";
 
 const categories = [
   { value: "professors", label: "Professors & Courses" },
@@ -24,6 +25,19 @@ const categories = [
   { value: "buy_sell", label: "Buy / Sell" },
 ];
 
+const postSchema = z.object({
+  title: z.string()
+    .trim()
+    .min(1, "Title is required")
+    .max(200, "Title must be less than 200 characters"),
+  content: z.string()
+    .trim()
+    .min(1, "Content is required")
+    .max(2000, "Content must be less than 2000 characters"),
+  category: z.string()
+    .min(1, "Please select a category"),
+});
+
 export default function CreatePost() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -31,6 +45,7 @@ export default function CreatePost() {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,15 +65,28 @@ export default function CreatePost() {
     e.preventDefault();
     if (!user) return;
 
+    // Validate input
+    const result = postSchema.safeParse({ title, content, category });
+    if (!result.success) {
+      const newErrors: Record<string, string> = {};
+      result.error.issues.forEach((err) => {
+        if (err.path[0]) {
+          newErrors[err.path[0].toString()] = err.message;
+        }
+      });
+      setErrors(newErrors);
+      return;
+    }
+    setErrors({});
+
     setLoading(true);
     try {
-      const { error } = await supabase.from("posts").insert([{
-        title,
-        content,
-        category: category as any,
-        is_anonymous: isAnonymous,
-        user_id: user.id,
-      }]);
+      const { data, error } = await supabase.rpc("create_post", {
+        p_title: title.trim(),
+        p_content: content.trim(),
+        p_category: category as any,
+        p_is_anonymous: isAnonymous,
+      });
 
       if (error) throw error;
       toast.success("Post created successfully!");

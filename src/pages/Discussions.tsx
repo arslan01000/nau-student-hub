@@ -43,7 +43,7 @@ export default function Discussions() {
     setLoading(true);
     try {
       let query = supabase
-        .from("posts")
+        .from("posts_view")
         .select("*")
         .order("created_at", { ascending: false });
 
