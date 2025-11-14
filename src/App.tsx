@@ -7,11 +7,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Navbar } from "@/components/Navbar";
 import { AuthModal } from "@/components/AuthModal";
+import { Footer } from "@/components/Footer";
 import Home from "./pages/Home";
 import Discussions from "./pages/Discussions";
 import CreatePost from "./pages/CreatePost";
 import PostDetail from "./pages/PostDetail";
 import Reviews from "./pages/Reviews";
+import Privacy from "./pages/Privacy";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Settings from "./pages/Settings";
@@ -54,24 +56,28 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <div className="min-h-screen bg-background">
+          <div className="min-h-screen bg-background flex flex-col">
             <Navbar
               onLoginClick={() => setShowAuthModal(true)}
               user={user}
               onLogout={handleLogout}
             />
             <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/discussions" element={<Discussions />} />
-              <Route path="/create" element={<CreatePost />} />
-              <Route path="/post/:id" element={<PostDetail />} />
-              <Route path="/reviews" element={<Reviews />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <main className="flex-1">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/discussions" element={<Discussions />} />
+                <Route path="/create" element={<CreatePost />} />
+                <Route path="/post/:id" element={<PostDetail />} />
+                <Route path="/reviews" element={<Reviews />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            <Footer />
           </div>
         </BrowserRouter>
       </TooltipProvider>

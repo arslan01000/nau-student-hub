@@ -144,15 +144,20 @@ export default function CreatePost() {
             </Select>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="anonymous"
-              checked={isAnonymous}
-              onCheckedChange={(checked) => setIsAnonymous(checked as boolean)}
-            />
-            <Label htmlFor="anonymous" className="cursor-pointer">
+          <div className="space-y-2">
+            <Label htmlFor="anonymous" className="text-sm font-medium">
               Post anonymously
             </Label>
+            <div className="flex items-start space-x-2">
+              <Checkbox
+                id="anonymous"
+                checked={isAnonymous}
+                onCheckedChange={(checked) => setIsAnonymous(checked as boolean)}
+              />
+              <Label htmlFor="anonymous" className="cursor-pointer text-sm text-muted-foreground leading-relaxed">
+                When enabled, your name and email are hidden from other users.
+              </Label>
+            </div>
           </div>
 
           <div className="flex gap-4">
