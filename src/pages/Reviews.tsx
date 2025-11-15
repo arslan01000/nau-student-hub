@@ -58,31 +58,52 @@ export default function Reviews() {
   const fetchReviews = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from("reviews_view")
-        .select(`
-          *,
-          profiles!reviews_view_user_id_fkey (
-            display_name
-          ),
-          email:user_id (
-            email
-          )
-        `)
+      // First, get all reviews
+      const { data: reviewsData, error: reviewsError } = await supabase
+        .from("reviews")
+        .select("*")
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
-      
-      // Map the data to include display_name and email at the top level
-      const mappedData = data?.map((review: any) => ({
+      if (reviewsError) throw reviewsError;
+
+      // Then, get all profiles to map display names
+      const { data: profilesData, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, display_name");
+
+      if (profilesError) throw profilesError;
+
+      // Create a map of user_id to display_name
+      const profilesMap = new Map<string, string | null>();
+      profilesData?.forEach(p => {
+        profilesMap.set(p.id, p.display_name);
+      });
+
+      // Map the data to include display_name
+      const mappedData = reviewsData?.map((review: any) => ({
         ...review,
-        display_name: review.profiles?.display_name || null,
-        email: review.email?.email || null,
+        display_name: profilesMap.get(review.user_id) || null,
+        email: null, // Email not directly available from reviews table
       })) || [];
-      
+
+      console.log("allReviews length:", mappedData.length);
       setReviews(mappedData);
     } catch (error) {
       console.error("Error fetching reviews:", error);
+      // On error, try simple query without profile data
+      try {
+        const { data, error } = await supabase
+          .from("reviews")
+          .select("*")
+          .order("created_at", { ascending: false });
+        
+        if (error) throw error;
+        console.log("allReviews length (fallback):", data?.length || 0);
+        setReviews(data || []);
+      } catch (fallbackError) {
+        console.error("Fallback query also failed:", fallbackError);
+        setReviews([]);
+      }
     } finally {
       setLoading(false);
     }
@@ -141,13 +162,22 @@ export default function Reviews() {
     }
   };
 
-  const filteredReviews = searchQuery.trim()
-    ? reviews.filter(
+  // Separate allReviews and filteredReviews
+  const allReviews = reviews;
+  const searchTerm = searchQuery.trim();
+  
+  const filteredReviews = searchTerm
+    ? allReviews.filter(
         (review) =>
-          review.professor_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          review.course_code.toLowerCase().includes(searchQuery.toLowerCase())
+          review.professor_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          review.course_code.toLowerCase().includes(searchTerm.toLowerCase())
       )
-    : reviews;
+    : allReviews;
+
+  // Debug logs
+  console.log("allReviews length:", allReviews.length);
+  console.log("filteredReviews length:", filteredReviews.length);
+  console.log("searchTerm:", searchTerm);
 
   return (
     <div className="min-h-screen py-8 px-4">
@@ -269,12 +299,18 @@ export default function Reviews() {
           </div>
         )}
 
-        {!loading && filteredReviews.length === 0 && (
+        {!loading && allReviews.length === 0 && !searchTerm && (
           <div className="text-center py-12">
             <p className="text-muted-foreground text-lg">
-              {searchQuery.trim() 
-                ? "No reviews match your search." 
-                : "No reviews yet. Be the first to add one!"}
+              No reviews yet. Be the first to add one!
+            </p>
+          </div>
+        )}
+
+        {!loading && allReviews.length > 0 && filteredReviews.length === 0 && searchTerm && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground text-lg">
+              No reviews match your search.
             </p>
           </div>
         )}
