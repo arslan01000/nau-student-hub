@@ -8,44 +8,46 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Clean dark theme - minimal and calm */
-    --background: 0 0% 7%;
-    --foreground: 0 0% 93%;
+    /* Modern dark theme - GPT/Stripe inspired */
+    --background: 240 10% 6.7%;
+    --foreground: 0 0% 98%;
 
-    --card: 0 0% 10%;
-    --card-foreground: 0 0% 93%;
+    --card: 240 10% 10%;
+    --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 10%;
-    --popover-foreground: 0 0% 93%;
+    --popover: 240 10% 10%;
+    --popover-foreground: 0 0% 98%;
 
     --primary: 158 64% 70%;
-    --primary-foreground: 0 0% 7%;
+    --primary-foreground: 240 10% 6.7%;
 
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 93%;
+    --secondary: 240 10% 12%;
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 60%;
+    --muted: 240 10% 15%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 240 60% 80%;
-    --accent-foreground: 0 0% 7%;
+    --accent: 240 60% 75%;
+    --accent-foreground: 240 10% 6.7%;
 
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 12%;
+    --border: 240 10% 18%;
+    --input: 240 10% 12%;
     --ring: 158 64% 70%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    /* Gradients - subtle accents only */
-    --gradient-hero: linear-gradient(135deg, hsl(158 64% 70% / 0.05), hsl(240 60% 80% / 0.05));
-    --gradient-card: linear-gradient(180deg, hsl(0 0% 10%), hsl(0 0% 9%));
+    /* Gradients - premium subtle effects */
+    --gradient-hero: linear-gradient(135deg, hsl(158 64% 70% / 0.08), hsl(240 60% 75% / 0.08));
+    --gradient-card: linear-gradient(180deg, hsl(240 10% 11%), hsl(240 10% 9%));
+    --gradient-glow: radial-gradient(circle at center, hsl(158 64% 70% / 0.15), transparent 70%);
     
-    /* Shadows */
-    --shadow-card: 0 4px 24px hsl(0 0% 0% / 0.4);
-    --shadow-glow: 0 0 20px hsl(158 64% 70% / 0.1);
+    /* Shadows - elegant depth */
+    --shadow-card: 0 8px 32px hsl(0 0% 0% / 0.5);
+    --shadow-glow: 0 0 40px hsl(158 64% 70% / 0.2);
+    --shadow-float: 0 20px 60px hsl(0 0% 0% / 0.3);
     
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -78,5 +80,25 @@ All colors MUST be HSL.
   
   .text-gradient {
     @apply bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent;
+  }
+  
+  .grid-pattern {
+    background-image: 
+      linear-gradient(hsl(240 10% 18% / 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(240 10% 18% / 0.5) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+  
+  .float-animation {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .float-delayed {
+    animation: float 6s ease-in-out infinite 2s;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
   }
 }
