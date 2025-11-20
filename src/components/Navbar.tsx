@@ -20,7 +20,7 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
             <img
   src="/media/logo.png"
   alt="NAU Student Hub Logo"
-  className="h-35 w-auto object-contain"
+  className="h-16 w-auto object-contain"
   style={{ marginTop: "-2px" }}
 />
           </Link>
