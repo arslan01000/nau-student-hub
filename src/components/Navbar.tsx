@@ -16,12 +16,14 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
     <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center">
-              <span className="text-primary font-bold text-lg">N</span>
-            </div>
-            <span className="text-xl font-bold">NAU Student Hub</span>
+          <Link to="/" className="flex items-center space-x-3">
+            <img
+              src="/media/logo.png"
+              alt="NAU Student Hub Logo"
+              className="h-10 w-auto object-contain"
+              />
           </Link>
+
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
