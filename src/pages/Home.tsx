@@ -32,121 +32,70 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Hero Section - Modern Dark with Floating Cards */}
-      <section className="relative py-24 md:py-32 px-4 overflow-hidden">
+      {/* Hero Section - Minimalistic */}
+      <section className="relative py-32 md:py-40 px-4 overflow-hidden">
         {/* Grid Pattern Background */}
-        <div className="absolute inset-0 grid-pattern opacity-40"></div>
-        
-        {/* Gradient Glow */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-gradient-radial from-primary/10 via-transparent to-transparent blur-3xl pointer-events-none"></div>
+        <div className="absolute inset-0 grid-pattern opacity-30"></div>
 
         <div className="container mx-auto max-w-7xl relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left side - Text & CTAs */}
-            <div className="space-y-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-card/50 text-sm text-muted-foreground">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                </span>
-                Unofficial Student Platform
-              </div>
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border bg-card/30 text-xs text-muted-foreground">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-foreground/50 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-foreground/70"></span>
+              </span>
+              Unofficial Student Platform
+            </div>
 
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight">
-                The Unofficial NAU <br />
-                Student Platform
-                <span className="block mt-2 text-gradient">powered by the student community.</span>
-              </h1>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif leading-tight tracking-tight">
+              The NAU Student Platform.
+              <br />
+              <span className="text-muted-foreground">Built by students, for students.</span>
+            </h1>
 
-              <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-2xl">
-                Real insights and real experiences from students at North American University. 
-                Ask questions, share knowledge, and explore discussions created by the NAU community.
-              </p>
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              Discover professors, ask questions, explore real student experiences.
+            </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <Link to="/discussions">
-                  <Button size="lg" className="w-full sm:w-auto text-lg px-8 h-14 shadow-glow">
-                    Browse Discussions
-                  </Button>
-                </Link>
-                <Link to="/discussions">
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto text-lg px-8 h-14 border-border/50 hover:border-primary/50">
-                    Ask a Question
-                  </Button>
-                </Link>
-              </div>
-
+            <div className="flex flex-col sm:flex-row gap-4 pt-6 justify-center">
               <Link to="/discussions">
-                <Button variant="ghost" size="lg" className="text-muted-foreground hover:text-foreground">
-                  Join the Community →
+                <Button size="lg" className="w-full sm:w-auto text-base px-8 h-12">
+                  Browse Discussions
+                </Button>
+              </Link>
+              <Link to="/discussions">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto text-base px-8 h-12">
+                  Ask a Question
                 </Button>
               </Link>
             </div>
 
-            {/* Right side - Floating Cards */}
-            <div className="hidden lg:block relative h-[600px]">
-              {/* Question Thread Card */}
-              <div className="absolute top-0 right-0 w-80 p-5 bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl shadow-float float-animation">
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    <MessageSquare className="w-5 h-5 text-primary" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-foreground mb-1">Best CS professors?</h3>
-                    <p className="text-sm text-muted-foreground">Looking for recommendations for next semester...</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 text-xs text-muted-foreground pt-3 border-t border-border/30">
-                  <span className="flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3" /> 24 upvotes
-                  </span>
-                  <span>12 replies</span>
-                  <span>2h ago</span>
-                </div>
-              </div>
+            <Link to="/discussions">
+              <Button variant="ghost" size="lg" className="text-muted-foreground hover:text-foreground mt-4">
+                Join the Community →
+              </Button>
+            </Link>
+          </div>
+        </div>
 
-              {/* Review Card */}
-              <div className="absolute top-32 right-24 w-72 p-5 bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl shadow-float float-delayed">
-                <div className="flex items-start gap-3 mb-3">
-                  <div className="p-2 bg-accent/10 rounded-lg">
-                    <Star className="w-5 h-5 text-accent fill-accent" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-semibold text-foreground">Prof. Johnson</span>
-                      <span className="text-xs text-muted-foreground">CS 101</span>
-                    </div>
-                    <div className="flex gap-1 mb-2">
-                      {[1, 2, 3, 4, 5].map((i) => (
-                        <Star key={i} className="w-3 h-3 text-accent fill-accent" />
-                      ))}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Great professor! Makes complex topics easy to understand.</p>
-                  </div>
-                </div>
+        {/* Bottom Ticker with Student Post */}
+        <div className="absolute bottom-8 left-0 right-0 overflow-hidden">
+          <div className="ticker-animation whitespace-nowrap">
+            <div className="inline-flex items-center gap-8 px-4">
+              <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
+                <MessageSquare className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-foreground">Best CS professors for next semester?</span>
+                <span className="text-xs text-muted-foreground">• 12 replies</span>
               </div>
-
-              {/* Discussion Snippet */}
-              <div className="absolute top-80 right-12 w-64 p-4 bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl shadow-float float-animation">
-                <div className="flex items-start gap-2">
-                  <FileText className="w-4 h-4 text-primary mt-1" />
-                  <div>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      "Does anyone know when spring registration opens?"
-                    </p>
-                    <div className="text-xs text-muted-foreground">
-                      <span className="text-primary font-medium">3 answers</span> • Just now
-                    </div>
-                  </div>
-                </div>
+              <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
+                <Star className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-foreground">Prof. Johnson makes complex topics easy</span>
+                <span className="text-xs text-muted-foreground">• 5.0 rating</span>
               </div>
-
-              {/* Small Question Bubble */}
-              <div className="absolute bottom-20 right-32 w-56 p-4 bg-primary/5 backdrop-blur-xl border border-primary/20 rounded-2xl shadow-float float-delayed">
-                <p className="text-sm text-foreground/90 font-medium">
-                  "What class should I take next semester?"
-                </p>
-                <div className="mt-2 text-xs text-muted-foreground">Anonymous • 5m ago</div>
+              <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
+                <FileText className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-foreground">When does spring registration open?</span>
+                <span className="text-xs text-muted-foreground">• 3 answers</span>
               </div>
             </div>
           </div>
@@ -154,20 +103,20 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 px-4 border-t border-b border-border/50 bg-card/30">
+      <section className="py-16 px-4 border-t border-b border-border bg-card/20">
         <div className="container mx-auto max-w-6xl">
           <div className="grid md:grid-cols-3 gap-12">
             <div className="text-center space-y-2">
-              <div className="text-5xl md:text-6xl font-bold text-gradient">48%</div>
-              <p className="text-muted-foreground">of NAU students reached</p>
+              <div className="text-5xl md:text-6xl font-serif font-bold text-foreground">48%</div>
+              <p className="text-sm text-muted-foreground">of NAU students reached</p>
             </div>
-            <div className="text-center space-y-2 md:border-x border-border/50">
-              <div className="text-5xl md:text-6xl font-bold text-gradient">320+</div>
-              <p className="text-muted-foreground">real stories, reviews, and discussions</p>
+            <div className="text-center space-y-2 md:border-x border-border">
+              <div className="text-5xl md:text-6xl font-serif font-bold text-foreground">320+</div>
+              <p className="text-sm text-muted-foreground">real stories, reviews, and discussions</p>
             </div>
             <div className="text-center space-y-2">
-              <div className="text-5xl md:text-6xl font-bold text-gradient">12</div>
-              <p className="text-muted-foreground">academic departments represented</p>
+              <div className="text-5xl md:text-6xl font-serif font-bold text-foreground">12</div>
+              <p className="text-sm text-muted-foreground">academic departments represented</p>
             </div>
           </div>
         </div>
@@ -178,11 +127,11 @@ export default function Home() {
         <div className="container mx-auto max-w-6xl">
           <div className="flex items-center justify-between mb-12">
             <div>
-              <h2 className="text-4xl font-bold mb-2">Latest Discussions</h2>
-              <p className="text-muted-foreground">See what the community is talking about</p>
+              <h2 className="text-4xl font-serif mb-2">Latest Discussions</h2>
+              <p className="text-sm text-muted-foreground">See what the community is talking about</p>
             </div>
             <Link to="/discussions">
-              <Button variant="ghost" className="text-primary hover:text-primary/80">
+              <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
                 View All →
               </Button>
             </Link>
@@ -221,33 +170,33 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section className="py-20 px-4 bg-card/30 border-t border-border/50">
+      <section className="py-20 px-4 bg-card/20 border-t border-border">
         <div className="container mx-auto max-w-6xl">
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="p-8 rounded-2xl border border-border/50 bg-card/50 backdrop-blur">
-              <div className="p-3 bg-primary/10 rounded-xl w-fit mb-4">
-                <MessageSquare className="w-6 h-6 text-primary" />
+            <div className="p-8 rounded-lg border border-border bg-card/30">
+              <div className="p-2 bg-muted rounded-lg w-fit mb-4">
+                <MessageSquare className="w-5 h-5 text-foreground" />
               </div>
-              <h3 className="text-2xl font-bold mb-3">Ask & Answer</h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <h3 className="text-xl font-serif mb-3">Ask & Answer</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 Get help with academics, campus life, and everything in between from fellow students.
               </p>
             </div>
-            <div className="p-8 rounded-2xl border border-border/50 bg-card/50 backdrop-blur">
-              <div className="p-3 bg-accent/10 rounded-xl w-fit mb-4">
-                <Star className="w-6 h-6 text-accent" />
+            <div className="p-8 rounded-lg border border-border bg-card/30">
+              <div className="p-2 bg-muted rounded-lg w-fit mb-4">
+                <Star className="w-5 h-5 text-foreground" />
               </div>
-              <h3 className="text-2xl font-bold mb-3">Professor Reviews</h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <h3 className="text-xl font-serif mb-3">Professor Reviews</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 Share and read honest reviews about professors and courses to make informed decisions.
               </p>
             </div>
-            <div className="p-8 rounded-2xl border border-border/50 bg-card/50 backdrop-blur">
-              <div className="p-3 bg-primary/10 rounded-xl w-fit mb-4">
-                <BookOpen className="w-6 h-6 text-primary" />
+            <div className="p-8 rounded-lg border border-border bg-card/30">
+              <div className="p-2 bg-muted rounded-lg w-fit mb-4">
+                <BookOpen className="w-5 h-5 text-foreground" />
               </div>
-              <h3 className="text-2xl font-bold mb-3">Buy & Sell</h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <h3 className="text-xl font-serif mb-3">Buy & Sell</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
                 Find great deals on textbooks and items from other NAU students.
               </p>
             </div>

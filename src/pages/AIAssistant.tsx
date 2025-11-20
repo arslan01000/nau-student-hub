@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Send } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Send, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Message {
   id: string;
@@ -47,78 +48,71 @@ export default function AIAssistant() {
   };
 
   return (
-    <div className="min-h-screen py-8 px-4">
+    <div className="min-h-screen py-8 px-4 grid-pattern">
       <div className="container mx-auto max-w-4xl">
-        <h1 className="text-4xl font-bold mb-4">NAU AI Assistant</h1>
-        
-        <Alert className="mb-6 border-primary/50">
-          <AlertDescription>
-            <strong>Experimental Feature:</strong> NAU AI Assistant is currently in preview. 
-            In the future, it will use information from the official North American University (NAU) 
-            website (academic calendar, catalog, etc.). Answers may be incomplete or inaccurate. 
-            Always verify important academic, legal, and immigration information with official NAU 
-            advisors or na.edu.
+        <div className="mb-6">
+          <h1 className="text-3xl font-serif mb-2">NAU AI Assistant</h1>
+          <p className="text-sm text-muted-foreground">
+            Ask questions about North American University
+          </p>
+        </div>
+
+        <Alert className="mb-6 bg-card border-border">
+          <AlertCircle className="h-4 w-4 text-muted-foreground" />
+          <AlertTitle className="text-sm">Experimental Feature</AlertTitle>
+          <AlertDescription className="text-xs text-muted-foreground">
+            NAU AI Assistant is experimental. In the future it will use information from the official North American University (NAU) website. 
+            Always verify important information with official NAU advisors or na.edu.
           </AlertDescription>
         </Alert>
 
-        <Card className="p-6 min-h-[600px] flex flex-col">
-          <div className="flex-1 overflow-y-auto mb-4 space-y-4">
-            {messages.length === 0 ? (
-              <div className="flex items-center justify-center h-full text-center text-muted-foreground">
-                <div>
-                  <p className="mb-2">Welcome to NAU AI Assistant!</p>
-                  <p className="text-sm">Ask me anything about North American University.</p>
-                </div>
-              </div>
-            ) : (
-              messages.map((message) => (
+        <Card className="flex flex-col h-[600px] border-border bg-card/50">
+          <ScrollArea className="flex-1 p-4">
+            <div className="space-y-3">
+              {messages.map((message) => (
                 <div
                   key={message.id}
                   className={`flex ${
-                    message.role === "user" ? "justify-end" : "justify-start"
+                    message.role === 'user' ? 'justify-end' : 'justify-start'
                   }`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-lg p-4 ${
-                      message.role === "user"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted"
+                    className={`max-w-[80%] rounded-lg px-4 py-3 ${
+                      message.role === 'user'
+                        ? 'bg-foreground text-background'
+                        : 'bg-muted border border-border'
                     }`}
                   >
-                    <p className="text-sm">{message.content}</p>
-                    <p
-                      className={`text-xs mt-2 ${
-                        message.role === "user"
-                          ? "text-primary-foreground/70"
-                          : "text-muted-foreground"
-                      }`}
-                    >
+                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    <p className="text-xs opacity-50 mt-1">
                       {message.timestamp.toLocaleTimeString()}
                     </p>
                   </div>
                 </div>
-              ))
-            )}
-            {loading && (
-              <div className="flex justify-start">
-                <div className="bg-muted rounded-lg p-4">
-                  <p className="text-sm text-muted-foreground">Thinking...</p>
+              ))}
+              {loading && (
+                <div className="flex justify-start">
+                  <div className="max-w-[80%] rounded-lg px-4 py-3 bg-muted border border-border">
+                    <p className="text-sm text-muted-foreground">Thinking...</p>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          </ScrollArea>
 
-          <form onSubmit={handleSend} className="flex gap-2">
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask a question about NAU..."
-              disabled={loading}
-              className="flex-1"
-            />
-            <Button type="submit" disabled={loading || !input.trim()}>
-              <Send className="h-4 w-4" />
-            </Button>
+          <form onSubmit={handleSend} className="p-3 border-t border-border">
+            <div className="flex gap-2">
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask a question about NAU..."
+                disabled={loading}
+                className="flex-1 bg-background border-border"
+              />
+              <Button type="submit" disabled={loading || !input.trim()} size="sm">
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
           </form>
         </Card>
       </div>
