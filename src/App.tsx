@@ -21,6 +21,8 @@ import Settings from "./pages/Settings";
 import AIAssistant from "./pages/AIAssistant";
 import Playbooks from "./pages/Playbooks";
 import PlaybookArticle from "./pages/PlaybookArticle";
+import SubmitPlaybook from "./pages/SubmitPlaybook";
+import AdminPlaybooks from "./pages/AdminPlaybooks";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -48,8 +50,10 @@ const AppContent = () => {
           <Route path="/create" element={<CreatePost />} />
           <Route path="/post/:id" element={<PostDetail />} />
           <Route path="/reviews" element={<Reviews />} />
-          <Route path="/playbooks" element={<Playbooks />} />
-          <Route path="/playbooks/:id" element={<PlaybookArticle />} />
+            <Route path="/playbooks" element={<Playbooks />} />
+            <Route path="/playbooks/submit" element={<SubmitPlaybook />} />
+            <Route path="/playbooks/:id" element={<PlaybookArticle />} />
+            <Route path="/admin/playbooks" element={<AdminPlaybooks />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
