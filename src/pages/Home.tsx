@@ -70,34 +70,34 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Ticker with Student Post */}
-            <div className="mt-8 overflow-hidden">
-              <div className="ticker-animation whitespace-nowrap">
-                <div className="inline-flex items-center gap-8 px-4">
-                  <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
-                    <MessageSquare className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm text-foreground">Best CS professors for next semester?</span>
-                    <span className="text-xs text-muted-foreground">• 12 replies</span>
-                  </div>
-                  <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
-                    <Star className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm text-foreground">Prof. Johnson makes complex topics easy</span>
-                    <span className="text-xs text-muted-foreground">• 5.0 rating</span>
-                  </div>
-                  <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
-                    <FileText className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm text-foreground">When does spring registration open?</span>
-                    <span className="text-xs text-muted-foreground">• 3 answers</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <Link to="/discussions">
-              <Button variant="ghost" size="lg" className="text-muted-foreground hover:text-foreground mt-6">
+              <Button variant="ghost" size="lg" className="text-muted-foreground hover:text-foreground mt-4">
                 Join the Community →
               </Button>
             </Link>
+          </div>
+        </div>
+
+        {/* Bottom Ticker with Student Post */}
+        <div className="absolute bottom-8 left-0 right-0 overflow-hidden">
+          <div className="ticker-animation whitespace-nowrap">
+            <div className="inline-flex items-center gap-8 px-4">
+              <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
+                <MessageSquare className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-foreground">Best CS professors for next semester?</span>
+                <span className="text-xs text-muted-foreground">• 12 replies</span>
+              </div>
+              <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
+                <Star className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-foreground">Prof. Johnson makes complex topics easy</span>
+                <span className="text-xs text-muted-foreground">• 5.0 rating</span>
+              </div>
+              <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
+                <FileText className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-foreground">When does spring registration open?</span>
+                <span className="text-xs text-muted-foreground">• 3 answers</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>

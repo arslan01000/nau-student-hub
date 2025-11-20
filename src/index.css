@@ -96,15 +96,6 @@ All colors MUST be HSL.
     100% { transform: translateX(-100%); }
   }
   
-  .ticker-animation-visible {
-    animation: ticker-visible 20s linear infinite;
-  }
-  
-  @keyframes ticker-visible {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
-  }
-  
   .fade-cycle {
     animation: fadeCycle 7s ease-in-out infinite;
   }
