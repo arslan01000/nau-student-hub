@@ -58,7 +58,7 @@ const reviewSchema = z.object({
 
 interface Professor {
   id: string;
-  title: string;
+  title?: string;
   full_name: string;
   department: string;
 }
@@ -100,8 +100,7 @@ export default function Reviews() {
     try {
       const { data, error } = await supabase
         .from("professors")
-        .select("id, title, full_name, department")
-        .eq("is_active", true)
+        .select("id, full_name, department")
         .order("full_name");
 
       if (error) throw error;
@@ -303,7 +302,7 @@ export default function Reviews() {
                               />
                               <div>
                                 <div className="font-medium">
-                                  {prof.title} {prof.full_name}
+                                  {prof.title ? `${prof.title} ` : ""}{prof.full_name}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
                                   {prof.department}

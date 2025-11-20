@@ -7,7 +7,7 @@ import { Loader2, Search, Star, MessageSquare } from "lucide-react";
 
 interface Professor {
   id: string;
-  title: string;
+  title?: string;
   full_name: string;
   department: string;
   avgRating: number;
@@ -76,7 +76,6 @@ export default function Professors() {
           : 0;
         return {
           id: prof.id,
-          title: prof.title || "",
           full_name: prof.full_name,
           department: prof.department,
           avgRating,
