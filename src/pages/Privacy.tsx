@@ -8,7 +8,7 @@ export default function Privacy() {
           <section className="space-y-3">
             <h2 className="text-2xl font-bold">Our Commitment to Your Privacy</h2>
             <p>
-              NAU Student Hub is an unofficial, student-run platform designed to help NAU students 
+              NAU Threads is an unofficial, student-run platform designed to help NAU students 
               share information and experiences. We take your privacy seriously.
             </p>
           </section>
@@ -74,7 +74,7 @@ export default function Privacy() {
 
           <div className="mt-8 p-4 bg-muted/50 rounded-lg border border-border">
             <p className="text-sm text-muted-foreground">
-              <strong>Remember:</strong> NAU Student Hub is unofficial and student-run. 
+              <strong>Remember:</strong> NAU Threads is unofficial and student-run. 
               This is not affiliated with North American University (NAU). 
               Always verify important information with official NAU resources.
             </p>
