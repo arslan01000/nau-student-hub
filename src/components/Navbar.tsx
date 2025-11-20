@@ -34,6 +34,9 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
             <Link to="/reviews" className="text-sm font-medium hover:text-primary transition-colors">
               Reviews
             </Link>
+            <Link to="/playbooks" className="text-sm font-medium hover:text-primary transition-colors">
+              Playbooks
+            </Link>
             <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
               About
             </Link>
@@ -89,6 +92,13 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
               onClick={() => setIsMenuOpen(false)}
             >
               Reviews
+            </Link>
+            <Link
+              to="/playbooks"
+              className="block text-sm font-medium hover:text-primary transition-colors py-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Playbooks
             </Link>
             <Link
               to="/about"
