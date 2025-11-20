@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { PostCard } from "@/components/PostCard";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2 } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   Select,
@@ -25,14 +26,31 @@ const categories = [
 
 export default function Discussions() {
   const [posts, setPosts] = useState<any[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchPosts();
   }, [selectedCategory]);
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredPosts(posts);
+    } else {
+      const query = searchQuery.toLowerCase();
+      setFilteredPosts(
+        posts.filter(
+          (post) =>
+            post.title.toLowerCase().includes(query) ||
+            post.content.toLowerCase().includes(query)
+        )
+      );
+    }
+  }, [searchQuery, posts]);
 
   const fetchPosts = async () => {
     setLoading(true);
@@ -49,6 +67,7 @@ export default function Discussions() {
       const { data, error } = await query;
       if (error) throw error;
       setPosts(data || []);
+      setFilteredPosts(data || []);
     } catch (error) {
       console.error("Error fetching posts:", error);
     } finally {
@@ -77,7 +96,20 @@ export default function Discussions() {
           )}
         </div>
 
-        <div className="mb-8">
+        <div className="mb-8 space-y-4">
+          {/* Search Bar */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search discussions (roommate, calculus, party...)"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+
+          {/* Category Filter */}
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger className="w-full sm:w-64">
               <SelectValue placeholder="Filter by category" />
@@ -98,7 +130,7 @@ export default function Discussions() {
           </div>
         ) : (
           <div className="space-y-6">
-            {posts.map((post) => (
+            {filteredPosts.map((post) => (
               <PostCard
                 key={post.id}
                 id={post.id}
@@ -116,12 +148,16 @@ export default function Discussions() {
           </div>
         )}
 
-        {!loading && posts.length === 0 && (
+        {!loading && filteredPosts.length === 0 && (
           <div className="text-center py-12">
             <p className="text-muted-foreground text-lg mb-4">
-              No discussions found in this category.
+              {searchQuery.trim()
+                ? "No discussions match your search yet. Try another keyword or start a new thread."
+                : "No discussions found in this category."}
             </p>
-            <Button onClick={handleCreatePost}>Be the first to post!</Button>
+            {!searchQuery.trim() && (
+              <Button onClick={handleCreatePost}>Be the first to post!</Button>
+            )}
           </div>
         )}
       </div>

@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ReviewCard } from "@/components/ReviewCard";
 import { Card } from "@/components/ui/card";
 import {
@@ -24,14 +26,22 @@ const reviewSchema = z.object({
     .trim()
     .min(1, "Professor name is required")
     .max(100, "Professor name must be less than 100 characters"),
+  department: z.string()
+    .trim()
+    .min(1, "Department is required")
+    .max(100, "Department must be less than 100 characters"),
   course_code: z.string()
     .trim()
     .min(1, "Course code is required")
     .max(20, "Course code must be less than 20 characters"),
-  rating: z.number()
+  overall_rating: z.number()
     .int()
     .min(1, "Please select a rating")
     .max(5, "Rating must be between 1 and 5"),
+  difficulty_rating: z.number()
+    .int()
+    .min(1, "Please select a difficulty rating")
+    .max(5, "Difficulty must be between 1 and 5"),
   text: z.string()
     .trim()
     .min(1, "Review text is required")
@@ -40,11 +50,18 @@ const reviewSchema = z.object({
 
 export default function Reviews() {
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  const professorIdFromUrl = searchParams.get("professorId");
+  
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [professorName, setProfessorName] = useState("");
+  const [department, setDepartment] = useState("");
   const [courseCode, setCourseCode] = useState("");
-  const [rating, setRating] = useState("");
+  const [overallRating, setOverallRating] = useState("");
+  const [difficultyRating, setDifficultyRating] = useState("");
+  const [gradeReceived, setGradeReceived] = useState("");
+  const [wouldTakeAgain, setWouldTakeAgain] = useState<string>("");
   const [reviewText, setReviewText] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -55,57 +72,104 @@ export default function Reviews() {
     fetchReviews();
   }, []);
 
+  useEffect(() => {
+    if (professorIdFromUrl) {
+      fetchProfessorForReview(professorIdFromUrl);
+    }
+  }, [professorIdFromUrl]);
+
+  const fetchProfessorForReview = async (profId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("professors")
+        .select("*")
+        .eq("id", profId)
+        .single();
+
+      if (error) throw error;
+      if (data) {
+        setProfessorName(data.full_name);
+        setDepartment(data.department);
+      }
+    } catch (error) {
+      console.error("Error fetching professor:", error);
+    }
+  };
+
   const fetchReviews = async () => {
     setLoading(true);
     try {
-      // First, get all reviews
       const { data: reviewsData, error: reviewsError } = await supabase
         .from("reviews")
-        .select("*")
+        .select(`
+          *,
+          professors (
+            id,
+            full_name
+          )
+        `)
         .order("created_at", { ascending: false });
 
       if (reviewsError) throw reviewsError;
 
-      // Then, get all profiles to map display names
       const { data: profilesData, error: profilesError } = await supabase
         .from("profiles")
         .select("id, display_name");
 
       if (profilesError) throw profilesError;
 
-      // Create a map of user_id to display_name
       const profilesMap = new Map<string, string | null>();
       profilesData?.forEach(p => {
         profilesMap.set(p.id, p.display_name);
       });
 
-      // Map the data to include display_name
       const mappedData = reviewsData?.map((review: any) => ({
         ...review,
         display_name: profilesMap.get(review.user_id) || null,
-        email: null, // Email not directly available from reviews table
+        email: null,
+        professor_name: review.professors?.full_name || review.professor_name || "Unknown Professor",
+        professor_id: review.professors?.id || null,
       })) || [];
 
-      console.log("allReviews length:", mappedData.length);
       setReviews(mappedData);
     } catch (error) {
       console.error("Error fetching reviews:", error);
-      // On error, try simple query without profile data
-      try {
-        const { data, error } = await supabase
-          .from("reviews")
-          .select("*")
-          .order("created_at", { ascending: false });
-        
-        if (error) throw error;
-        console.log("allReviews length (fallback):", data?.length || 0);
-        setReviews(data || []);
-      } catch (fallbackError) {
-        console.error("Fallback query also failed:", fallbackError);
-        setReviews([]);
-      }
+      setReviews([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const findOrCreateProfessor = async (name: string, dept: string): Promise<string | null> => {
+    try {
+      const { data: existing, error: searchError } = await supabase
+        .from("professors")
+        .select("id")
+        .ilike("full_name", name.trim())
+        .ilike("department", dept.trim())
+        .maybeSingle();
+
+      if (searchError) throw searchError;
+
+      if (existing) {
+        return existing.id;
+      }
+
+      const { data: newProf, error: createError } = await supabase
+        .from("professors")
+        .insert({
+          full_name: name.trim(),
+          department: dept.trim(),
+          school: "North American University",
+        })
+        .select("id")
+        .single();
+
+      if (createError) throw createError;
+      return newProf?.id || null;
+    } catch (error) {
+      console.error("Error with professor:", error);
+      return null;
     }
   };
 
@@ -119,8 +183,10 @@ export default function Reviews() {
     // Validate input
     const result = reviewSchema.safeParse({
       professor_name: professorName,
+      department: department,
       course_code: courseCode,
-      rating: parseInt(rating),
+      overall_rating: parseInt(overallRating),
+      difficulty_rating: parseInt(difficultyRating),
       text: reviewText,
     });
 
@@ -138,20 +204,34 @@ export default function Reviews() {
 
     setSubmitting(true);
     try {
+      const professorId = await findOrCreateProfessor(professorName, department);
+      if (!professorId) {
+        throw new Error("Failed to create or find professor");
+      }
+
       const { error } = await supabase.from("reviews").insert({
+        professor_id: professorId,
         professor_name: professorName.trim(),
         course_code: courseCode.trim(),
-        rating: parseInt(rating),
+        overall_rating: parseInt(overallRating),
+        difficulty_rating: parseInt(difficultyRating),
+        grade_received: gradeReceived || null,
+        would_take_again: wouldTakeAgain ? wouldTakeAgain === "yes" : null,
         text: reviewText.trim(),
         user_id: user.id,
         is_anonymous: isAnonymous,
+        rating: parseInt(overallRating),
       });
 
       if (error) throw error;
       toast.success("Review submitted successfully!");
       setProfessorName("");
+      setDepartment("");
       setCourseCode("");
-      setRating("");
+      setOverallRating("");
+      setDifficultyRating("");
+      setGradeReceived("");
+      setWouldTakeAgain("");
       setReviewText("");
       setIsAnonymous(false);
       fetchReviews();
@@ -190,55 +270,146 @@ export default function Reviews() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="professor">Professor Name</Label>
+                <Label htmlFor="professor">Professor Name *</Label>
                 <Input
                   id="professor"
                   value={professorName}
                   onChange={(e) => setProfessorName(e.target.value)}
-                  placeholder="e.g., Dr. Smith"
+                  placeholder="e.g., Dr. John Smith"
                   required
                   disabled={!user}
                 />
+                {errors.professor_name && (
+                  <p className="text-sm text-destructive">{errors.professor_name}</p>
+                )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="course">Course Code</Label>
+                <Label htmlFor="department">Department *</Label>
                 <Input
-                  id="course"
-                  value={courseCode}
-                  onChange={(e) => setCourseCode(e.target.value)}
-                  placeholder="e.g., CS 101"
+                  id="department"
+                  value={department}
+                  onChange={(e) => setDepartment(e.target.value)}
+                  placeholder="e.g., Computer Science"
                   required
                   disabled={!user}
                 />
+                {errors.department && (
+                  <p className="text-sm text-destructive">{errors.department}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="course">Course Code *</Label>
+              <Input
+                id="course"
+                value={courseCode}
+                onChange={(e) => setCourseCode(e.target.value)}
+                placeholder="e.g., COMP 2415"
+                required
+                disabled={!user}
+              />
+              {errors.course_code && (
+                <p className="text-sm text-destructive">{errors.course_code}</p>
+              )}
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="overall-rating">Overall Rating *</Label>
+                <Select value={overallRating} onValueChange={setOverallRating} required disabled={!user}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select overall rating" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="5">⭐⭐⭐⭐⭐ - Excellent</SelectItem>
+                    <SelectItem value="4">⭐⭐⭐⭐ - Good</SelectItem>
+                    <SelectItem value="3">⭐⭐⭐ - Average</SelectItem>
+                    <SelectItem value="2">⭐⭐ - Below Average</SelectItem>
+                    <SelectItem value="1">⭐ - Poor</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.overall_rating && (
+                  <p className="text-sm text-destructive">{errors.overall_rating}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="difficulty-rating">Difficulty Rating *</Label>
+                <Select value={difficultyRating} onValueChange={setDifficultyRating} required disabled={!user}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select difficulty" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="5">5 - Very Hard</SelectItem>
+                    <SelectItem value="4">4 - Hard</SelectItem>
+                    <SelectItem value="3">3 - Moderate</SelectItem>
+                    <SelectItem value="2">2 - Easy</SelectItem>
+                    <SelectItem value="1">1 - Very Easy</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.difficulty_rating && (
+                  <p className="text-sm text-destructive">{errors.difficulty_rating}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="grade">Grade Received (Optional)</Label>
+                <Select value={gradeReceived} onValueChange={setGradeReceived} disabled={!user}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select grade" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="A">A</SelectItem>
+                    <SelectItem value="A-">A-</SelectItem>
+                    <SelectItem value="B+">B+</SelectItem>
+                    <SelectItem value="B">B</SelectItem>
+                    <SelectItem value="B-">B-</SelectItem>
+                    <SelectItem value="C+">C+</SelectItem>
+                    <SelectItem value="C">C</SelectItem>
+                    <SelectItem value="C-">C-</SelectItem>
+                    <SelectItem value="D">D</SelectItem>
+                    <SelectItem value="F">F</SelectItem>
+                    <SelectItem value="P">P (Pass)</SelectItem>
+                    <SelectItem value="W">W (Withdraw)</SelectItem>
+                    <SelectItem value="N/A">N/A</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Would Take Again? (Optional)</Label>
+                <RadioGroup value={wouldTakeAgain} onValueChange={setWouldTakeAgain} disabled={!user}>
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="yes" id="yes" />
+                      <Label htmlFor="yes" className="cursor-pointer">Yes</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="no" id="no" />
+                      <Label htmlFor="no" className="cursor-pointer">No</Label>
+                    </div>
+                  </div>
+                </RadioGroup>
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="rating">Rating</Label>
-              <Select value={rating} onValueChange={setRating} required disabled={!user}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select rating" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="5">5 - Excellent</SelectItem>
-                  <SelectItem value="4">4 - Good</SelectItem>
-                  <SelectItem value="3">3 - Average</SelectItem>
-                  <SelectItem value="2">2 - Below Average</SelectItem>
-                  <SelectItem value="1">1 - Poor</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="review">Review</Label>
+              <Label htmlFor="review">Your Review *</Label>
               <Textarea
                 id="review"
                 value={reviewText}
                 onChange={(e) => setReviewText(e.target.value)}
-                placeholder="Share your experience..."
+                placeholder="Share your experience with this professor and course..."
                 required
-                rows={4}
+                rows={5}
                 disabled={!user}
                 maxLength={1000}
               />
+              {errors.text && (
+                <p className="text-sm text-destructive">{errors.text}</p>
+              )}
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox
@@ -287,8 +458,12 @@ export default function Reviews() {
               <ReviewCard
                 key={review.id}
                 professorName={review.professor_name}
+                professorId={review.professor_id}
                 courseCode={review.course_code}
-                rating={review.rating}
+                rating={review.overall_rating || review.rating || 0}
+                difficultyRating={review.difficulty_rating}
+                gradeReceived={review.grade_received}
+                wouldTakeAgain={review.would_take_again}
                 text={review.text}
                 createdAt={review.created_at}
                 isAnonymous={review.is_anonymous}
@@ -314,6 +489,12 @@ export default function Reviews() {
             </p>
           </div>
         )}
+
+        {/* Disclaimer */}
+        <div className="mt-12 text-center text-xs text-muted-foreground border-t border-border pt-6">
+          NAU Threads is a student-run platform and is not officially affiliated with North American University. 
+          All reviews are user-generated opinions.
+        </div>
       </div>
     </div>
   );
