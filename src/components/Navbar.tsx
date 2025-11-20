@@ -18,10 +18,11 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center space-x-3">
             <img
-              src="/media/logo.png"
-              alt="NAU Student Hub Logo"
-              className="h-10 w-auto object-contain"
-              />
+  src="/media/logo.png"
+  alt="NAU Student Hub Logo"
+  className="h-14 w-auto object-contain"
+  style={{ marginTop: "-2px" }}
+/>
           </Link>
 
 
