@@ -139,7 +139,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Welcome to NAU Student Hub</DialogTitle>
+          <DialogTitle>Welcome to NAU Threads</DialogTitle>
           <DialogDescription>
             Sign in or create an account to get started
           </DialogDescription>

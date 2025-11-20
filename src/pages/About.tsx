@@ -2,16 +2,16 @@ export default function About() {
   return (
     <div className="min-h-screen py-12 px-4 grid-pattern">
       <div className="container mx-auto max-w-4xl">
-        <h1 className="text-4xl font-serif mb-8">About NAU Student Hub</h1>
+        <h1 className="text-4xl font-serif mb-8">About NAU Threads</h1>
         <div className="space-y-6 text-base text-muted-foreground">
           <p>
-            NAU Student Hub is a community-driven platform designed exclusively for North American University students.
+            NAU Threads is a community-driven platform designed exclusively for North American University students.
             Our mission is to create a space where students can connect, share experiences, and support each other
             throughout their academic journey.
           </p>
           <p>
             Whether you're looking for honest professor reviews, seeking advice about internships and OPT/CPT,
-            discussing campus life, or buying and selling textbooks, NAU Student Hub brings it all together in one
+            discussing campus life, or buying and selling textbooks, NAU Threads brings it all together in one
             clean, easy-to-use platform.
           </p>
           <p>
