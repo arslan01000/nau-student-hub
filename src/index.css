@@ -8,49 +8,46 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Modern dark theme - GPT/Stripe inspired */
-    --background: 240 10% 6.7%;
-    --foreground: 0 0% 98%;
+    /* Minimalistic neutral dark theme */
+    --background: 0 0% 5%;
+    --foreground: 0 0% 96%;
 
-    --card: 240 10% 10%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 96%;
 
-    --popover: 240 10% 10%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 96%;
 
-    --primary: 158 64% 70%;
-    --primary-foreground: 240 10% 6.7%;
+    --primary: 0 0% 96%;
+    --primary-foreground: 0 0% 5%;
 
-    --secondary: 240 10% 12%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 96%;
 
-    --muted: 240 10% 15%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 72%;
 
-    --accent: 240 60% 75%;
-    --accent-foreground: 240 10% 6.7%;
+    --accent: 243 16% 86%;
+    --accent-foreground: 0 0% 5%;
 
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 10% 18%;
-    --input: 240 10% 12%;
-    --ring: 158 64% 70%;
+    --border: 0 0% 12%;
+    --input: 0 0% 10%;
+    --ring: 0 0% 96%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    /* Gradients - premium subtle effects */
-    --gradient-hero: linear-gradient(135deg, hsl(158 64% 70% / 0.08), hsl(240 60% 75% / 0.08));
-    --gradient-card: linear-gradient(180deg, hsl(240 10% 11%), hsl(240 10% 9%));
-    --gradient-glow: radial-gradient(circle at center, hsl(158 64% 70% / 0.15), transparent 70%);
+    /* Minimal gradients */
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 6%), hsl(0 0% 5%));
     
-    /* Shadows - elegant depth */
-    --shadow-card: 0 8px 32px hsl(0 0% 0% / 0.5);
-    --shadow-glow: 0 0 40px hsl(158 64% 70% / 0.2);
-    --shadow-float: 0 20px 60px hsl(0 0% 0% / 0.3);
+    /* Subtle shadows */
+    --shadow-card: 0 4px 16px hsl(0 0% 0% / 0.4);
+    --shadow-minimal: 0 1px 3px hsl(0 0% 0% / 0.3);
     
     /* Transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
 
@@ -66,6 +63,7 @@ All colors MUST be HSL.
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-bold;
+    font-family: 'Playfair Display', serif;
   }
 }
 
@@ -84,21 +82,26 @@ All colors MUST be HSL.
   
   .grid-pattern {
     background-image: 
-      linear-gradient(hsl(240 10% 18% / 0.5) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(240 10% 18% / 0.5) 1px, transparent 1px);
+      linear-gradient(hsl(0 0% 10% / 0.4) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(0 0% 10% / 0.4) 1px, transparent 1px);
     background-size: 64px 64px;
   }
   
-  .float-animation {
-    animation: float 6s ease-in-out infinite;
+  .ticker-animation {
+    animation: ticker 20s linear infinite;
   }
   
-  .float-delayed {
-    animation: float 6s ease-in-out infinite 2s;
+  @keyframes ticker {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
   }
   
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
+  .fade-cycle {
+    animation: fadeCycle 7s ease-in-out infinite;
+  }
+  
+  @keyframes fadeCycle {
+    0%, 100% { opacity: 0; }
+    10%, 90% { opacity: 1; }
   }
 }
