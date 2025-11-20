@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -50,6 +50,7 @@ const reviewSchema = z.object({
 
 export default function Reviews() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const professorIdFromUrl = searchParams.get("professorId");
   
@@ -263,6 +264,25 @@ export default function Reviews() {
     <div className="min-h-screen py-8 px-4">
       <div className="container mx-auto max-w-6xl">
         <h1 className="text-4xl font-bold mb-8">Professor & Course Reviews</h1>
+
+        {/* Browse Professors Card */}
+        <Card 
+          className="mb-8 p-6 border-border bg-card/50 backdrop-blur cursor-pointer hover:bg-card/70 transition-all"
+          onClick={() => navigate('/professors')}
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-bold mb-2">Browse Professors</h2>
+              <p className="text-sm text-muted-foreground">
+                View all professors with ratings and reviews from NAU students
+              </p>
+            </div>
+            <div className="flex items-center gap-2 text-primary">
+              <span className="text-sm font-medium">View All</span>
+              <Search className="h-4 w-4" />
+            </div>
+          </div>
+        </Card>
 
         {/* Add Review Form */}
         <Card className="p-6 mb-8">
