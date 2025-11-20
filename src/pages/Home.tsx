@@ -84,18 +84,35 @@ export default function Home() {
             <div className="inline-flex items-center gap-8 px-4">
               <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
                 <MessageSquare className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm text-foreground">Best CS professors for next semester?</span>
-                <span className="text-xs text-muted-foreground">• 12 replies</span>
+                <span className="text-sm text-foreground">Best CS professors for next semester? • 12 replies</span>
               </div>
               <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
                 <Star className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm text-foreground">Prof. Johnson makes complex topics easy</span>
-                <span className="text-xs text-muted-foreground">• 5.0 rating</span>
+                <span className="text-sm text-foreground">Prof. Johnson makes complex topics easy • 5.0 rating</span>
               </div>
               <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
                 <FileText className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm text-foreground">When does spring registration open?</span>
-                <span className="text-xs text-muted-foreground">• 3 answers</span>
+                <span className="text-sm text-foreground">When does spring registration open? • 3 answers</span>
+              </div>
+              <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
+                <MessageSquare className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-foreground">Is 4 classes too much in one semester? • 9 replies</span>
+              </div>
+              <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
+                <MessageSquare className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-foreground">Any easy Core classes to balance a heavy schedule? • 7 replies</span>
+              </div>
+              <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
+                <FileText className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-foreground">How hard is CPT approval at NAU? • 5 answers</span>
+              </div>
+              <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
+                <MessageSquare className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-foreground">Looking for roommates near campus next fall • 6 replies</span>
+              </div>
+              <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
+                <Star className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-foreground">Anonymous review: CS 2415 Systems Programming • 4.8 rating</span>
               </div>
             </div>
           </div>
