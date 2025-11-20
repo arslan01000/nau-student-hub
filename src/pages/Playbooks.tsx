@@ -1,9 +1,84 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BookOpen } from "lucide-react";
-import { playbooks } from "@/data/playbooks";
+import { ArrowRight, BookOpen, Eye } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { AuthModal } from "@/components/AuthModal";
+
+interface Playbook {
+  id: string;
+  title: string;
+  description: string;
+  tags: string[];
+  author_name: string;
+  author_major: string | null;
+  author_grad_year: string | null;
+  views: number;
+}
+
+const allTags = ["All", "Academics", "US Life", "Career", "Campus Life", "Immigration", "Money"];
 
 const Playbooks = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [playbooks, setPlaybooks] = useState<Playbook[]>([]);
+  const [filteredPlaybooks, setFilteredPlaybooks] = useState<Playbook[]>([]);
+  const [selectedTag, setSelectedTag] = useState("All");
+  const [sortBy, setSortBy] = useState<"newest" | "mostViewed">("newest");
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPlaybooks();
+  }, []);
+
+  const fetchPlaybooks = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('playbooks')
+        .select('id, title, description, tags, author_name, author_major, author_grad_year, views')
+        .eq('status', 'published')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setPlaybooks(data || []);
+      setFilteredPlaybooks(data || []);
+    } catch (error) {
+      console.error('Error fetching playbooks:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let filtered = playbooks;
+
+    // Filter by tag
+    if (selectedTag !== "All") {
+      filtered = filtered.filter(p => p.tags.includes(selectedTag));
+    }
+
+    // Sort
+    if (sortBy === "mostViewed") {
+      filtered = [...filtered].sort((a, b) => b.views - a.views);
+    } else {
+      filtered = [...filtered].sort((a, b) => 
+        new Date(b.id).getTime() - new Date(a.id).getTime()
+      );
+    }
+
+    setFilteredPlaybooks(filtered);
+  }, [selectedTag, sortBy, playbooks]);
+
+  const handleSubmitClick = () => {
+    if (!user) {
+      setAuthModalOpen(true);
+    } else {
+      navigate('/playbooks/submit');
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Hero Section */}
@@ -22,20 +97,71 @@ const Playbooks = () => {
         </div>
       </section>
 
-      {/* Playbooks Grid */}
-      <section className="py-16 px-4">
+      {/* Filters and Sort */}
+      <section className="px-4 pb-8">
         <div className="container mx-auto max-w-7xl">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {playbooks.map((playbook) => (
+          <div className="flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+            {/* Tag Filters */}
+            <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
+              {allTags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => setSelectedTag(tag)}
+                  className={`px-4 py-2 rounded-full text-sm border whitespace-nowrap transition-colors ${
+                    selectedTag === tag
+                      ? 'bg-foreground text-background border-foreground'
+                      : 'bg-transparent text-foreground border-border hover:bg-muted'
+                  }`}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+
+            {/* Sort Dropdown */}
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as "newest" | "mostViewed")}
+              className="px-4 py-2 rounded-md border border-border bg-background text-foreground text-sm"
+            >
+              <option value="newest">Newest</option>
+              <option value="mostViewed">Most Viewed</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      {/* Playbooks Grid */}
+      <section className="py-8 px-4">
+        <div className="container mx-auto max-w-7xl">
+          {loading ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">Loading playbooks...</p>
+            </div>
+          ) : filteredPlaybooks.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">
+                {selectedTag === "All" 
+                  ? "No playbooks yet. Be the first to add one!" 
+                  : `No playbooks found for ${selectedTag}`}
+              </p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredPlaybooks.map((playbook) => (
               <Link
                 key={playbook.id}
                 to={`/playbooks/${playbook.id}`}
                 className="group"
               >
                 <div className="h-full p-6 rounded-lg border border-border bg-card/30 hover:bg-card/50 transition-all duration-300 hover:border-border/50">
-                  {/* Tag */}
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-xs text-foreground mb-4">
-                    {playbook.tag}
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {playbook.tags.slice(0, 2).map((tag) => (
+                      <span key={tag} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-xs text-foreground">
+                        {tag}
+                      </span>
+                    ))}
                   </div>
 
                   {/* Title */}
@@ -48,22 +174,32 @@ const Playbooks = () => {
                     {playbook.description}
                   </p>
 
+                  {/* Views */}
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground mb-4">
+                    <Eye className="w-3 h-3" />
+                    <span>{playbook.views} views</span>
+                  </div>
+
                   {/* Author Info */}
                   <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/50">
                     <div>
                       <p className="text-sm font-medium text-foreground">
-                        {playbook.author}
+                        {playbook.author_name}
                       </p>
-                      <p className="text-xs text-muted-foreground">
-                        {playbook.major} • Class of {playbook.graduationYear}
-                      </p>
+                      {(playbook.author_major || playbook.author_grad_year) && (
+                        <p className="text-xs text-muted-foreground">
+                          {playbook.author_major}
+                          {playbook.author_grad_year && ` • Class of ${playbook.author_grad_year}`}
+                        </p>
+                      )}
                     </div>
                     <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
                   </div>
                 </div>
               </Link>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -75,13 +211,15 @@ const Playbooks = () => {
           </div>
           <h2 className="text-3xl font-serif mb-4">Have a guide to share?</h2>
           <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Help other NAU students by sharing your experiences and insights. Guide submissions are coming soon.
+            Help other NAU students by sharing your experiences and insights.
           </p>
-          <Button size="lg" disabled className="opacity-50 cursor-not-allowed">
-            Submit a Playbook (Coming Soon)
+          <Button size="lg" onClick={handleSubmitClick}>
+            Submit a Playbook
           </Button>
         </div>
       </section>
+
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </div>
   );
 };
