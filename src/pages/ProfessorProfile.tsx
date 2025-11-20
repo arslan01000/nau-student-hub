@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 interface Professor {
   id: string;
+  title: string;
   full_name: string;
   department: string;
   school: string;
@@ -147,7 +148,9 @@ export default function ProfessorProfile() {
         {/* Header Section */}
         <Card className="p-8 mb-8 border-border bg-card/50 backdrop-blur">
           <div className="mb-6">
-            <h1 className="text-4xl font-bold mb-2">{professor.full_name}</h1>
+            <h1 className="text-4xl font-bold mb-2">
+              {professor.title} {professor.full_name}
+            </h1>
             <p className="text-lg text-muted-foreground">
               Professor in the <span className="text-foreground font-medium">{professor.department}</span> department at {professor.school}
             </p>

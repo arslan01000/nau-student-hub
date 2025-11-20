@@ -201,7 +201,6 @@ export type Database = {
           is_anonymous: boolean | null
           overall_rating: number | null
           professor_id: string | null
-          professor_name: string
           rating: number
           text: string
           user_id: string
@@ -216,7 +215,6 @@ export type Database = {
           is_anonymous?: boolean | null
           overall_rating?: number | null
           professor_id?: string | null
-          professor_name: string
           rating: number
           text: string
           user_id: string
@@ -231,7 +229,6 @@ export type Database = {
           is_anonymous?: boolean | null
           overall_rating?: number | null
           professor_id?: string | null
-          professor_name?: string
           rating?: number
           text?: string
           user_id?: string
@@ -304,34 +301,27 @@ export type Database = {
         Row: {
           course_code: string | null
           created_at: string | null
+          difficulty_rating: number | null
+          grade_received: string | null
           id: string | null
           is_anonymous: boolean | null
+          overall_rating: number | null
+          professor_id: string | null
           professor_name: string | null
           rating: number | null
           text: string | null
           user_id: string | null
+          would_take_again: boolean | null
         }
-        Insert: {
-          course_code?: string | null
-          created_at?: string | null
-          id?: string | null
-          is_anonymous?: boolean | null
-          professor_name?: string | null
-          rating?: number | null
-          text?: string | null
-          user_id?: never
-        }
-        Update: {
-          course_code?: string | null
-          created_at?: string | null
-          id?: string | null
-          is_anonymous?: boolean | null
-          professor_name?: string | null
-          rating?: number | null
-          text?: string | null
-          user_id?: never
-        }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "reviews_professor_id_fkey"
+            columns: ["professor_id"]
+            isOneToOne: false
+            referencedRelation: "professors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Functions: {
