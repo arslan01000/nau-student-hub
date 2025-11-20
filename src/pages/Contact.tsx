@@ -27,10 +27,10 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen py-12 px-4">
+    <div className="min-h-screen py-12 px-4 grid-pattern">
       <div className="container mx-auto max-w-2xl">
-        <h1 className="text-4xl font-bold mb-8">Contact Us</h1>
-        <Card className="p-8">
+        <h1 className="text-4xl font-serif mb-8">Contact Us</h1>
+        <Card className="p-8 bg-card/50 border-border">
           <p className="text-muted-foreground mb-6">
             Have questions, suggestions, or feedback? We'd love to hear from you!
           </p>
