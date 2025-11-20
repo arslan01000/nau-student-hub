@@ -15,21 +15,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, Search } from "lucide-react";
+import { Loader2, Search, Check, ChevronsUpDown } from "lucide-react";
 import { z } from "zod";
 import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
 
 const reviewSchema = z.object({
-  professor_name: z.string()
-    .trim()
-    .min(1, "Professor name is required")
-    .max(100, "Professor name must be less than 100 characters"),
-  department: z.string()
-    .trim()
-    .min(1, "Department is required")
-    .max(100, "Department must be less than 100 characters"),
+  professor_id: z.string()
+    .min(1, "Please select a professor"),
   course_code: z.string()
     .trim()
     .min(1, "Course code is required")
@@ -48,6 +56,13 @@ const reviewSchema = z.object({
     .max(1000, "Review must be less than 1000 characters"),
 });
 
+interface Professor {
+  id: string;
+  title: string;
+  full_name: string;
+  department: string;
+}
+
 export default function Reviews() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -56,8 +71,9 @@ export default function Reviews() {
   
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [professorName, setProfessorName] = useState("");
-  const [department, setDepartment] = useState("");
+  const [professors, setProfessors] = useState<Professor[]>([]);
+  const [selectedProfessorId, setSelectedProfessorId] = useState("");
+  const [professorComboOpen, setProfessorComboOpen] = useState(false);
   const [courseCode, setCourseCode] = useState("");
   const [overallRating, setOverallRating] = useState("");
   const [difficultyRating, setDifficultyRating] = useState("");
@@ -71,29 +87,27 @@ export default function Reviews() {
 
   useEffect(() => {
     fetchReviews();
+    fetchProfessors();
   }, []);
 
   useEffect(() => {
     if (professorIdFromUrl) {
-      fetchProfessorForReview(professorIdFromUrl);
+      setSelectedProfessorId(professorIdFromUrl);
     }
   }, [professorIdFromUrl]);
 
-  const fetchProfessorForReview = async (profId: string) => {
+  const fetchProfessors = async () => {
     try {
       const { data, error } = await supabase
         .from("professors")
-        .select("*")
-        .eq("id", profId)
-        .single();
+        .select("id, title, full_name, department")
+        .eq("is_active", true)
+        .order("full_name");
 
       if (error) throw error;
-      if (data) {
-        setProfessorName(data.full_name);
-        setDepartment(data.department);
-      }
+      setProfessors(data || []);
     } catch (error) {
-      console.error("Error fetching professor:", error);
+      console.error("Error fetching professors:", error);
     }
   };
 
@@ -141,38 +155,6 @@ export default function Reviews() {
     }
   };
 
-  const findOrCreateProfessor = async (name: string, dept: string): Promise<string | null> => {
-    try {
-      const { data: existing, error: searchError } = await supabase
-        .from("professors")
-        .select("id")
-        .ilike("full_name", name.trim())
-        .ilike("department", dept.trim())
-        .maybeSingle();
-
-      if (searchError) throw searchError;
-
-      if (existing) {
-        return existing.id;
-      }
-
-      const { data: newProf, error: createError } = await supabase
-        .from("professors")
-        .insert({
-          full_name: name.trim(),
-          department: dept.trim(),
-          school: "North American University",
-        })
-        .select("id")
-        .single();
-
-      if (createError) throw createError;
-      return newProf?.id || null;
-    } catch (error) {
-      console.error("Error with professor:", error);
-      return null;
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -183,8 +165,7 @@ export default function Reviews() {
 
     // Validate input
     const result = reviewSchema.safeParse({
-      professor_name: professorName,
-      department: department,
+      professor_id: selectedProfessorId,
       course_code: courseCode,
       overall_rating: parseInt(overallRating),
       difficulty_rating: parseInt(difficultyRating),
@@ -205,14 +186,8 @@ export default function Reviews() {
 
     setSubmitting(true);
     try {
-      const professorId = await findOrCreateProfessor(professorName, department);
-      if (!professorId) {
-        throw new Error("Failed to create or find professor");
-      }
-
       const { error } = await supabase.from("reviews").insert({
-        professor_id: professorId,
-        professor_name: professorName.trim(),
+        professor_id: selectedProfessorId,
         course_code: courseCode.trim(),
         overall_rating: parseInt(overallRating),
         difficulty_rating: parseInt(difficultyRating),
@@ -226,8 +201,7 @@ export default function Reviews() {
 
       if (error) throw error;
       toast.success("Review submitted successfully!");
-      setProfessorName("");
-      setDepartment("");
+      setSelectedProfessorId("");
       setCourseCode("");
       setOverallRating("");
       setDifficultyRating("");
@@ -290,32 +264,75 @@ export default function Reviews() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="professor">Professor Name *</Label>
-                <Input
-                  id="professor"
-                  value={professorName}
-                  onChange={(e) => setProfessorName(e.target.value)}
-                  placeholder="e.g., Dr. John Smith"
-                  required
-                  disabled={!user}
-                />
-                {errors.professor_name && (
-                  <p className="text-sm text-destructive">{errors.professor_name}</p>
+                <Label htmlFor="professor">Select Professor *</Label>
+                <Popover open={professorComboOpen} onOpenChange={setProfessorComboOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={professorComboOpen}
+                      className="w-full justify-between"
+                      disabled={!user}
+                    >
+                      {selectedProfessorId
+                        ? professors.find((p) => p.id === selectedProfessorId)?.full_name
+                        : "Search for a professor..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[400px] p-0 bg-popover z-50">
+                    <Command>
+                      <CommandInput placeholder="Search professor..." />
+                      <CommandList>
+                        <CommandEmpty>No professor found.</CommandEmpty>
+                        <CommandGroup>
+                          {professors.map((prof) => (
+                            <CommandItem
+                              key={prof.id}
+                              value={`${prof.full_name} ${prof.department}`}
+                              onSelect={() => {
+                                setSelectedProfessorId(prof.id);
+                                setProfessorComboOpen(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  selectedProfessorId === prof.id ? "opacity-100" : "opacity-0"
+                                )}
+                              />
+                              <div>
+                                <div className="font-medium">
+                                  {prof.title} {prof.full_name}
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                  {prof.department}
+                                </div>
+                              </div>
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                {errors.professor_id && (
+                  <p className="text-sm text-destructive">{errors.professor_id}</p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="department">Department *</Label>
+                <Label htmlFor="department">Department</Label>
                 <Input
                   id="department"
-                  value={department}
-                  onChange={(e) => setDepartment(e.target.value)}
-                  placeholder="e.g., Computer Science"
-                  required
-                  disabled={!user}
+                  value={
+                    selectedProfessorId
+                      ? professors.find((p) => p.id === selectedProfessorId)?.department || ""
+                      : ""
+                  }
+                  placeholder="Select a professor first"
+                  disabled
+                  className="bg-muted"
                 />
-                {errors.department && (
-                  <p className="text-sm text-destructive">{errors.department}</p>
-                )}
               </div>
             </div>
 
