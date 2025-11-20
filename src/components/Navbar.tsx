@@ -14,7 +14,7 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-    <div className="max-w-5xl mx-auto px-6">
+    <div className="max-w-7xl mx-auto px-6">
       <div className="flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center space-x-3">
           <img
