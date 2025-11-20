@@ -300,14 +300,9 @@ export default function Reviews() {
                                   selectedProfessorId === prof.id ? "opacity-100" : "opacity-0"
                                 )}
                               />
-                              <div>
-                                <div className="font-medium">
-                                  {prof.title ? `${prof.title} ` : ""}{prof.full_name}
-                                </div>
-                                <div className="text-xs text-muted-foreground">
-                                  {prof.department}
-                                </div>
-                              </div>
+                              <span className="font-medium">
+                                {prof.title ? `${prof.title} ` : ""}{prof.full_name} – {prof.department}
+                              </span>
                             </CommandItem>
                           ))}
                         </CommandGroup>
