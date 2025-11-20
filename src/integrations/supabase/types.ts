@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      playbooks: {
+        Row: {
+          author_grad_year: string | null
+          author_id: string
+          author_major: string | null
+          author_name: string
+          body: string
+          created_at: string
+          description: string
+          external_links: string[] | null
+          id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          tags: string[]
+          title: string
+          updated_at: string
+          views: number
+        }
+        Insert: {
+          author_grad_year?: string | null
+          author_id: string
+          author_major?: string | null
+          author_name: string
+          body: string
+          created_at?: string
+          description: string
+          external_links?: string[] | null
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          tags: string[]
+          title: string
+          updated_at?: string
+          views?: number
+        }
+        Update: {
+          author_grad_year?: string | null
+          author_id?: string
+          author_major?: string | null
+          author_name?: string
+          body?: string
+          created_at?: string
+          description?: string
+          external_links?: string[] | null
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          views?: number
+        }
+        Relationships: []
+      }
       posts: {
         Row: {
           category: Database["public"]["Enums"]["post_category"]
@@ -140,6 +197,24 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       posts_view: {
@@ -219,8 +294,20 @@ export type Database = {
         }
         Returns: string
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      increment_playbook_views: {
+        Args: { playbook_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
+      app_role: "admin" | "moderator" | "user"
       post_category:
         | "professors"
         | "courses"
@@ -355,6 +442,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "moderator", "user"],
       post_category: [
         "professors",
         "courses",
