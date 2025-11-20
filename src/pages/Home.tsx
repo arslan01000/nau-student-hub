@@ -72,7 +72,7 @@ export default function Home() {
 
             {/* Ticker with Student Post */}
             <div className="mt-8 overflow-hidden">
-              <div className="ticker-animation-visible whitespace-nowrap">
+              <div className="ticker-animation whitespace-nowrap">
                 <div className="inline-flex items-center gap-8 px-4">
                   <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
                     <MessageSquare className="w-4 h-4 text-muted-foreground" />
