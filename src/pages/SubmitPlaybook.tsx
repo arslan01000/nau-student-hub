@@ -86,7 +86,7 @@ const SubmitPlaybook = () => {
       if (error) throw error;
 
       setSubmitted(true);
-      toast.success("Playbook submitted successfully!");
+      toast.success("Playbook submitted successfully! Wait for it to be approved.");
       
       setTimeout(() => {
         navigate('/playbooks');
