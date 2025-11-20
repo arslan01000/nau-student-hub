@@ -14,6 +14,8 @@ import Discussions from "./pages/Discussions";
 import CreatePost from "./pages/CreatePost";
 import PostDetail from "./pages/PostDetail";
 import Reviews from "./pages/Reviews";
+import Professors from "./pages/Professors";
+import ProfessorProfile from "./pages/ProfessorProfile";
 import Privacy from "./pages/Privacy";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -50,7 +52,9 @@ const AppContent = () => {
           <Route path="/create" element={<CreatePost />} />
           <Route path="/post/:id" element={<PostDetail />} />
           <Route path="/reviews" element={<Reviews />} />
-            <Route path="/playbooks" element={<Playbooks />} />
+          <Route path="/professors" element={<Professors />} />
+          <Route path="/professors/:id" element={<ProfessorProfile />} />
+          <Route path="/playbooks" element={<Playbooks />} />
             <Route path="/playbooks/submit" element={<SubmitPlaybook />} />
             <Route path="/playbooks/:id" element={<PlaybookArticle />} />
             <Route path="/admin/playbooks" element={<AdminPlaybooks />} />
