@@ -48,7 +48,7 @@ export default function Home() {
             </div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif leading-tight tracking-tight">
-              The NAU Student Platform.
+              NAU Threads.
               <br />
               <span className="text-muted-foreground">Built by students, for students.</span>
             </h1>

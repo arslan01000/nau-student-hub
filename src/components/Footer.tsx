@@ -6,7 +6,7 @@ export const Footer = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center space-y-4">
           <p className="text-sm text-muted-foreground max-w-3xl mx-auto">
-            NAU Student Hub is an unofficial student platform. Posts may be inaccurate or incomplete. 
+            NAU Threads is an unofficial student platform. Posts may be inaccurate or incomplete. 
             Always verify important academic, legal, and immigration information with official NAU advisors.
           </p>
           <div className="flex items-center justify-center gap-6 text-sm">
