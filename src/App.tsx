@@ -25,6 +25,9 @@ import Playbooks from "./pages/Playbooks";
 import PlaybookArticle from "./pages/PlaybookArticle";
 import SubmitPlaybook from "./pages/SubmitPlaybook";
 import AdminPlaybooks from "./pages/AdminPlaybooks";
+import Admin from "./pages/Admin";
+import AdminReviews from "./pages/AdminReviews";
+import { AdminLayout } from "@/components/AdminLayout";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -57,7 +60,14 @@ const AppContent = () => {
           <Route path="/playbooks" element={<Playbooks />} />
             <Route path="/playbooks/submit" element={<SubmitPlaybook />} />
             <Route path="/playbooks/:id" element={<PlaybookArticle />} />
-            <Route path="/admin/playbooks" element={<AdminPlaybooks />} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Admin />} />
+            <Route path="playbooks" element={<AdminPlaybooks />} />
+            <Route path="reviews" element={<AdminReviews />} />
+          </Route>
+          
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />

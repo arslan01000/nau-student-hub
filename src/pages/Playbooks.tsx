@@ -38,7 +38,7 @@ const Playbooks = () => {
       const { data, error } = await supabase
         .from('playbooks')
         .select('id, title, description, tags, author_name, author_major, author_grad_year, views')
-        .eq('status', 'published')
+        .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
