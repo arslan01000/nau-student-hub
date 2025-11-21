@@ -14,8 +14,37 @@ export type Database = {
   }
   public: {
     Tables: {
+      contact_messages: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+          message: string
+          name: string
+          subject: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+          message: string
+          name: string
+          subject?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          subject?: string | null
+        }
+        Relationships: []
+      }
       playbooks: {
         Row: {
+          approved_at: string | null
+          approved_by: string | null
           author_grad_year: string | null
           author_id: string
           author_major: string | null
@@ -25,8 +54,6 @@ export type Database = {
           description: string
           external_links: string[] | null
           id: string
-          reviewed_at: string | null
-          reviewed_by: string | null
           status: string
           tags: string[]
           title: string
@@ -34,6 +61,8 @@ export type Database = {
           views: number
         }
         Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
           author_grad_year?: string | null
           author_id: string
           author_major?: string | null
@@ -43,8 +72,6 @@ export type Database = {
           description: string
           external_links?: string[] | null
           id?: string
-          reviewed_at?: string | null
-          reviewed_by?: string | null
           status?: string
           tags: string[]
           title: string
@@ -52,6 +79,8 @@ export type Database = {
           views?: number
         }
         Update: {
+          approved_at?: string | null
+          approved_by?: string | null
           author_grad_year?: string | null
           author_id?: string
           author_major?: string | null
@@ -61,8 +90,6 @@ export type Database = {
           description?: string
           external_links?: string[] | null
           id?: string
-          reviewed_at?: string | null
-          reviewed_by?: string | null
           status?: string
           tags?: string[]
           title?: string

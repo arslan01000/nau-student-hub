@@ -198,7 +198,15 @@ export default function Reviews() {
         rating: parseInt(overallRating),
       });
 
-      if (error) throw error;
+      if (error) {
+        // Handle duplicate review error
+        if (error.code === '23505' && error.message.includes('reviews_user_professor_unique')) {
+          toast.error("You've already reviewed this professor. For now you can't submit a second review.");
+          return;
+        }
+        throw error;
+      }
+      
       toast.success("Review submitted successfully!");
       setSelectedProfessorId("");
       setCourseCode("");

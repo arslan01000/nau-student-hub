@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useAdmin } from "@/hooks/useAdmin";
 
 interface NavbarProps {
   onLoginClick: () => void;
@@ -11,6 +12,7 @@ interface NavbarProps {
 
 export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isAdmin } = useAdmin();
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -49,6 +51,11 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
             {user && (
               <Link to="/settings" className="text-sm font-medium hover:text-primary transition-colors">
                 Settings
+              </Link>
+            )}
+            {isAdmin && (
+              <Link to="/admin" className="text-sm font-medium hover:text-primary transition-colors">
+                Admin
               </Link>
             )}
             {user ? (
@@ -128,6 +135,15 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Settings
+              </Link>
+            )}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="block text-sm font-medium hover:text-primary transition-colors py-2"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Admin
               </Link>
             )}
             <div className="pt-2 border-t border-border">

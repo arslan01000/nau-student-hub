@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatDistanceToNow } from "date-fns";
 import { ThumbsUp, MessageCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { getUserDisplayName, obfuscateEmail } from "@/utils/userDisplay";
 export default function PostDetail() {
   const {
     id
@@ -47,14 +48,33 @@ export default function PostDetail() {
   };
   const fetchReplies = async () => {
     try {
-      const {
-        data,
-        error
-      } = await supabase.from("replies").select("*").eq("post_id", id).order("created_at", {
-        ascending: true
+      const { data: repliesData, error: repliesError } = await supabase
+        .from("replies")
+        .select("*")
+        .eq("post_id", id)
+        .order("created_at", { ascending: true });
+
+      if (repliesError) throw repliesError;
+
+      // Fetch profiles for reply authors
+      const { data: profilesData, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, display_name");
+
+      if (profilesError) throw profilesError;
+
+      const profilesMap = new Map<string, string | null>();
+      profilesData?.forEach(p => {
+        profilesMap.set(p.id, p.display_name);
       });
-      if (error) throw error;
-      setReplies(data || []);
+
+      // Map replies with author display names
+      const mappedReplies = repliesData?.map((reply: any) => ({
+        ...reply,
+        display_name: profilesMap.get(reply.user_id) || null,
+      })) || [];
+
+      setReplies(mappedReplies);
     } catch (error) {
       console.error("Error fetching replies:", error);
     }
@@ -135,16 +155,26 @@ export default function PostDetail() {
         </div>
 
         <div className="space-y-4">
-          {replies.map(reply => <Card key={reply.id} className="p-6">
-              <p className="text-muted-foreground mb-3 whitespace-pre-wrap">
-                {reply.content}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {formatDistanceToNow(new Date(reply.created_at), {
-              addSuffix: true
-            })}
-              </p>
-            </Card>)}
+          {replies.map(reply => {
+            // Get author display name (replies are never anonymous in current schema)
+            const authorName = reply.display_name || obfuscateEmail(user?.email || 'Unknown User');
+            
+            return (
+              <Card key={reply.id} className="p-6">
+                <p className="text-muted-foreground mb-3 whitespace-pre-wrap">
+                  {reply.content}
+                </p>
+                <div className="flex items-center justify-between text-sm text-muted-foreground">
+                  <span>Reply by {authorName}</span>
+                  <span>
+                    {formatDistanceToNow(new Date(reply.created_at), {
+                      addSuffix: true
+                    })}
+                  </span>
+                </div>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </div>;
