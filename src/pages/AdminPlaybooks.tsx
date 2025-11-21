@@ -81,8 +81,8 @@ const AdminPlaybooks = () => {
       const { error } = await supabase
         .from('playbooks')
         .update({
-          status: 'published',
-          reviewed_at: new Date().toISOString(),
+          status: 'approved',
+          approved_at: new Date().toISOString(),
         })
         .eq('id', id);
 
@@ -102,7 +102,7 @@ const AdminPlaybooks = () => {
         .from('playbooks')
         .update({
           status: 'rejected',
-          reviewed_at: new Date().toISOString(),
+          approved_at: new Date().toISOString(),
         })
         .eq('id', id);
 
@@ -126,20 +126,11 @@ const AdminPlaybooks = () => {
   }
 
   return (
-    <div className="min-h-screen py-12 px-4">
-      <div className="container mx-auto max-w-7xl">
-        <Link 
-          to="/" 
-          className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Home
-        </Link>
-
-        <div className="mb-8">
-          <h1 className="text-4xl font-serif mb-2">Playbook Moderation</h1>
-          <p className="text-muted-foreground">Review and manage submitted playbooks</p>
-        </div>
+    <div>
+      <div className="mb-8">
+        <h1 className="text-4xl font-serif mb-2">Playbook Moderation</h1>
+        <p className="text-muted-foreground">Review and manage submitted playbooks</p>
+      </div>
 
         {loading ? (
           <div className="text-center py-12">
@@ -187,7 +178,7 @@ const AdminPlaybooks = () => {
                     <TableCell>
                       <Badge 
                         variant={
-                          playbook.status === 'published' ? 'default' : 
+                          playbook.status === 'approved' ? 'default' : 
                           playbook.status === 'rejected' ? 'destructive' : 
                           'secondary'
                         }
@@ -314,8 +305,7 @@ const AdminPlaybooks = () => {
           </DialogContent>
         </Dialog>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
-export default AdminPlaybooks;
+  export default AdminPlaybooks;
