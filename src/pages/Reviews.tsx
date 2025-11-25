@@ -36,21 +36,26 @@ import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 
 const reviewSchema = z.object({
-  professor_id: z.string()
+  professor_id: z
+    .string()
     .min(1, "Please select a professor"),
-  course_code: z.string()
+  course_code: z
+    .string()
     .trim()
     .min(1, "Course code is required")
     .max(20, "Course code must be less than 20 characters"),
-  overall_rating: z.number()
+  overall_rating: z
+    .number()
     .int()
     .min(1, "Please select a rating")
     .max(5, "Rating must be between 1 and 5"),
-  difficulty_rating: z.number()
+  difficulty_rating: z
+    .number()
     .int()
     .min(1, "Please select a difficulty rating")
     .max(5, "Difficulty must be between 1 and 5"),
-  text: z.string()
+  text: z
+    .string()
     .trim()
     .min(1, "Review text is required")
     .max(1000, "Review must be less than 1000 characters"),
@@ -68,7 +73,7 @@ export default function Reviews() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const professorIdFromUrl = searchParams.get("professorId");
-  
+
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [professors, setProfessors] = useState<Professor[]>([]);
@@ -113,37 +118,58 @@ export default function Reviews() {
   const fetchReviews = async () => {
     setLoading(true);
     try {
+      // 1. Берём сами отзывы + данные профессора
       const { data: reviewsData, error: reviewsError } = await supabase
         .from("reviews")
-        .select(`
+        .select(
+          `
           *,
           professors (
             id,
             full_name
           )
-        `)
+        `
+        )
         .order("created_at", { ascending: false });
 
       if (reviewsError) throw reviewsError;
 
+      // 2. Берём профили с display_name и email
       const { data: profilesData, error: profilesError } = await supabase
         .from("profiles")
-        .select("id, display_name");
+        .select("id, display_name, email");
 
       if (profilesError) throw profilesError;
 
-      const profilesMap = new Map<string, string | null>();
-      profilesData?.forEach(p => {
-        profilesMap.set(p.id, p.display_name);
+      // 3. Делаем map по user_id → { display_name, email }
+      const profilesMap = new Map<
+        string,
+        { display_name: string | null; email: string | null }
+      >();
+
+      profilesData?.forEach((p: any) => {
+        profilesMap.set(p.id, {
+          display_name: p.display_name,
+          email: p.email,
+        });
       });
 
-      const mappedData = reviewsData?.map((review: any) => ({
-        ...review,
-        display_name: profilesMap.get(review.user_id) || null,
-        email: null,
-        professor_name: review.professors?.full_name || review.professor_name || "Unknown Professor",
-        professor_id: review.professors?.id || null,
-      })) || [];
+      // 4. Собираем финальные данные для UI
+      const mappedData =
+        reviewsData?.map((review: any) => {
+          const profile = profilesMap.get(review.user_id);
+
+          return {
+            ...review,
+            display_name: profile?.display_name ?? null,
+            email: profile?.email ?? null,
+            professor_name:
+              review.professors?.full_name ||
+              review.professor_name ||
+              "Unknown Professor",
+            professor_id: review.professors?.id || null,
+          };
+        }) ?? [];
 
       setReviews(mappedData);
     } catch (error) {
@@ -154,7 +180,6 @@ export default function Reviews() {
     }
   };
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
@@ -162,7 +187,6 @@ export default function Reviews() {
       return;
     }
 
-    // Validate input
     const result = reviewSchema.safeParse({
       professor_id: selectedProfessorId,
       course_code: courseCode,
@@ -199,14 +223,18 @@ export default function Reviews() {
       });
 
       if (error) {
-        // Handle duplicate review error
-        if (error.code === '23505' && error.message.includes('reviews_user_professor_unique')) {
-          toast.error("You've already reviewed this professor. For now you can't submit a second review.");
+        if (
+          error.code === "23505" &&
+          error.message.includes("reviews_user_professor_unique")
+        ) {
+          toast.error(
+            "You've already reviewed this professor. For now you can't submit a second review."
+          );
           return;
         }
         throw error;
       }
-      
+
       toast.success("Review submitted successfully!");
       setSelectedProfessorId("");
       setCourseCode("");
@@ -224,19 +252,21 @@ export default function Reviews() {
     }
   };
 
-  // Separate allReviews and filteredReviews
   const allReviews = reviews;
   const searchTerm = searchQuery.trim();
-  
+
   const filteredReviews = searchTerm
     ? allReviews.filter(
         (review) =>
-          review.professor_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          review.course_code.toLowerCase().includes(searchTerm.toLowerCase())
+          review.professor_name
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          review.course_code
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
       )
     : allReviews;
 
-  // Debug logs
   console.log("allReviews length:", allReviews.length);
   console.log("filteredReviews length:", filteredReviews.length);
   console.log("searchTerm:", searchTerm);
@@ -244,12 +274,14 @@ export default function Reviews() {
   return (
     <div className="min-h-screen py-8 px-4">
       <div className="container mx-auto max-w-6xl">
-        <h1 className="text-4xl font-bold mb-8">Professor & Course Reviews</h1>
+        <h1 className="text-4xl font-bold mb-8">
+          Professor &amp; Course Reviews
+        </h1>
 
         {/* Browse Professors Card */}
-        <Card 
+        <Card
           className="mb-8 p-6 border-border bg-card/50 backdrop-blur cursor-pointer hover:bg-card/70 transition-all"
-          onClick={() => navigate('/professors')}
+          onClick={() => navigate("/professors")}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -272,7 +304,10 @@ export default function Reviews() {
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="professor">Select Professor *</Label>
-                <Popover open={professorComboOpen} onOpenChange={setProfessorComboOpen}>
+                <Popover
+                  open={professorComboOpen}
+                  onOpenChange={setProfessorComboOpen}
+                >
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
@@ -282,7 +317,8 @@ export default function Reviews() {
                       disabled={!user}
                     >
                       {selectedProfessorId
-                        ? professors.find((p) => p.id === selectedProfessorId)?.full_name
+                        ? professors.find((p) => p.id === selectedProfessorId)
+                            ?.full_name
                         : "Search for a professor..."}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -305,11 +341,14 @@ export default function Reviews() {
                               <Check
                                 className={cn(
                                   "mr-2 h-4 w-4",
-                                  selectedProfessorId === prof.id ? "opacity-100" : "opacity-0"
+                                  selectedProfessorId === prof.id
+                                    ? "opacity-100"
+                                    : "opacity-0"
                                 )}
                               />
                               <span className="font-medium">
-                                {prof.title ? `${prof.title} ` : ""}{prof.full_name} – {prof.department}
+                                {prof.title ? `${prof.title} ` : ""}
+                                {prof.full_name} – {prof.department}
                               </span>
                             </CommandItem>
                           ))}
@@ -319,7 +358,9 @@ export default function Reviews() {
                   </PopoverContent>
                 </Popover>
                 {errors.professor_id && (
-                  <p className="text-sm text-destructive">{errors.professor_id}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.professor_id}
+                  </p>
                 )}
               </div>
               <div className="space-y-2">
@@ -328,7 +369,8 @@ export default function Reviews() {
                   id="department"
                   value={
                     selectedProfessorId
-                      ? professors.find((p) => p.id === selectedProfessorId)?.department || ""
+                      ? professors.find((p) => p.id === selectedProfessorId)
+                          ?.department || ""
                       : ""
                   }
                   placeholder="Select a professor first"
@@ -349,33 +391,53 @@ export default function Reviews() {
                 disabled={!user}
               />
               {errors.course_code && (
-                <p className="text-sm text-destructive">{errors.course_code}</p>
+                <p className="text-sm text-destructive">
+                  {errors.course_code}
+                </p>
               )}
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="overall-rating">Overall Rating *</Label>
-                <Select value={overallRating} onValueChange={setOverallRating} required disabled={!user}>
+                <Select
+                  value={overallRating}
+                  onValueChange={setOverallRating}
+                  required
+                  disabled={!user}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select overall rating" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="5">⭐⭐⭐⭐⭐ - Excellent</SelectItem>
+                    <SelectItem value="5">
+                      ⭐⭐⭐⭐⭐ - Excellent
+                    </SelectItem>
                     <SelectItem value="4">⭐⭐⭐⭐ - Good</SelectItem>
                     <SelectItem value="3">⭐⭐⭐ - Average</SelectItem>
-                    <SelectItem value="2">⭐⭐ - Below Average</SelectItem>
+                    <SelectItem value="2">
+                      ⭐⭐ - Below Average
+                    </SelectItem>
                     <SelectItem value="1">⭐ - Poor</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.overall_rating && (
-                  <p className="text-sm text-destructive">{errors.overall_rating}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.overall_rating}
+                  </p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="difficulty-rating">Difficulty Rating *</Label>
-                <Select value={difficultyRating} onValueChange={setDifficultyRating} required disabled={!user}>
+                <Label htmlFor="difficulty-rating">
+                  Difficulty Rating *
+                </Label>
+                <Select
+                  value={difficultyRating}
+                  onValueChange={setDifficultyRating}
+                  required
+                  disabled={!user}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select difficulty" />
                   </SelectTrigger>
@@ -388,7 +450,9 @@ export default function Reviews() {
                   </SelectContent>
                 </Select>
                 {errors.difficulty_rating && (
-                  <p className="text-sm text-destructive">{errors.difficulty_rating}</p>
+                  <p className="text-sm text-destructive">
+                    {errors.difficulty_rating}
+                  </p>
                 )}
               </div>
             </div>
@@ -396,7 +460,11 @@ export default function Reviews() {
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="grade">Grade Received (Optional)</Label>
-                <Select value={gradeReceived} onValueChange={setGradeReceived} disabled={!user}>
+                <Select
+                  value={gradeReceived}
+                  onValueChange={setGradeReceived}
+                  disabled={!user}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select grade" />
                   </SelectTrigger>
@@ -420,20 +488,29 @@ export default function Reviews() {
 
               <div className="space-y-2">
                 <Label>Would Take Again? (Optional)</Label>
-                <RadioGroup value={wouldTakeAgain} onValueChange={setWouldTakeAgain} disabled={!user}>
+                <RadioGroup
+                  value={wouldTakeAgain}
+                  onValueChange={setWouldTakeAgain}
+                  disabled={!user}
+                >
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="yes" id="yes" />
-                      <Label htmlFor="yes" className="cursor-pointer">Yes</Label>
+                      <Label htmlFor="yes" className="cursor-pointer">
+                        Yes
+                      </Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="no" id="no" />
-                      <Label htmlFor="no" className="cursor-pointer">No</Label>
+                      <Label htmlFor="no" className="cursor-pointer">
+                        No
+                      </Label>
                     </div>
                   </div>
                 </RadioGroup>
               </div>
             </div>
+
             <div className="space-y-2">
               <Label htmlFor="review">Your Review *</Label>
               <Textarea
@@ -450,24 +527,39 @@ export default function Reviews() {
                 <p className="text-sm text-destructive">{errors.text}</p>
               )}
             </div>
+
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="anonymous-review"
                 checked={isAnonymous}
-                onCheckedChange={(checked) => setIsAnonymous(checked as boolean)}
+                onCheckedChange={(checked) =>
+                  setIsAnonymous(checked as boolean)
+                }
                 disabled={!user}
               />
-              <Label htmlFor="anonymous-review" className="cursor-pointer text-sm text-muted-foreground">
+              <Label
+                htmlFor="anonymous-review"
+                className="cursor-pointer text-sm text-muted-foreground"
+              >
                 Post anonymously
-                <span className="block text-xs mt-1">When enabled, your name and email are hidden from other users.</span>
+                <span className="block text-xs mt-1">
+                  When enabled, your name and email are hidden from other
+                  users.
+                </span>
               </Label>
             </div>
+
             <Button type="submit" disabled={!user || submitting}>
-              {submitting ? "Submitting..." : user ? "Submit Review" : "Login to Submit"}
+              {submitting
+                ? "Submitting..."
+                : user
+                ? "Submit Review"
+                : "Login to Submit"}
             </Button>
             {!user && (
               <p className="text-sm text-muted-foreground italic">
-                Want to post a review? Log in to participate. You can still post anonymously after logging in.
+                Want to post a review? Log in to participate. You can still post
+                anonymously after logging in.
               </p>
             )}
           </form>
@@ -476,7 +568,10 @@ export default function Reviews() {
         {/* Search */}
         <div className="mb-8">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
+              size={20}
+            />
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -521,18 +616,21 @@ export default function Reviews() {
           </div>
         )}
 
-        {!loading && allReviews.length > 0 && filteredReviews.length === 0 && searchTerm && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground text-lg">
-              No reviews match your search.
-            </p>
-          </div>
-        )}
+        {!loading &&
+          allReviews.length > 0 &&
+          filteredReviews.length === 0 &&
+          searchTerm && (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground text-lg">
+                No reviews match your search.
+              </p>
+            </div>
+          )}
 
-        {/* Disclaimer */}
         <div className="mt-12 text-center text-xs text-muted-foreground border-t border-border pt-6">
-          NAU Threads is a student-run platform and is not officially affiliated with North American University. 
-          All reviews are user-generated opinions.
+          NAU Threads is a student-run platform and is not officially affiliated
+          with North American University. All reviews are user-generated
+          opinions.
         </div>
       </div>
     </div>
