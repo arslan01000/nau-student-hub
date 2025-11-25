@@ -116,69 +116,53 @@ export default function Reviews() {
   };
 
   const fetchReviews = async () => {
-    setLoading(true);
-    try {
-      // 1. Берём сами отзывы + данные профессора
-      const { data: reviewsData, error: reviewsError } = await supabase
-        .from("reviews")
-        .select(
-          `
-          *,
-          professors (
-            id,
-            full_name
-          )
-        `
+  setLoading(true);
+  try {
+    const { data: reviewsData, error: reviewsError } = await supabase
+      .from("reviews")
+      .select(`
+        *,
+        professors (
+          id,
+          full_name
         )
-        .order("created_at", { ascending: false });
+      `)
+      .order("created_at", { ascending: false });
 
-      if (reviewsError) throw reviewsError;
+    if (reviewsError) throw reviewsError;
 
-      // 2. Берём профили с display_name и email
-      const { data: profilesData, error: profilesError } = await supabase
-        .from("profiles")
-        .select("id, display_name, email");
+    // 👉 ВАЖНО: только id и display_name, БЕЗ email
+    const { data: profilesData, error: profilesError } = await supabase
+      .from("profiles")
+      .select("id, display_name");
 
-      if (profilesError) throw profilesError;
+    if (profilesError) throw profilesError;
 
-      // 3. Делаем map по user_id → { display_name, email }
-      const profilesMap = new Map<
-        string,
-        { display_name: string | null; email: string | null }
-      >();
+    const profilesMap = new Map<string, string | null>();
+    profilesData?.forEach((p: any) => {
+      profilesMap.set(p.id, p.display_name);
+    });
 
-      profilesData?.forEach((p: any) => {
-        profilesMap.set(p.id, {
-          display_name: p.display_name,
-          email: p.email,
-        });
-      });
+    const mappedData =
+      reviewsData?.map((review: any) => ({
+        ...review,
+        display_name: profilesMap.get(review.user_id) || null,
+        email: null, // пока просто null
+        professor_name:
+          review.professors?.full_name ||
+          review.professor_name ||
+          "Unknown Professor",
+        professor_id: review.professors?.id || null,
+      })) ?? [];
 
-      // 4. Собираем финальные данные для UI
-      const mappedData =
-        reviewsData?.map((review: any) => {
-          const profile = profilesMap.get(review.user_id);
-
-          return {
-            ...review,
-            display_name: profile?.display_name ?? null,
-            email: profile?.email ?? null,
-            professor_name:
-              review.professors?.full_name ||
-              review.professor_name ||
-              "Unknown Professor",
-            professor_id: review.professors?.id || null,
-          };
-        }) ?? [];
-
-      setReviews(mappedData);
-    } catch (error) {
-      console.error("Error fetching reviews:", error);
-      setReviews([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setReviews(mappedData);
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    setReviews([]);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
