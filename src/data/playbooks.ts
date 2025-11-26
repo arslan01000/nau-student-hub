@@ -18,7 +18,7 @@ export const playbooks: Playbook[] = [
       "A practical NAU-focused guide on how to use ModernStates + CLEP exams to save time and money on your degree.",
     author: "Azamat Salamatov",
     major: "Computer Science",
-    graduationYear: "2023",
+    graduationYear: "2024",
     tag: "Academics",
     intro:
       "CLEP is a way to earn college credits by taking exams instead of sitting through a full semester. With a smart plan, you can finish undergrad much faster and much cheaper.",
@@ -188,8 +188,8 @@ If you study consistently, use ModernStates, and plan your exams wisely, CLEP ca
       "Step-by-step checklist for NAU students on how to get a Texas driver's license: courses, documents, appointments, and road test.",
     author: "Azamat Salamatov",
     major: "Computer Science",
-    graduationYear: "2023",
-    tag: "US Life",
+    graduationYear: "2024",
+    tag: "US Life", "Immigration",
     intro:
       "One of the most useful things you can do as a new student in Texas is to get a driver’s license. Here’s a practical, no-fluff guide based on what actually works.",
     content: `
