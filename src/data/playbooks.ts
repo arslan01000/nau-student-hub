@@ -14,154 +14,345 @@ export const playbooks: Playbook[] = [
   {
     id: "clep-strategy",
     title: "How to Finish Undergraduate in 2 Years (CLEP Strategy)",
-    description: "A step-by-step breakdown of using CLEP exams to accelerate your degree timeline.",
+    description:
+      "A practical NAU-focused guide on how to use ModernStates + CLEP exams to save time and money on your degree.",
     author: "Azamat Salamatov",
     major: "Computer Science",
     graduationYear: "2023",
     tag: "Academics",
-    intro: "Many students don't know that CLEP exams can dramatically reduce the time needed to complete your undergraduate degree. Here's how I did it.",
+    intro:
+      "CLEP is a way to earn college credits by taking exams instead of sitting through a full semester. With a smart plan, you can finish undergrad much faster and much cheaper.",
     content: `
-## Understanding CLEP Exams
+## What is CLEP?
 
-CLEP (College-Level Examination Program) exams allow you to earn college credit by demonstrating proficiency in specific subject areas. Each exam you pass can replace an entire course, saving you both time and tuition money.
+CLEP (College-Level Examination Program) is a system of exams that lets you earn **college credit** by passing a test in a specific subject.
 
-## My Strategy
+You save:
 
-I carefully mapped out which CLEP exams aligned with my degree requirements and focused on subjects where I had existing knowledge or could quickly learn the material through self-study.
+- **Money** — you don't pay full tuition for that course  
+- **Time** — you don't spend an entire semester on a class you can test out of  
 
-### Step 1: Review Your Degree Requirements
+CLEP is powered by **CollegeBoard** (the same organization that runs the SAT).
 
-Start by getting a complete list of your required courses. Identify which ones have CLEP equivalents at NAU. Meet with your academic advisor to confirm which CLEP credits will be accepted.
+> At NAU, students can take **up to 10 CLEP exams**. Always confirm the latest policy with the registrar or your advisor.
 
-### Step 2: Choose Your Exams Wisely
+---
 
-Focus on subjects you're already familiar with or that have substantial overlap with your high school education. Common choices include:
-- English Composition
-- College Mathematics
-- History courses
-- Natural Sciences
+## Overview of the Process
 
-### Step 3: Study Efficiently
+1. **Watch a ModernStates course to get a voucher for a free CLEP**
+2. **Register for CLEP using that voucher**
+3. **Take the exam and get your credits**
 
-Use free resources like Modern States (they even offer exam fee reimbursement), official CLEP study guides, and practice tests. Dedicate 2-4 weeks of focused study per exam.
+> 💡 If you want to take CLEP immediately, you can skip the free course and pay the CLEP registration fee (around **$93**) out of pocket.
 
-### Step 4: Register and Take the Exams
+---
 
-Register through the College Board website and schedule your exams at a nearby testing center. Most exams take about 90 minutes and cost around $89 (though you can get fee waivers).
+## Step 1: Watch a Course to Get a Free CLEP Voucher
 
-## Results
+1. Go to \`modernstates.org\`.
+2. Choose a **free CLEP course** you want to take.
 
-By following this strategy and combining CLEP credits with AP credits and a full course load each semester, I was able to complete my Computer Science degree in just 2 years instead of the traditional 4 years.
+At NAU, you can take a maximum of **10 CLEPs**.  
+To know which CLEPs count for which classes:
 
-## Important Considerations
+- Check the **NAU catalog**
+- If you’re from another school, check **your university’s catalog**  
+  - Example: “NLU Chicago CLEP equivalencies”
 
-- Check NAU's specific CLEP policies
-- Some majors have more CLEP-friendly requirements than others
-- Don't sacrifice learning for speed
-- Balance CLEP exams with building a strong GPA in your major courses
+A typical table in the catalog might look like this:
 
-This approach isn't for everyone, but if you're motivated and have good study habits, it can save you significant time and money.
-    `
+\`\`\`
+CLEP                  SCORE   Course Equivalency
+American Literature   50      ENGL 2316
+\`\`\`
+
+This means:
+
+> If you take **CLEP American Literature**, and score **50** or more, you will get credit for **ENGL 2316** at NAU.
+
+### What ModernStates Gives You
+
+ModernStates provides:
+
+- Video lessons  
+- Practice tests  
+- Reading materials  
+
+Time to complete the course depends on you:  
+it can be **from 1 hour to a few months**.
+
+To qualify for the **free CLEP voucher**:
+
+- Complete all required modules  
+- Score at least **75%** on the quizzes / tests  
+
+After you finish:
+
+- In about **10 days**, ModernStates will email you a **voucher code**.
+
+> 🔑 The voucher pays for the **official CLEP registration fee**.  
+> It does **not** automatically give you credits. Credits come after you pass the official exam and your score is sent to your school.
+
+---
+
+## Step 2: Register for CLEP
+
+1. Go to the official **CLEP website**.
+2. Register for the exam using the **voucher** you received from ModernStates.
+3. Choose the exam format:
+   - **Online proctoring** (take it at home)
+   - **Testing center** (in-person)
+
+4. Add your university as the **score recipient**.
+   - NAU students: search for NAU.  
+     If it doesn’t show up, enter it **manually** as instructed by the site or by the NAU registrar.
+
+5. Schedule your exam:
+   - CLEP exams are usually available on many days  
+   - Choose a time that works with your schedule
+
+6. For **online proctoring**, you typically need:
+   - A **Windows computer**
+   - A **working webcam**
+   - A **mirror** to show the proctor your screen
+
+7. On exam day:
+   - Use what you learned from ModernStates and your own preparation  
+   - Most CLEP exams require a score of around **50** to pass  
+     (some schools may set higher or lower cutoffs)
+
+---
+
+## Step 3: Get Your Credits ✨
+
+After you finish the exam:
+
+- In about **10–20 days**, CLEP sends your official score to your school
+- Once your university processes it, the course appears as **credits** on your transcript
+
+At NAU, that might look like:
+
+- “ENGL 2316 — 3 credits (by exam)”  
+
+Always double-check with the registrar that the credit was applied correctly and counts toward your degree.
+
+---
+
+## Why This Can Help You Finish in 2 Years
+
+By stacking:
+
+- CLEP credits  
+- Possibly AP credits (if you have any)  
+- Full course loads during regular semesters  
+- Maybe some summer/winter classes  
+
+You can **replace several core or elective classes with exams**, which can significantly reduce how many semesters you need.
+
+For example:
+
+- Instead of taking 4–5 lower-level general-ed courses in class, you might test out of them with CLEP
+- That frees your schedule to take more major classes earlier
+
+> This strategy is intense and not for everyone. You need discipline, honest studying, and a clear plan.
+
+---
+
+## Important Notes & Academic Honesty
+
+- Always check **NAU’s CLEP policy** and talk to your **advisor**  
+- Not every course has a CLEP equivalent  
+- Some majors are more CLEP-friendly than others  
+- Don’t overload yourself just to graduate faster—your **GPA and real knowledge matter**
+
+### About Cheating & AI
+
+Some students are tempted to misuse AI tools or phones during online exams.  
+This is considered **cheating** and can:
+
+- Get your score canceled  
+- Put a note on your record  
+- Create serious problems for your **student status** and even immigration/visa
+
+**My recommendation: don’t do it.**  
+Use CLEP as a chance to **prove what you really know**, not as a shortcut that risks everything.
+
+If you study consistently, use ModernStates, and plan your exams wisely, CLEP can be an honest and powerful way to save time and money on your degree.
+    `,
   },
   {
     id: "international-student-arrival",
-    title: "First Things To Do When You Arrive in the U.S. as an International Student",
-    description: "Essential steps, documents, and tips for international students during their first weeks in the U.S.",
+    title: "New to NAU: What’s Next? (Texas Driver’s License Guide)",
+    description:
+      "Step-by-step checklist for NAU students on how to get a Texas driver's license: courses, documents, appointments, and road test.",
     author: "Azamat Salamatov",
     major: "Computer Science",
     graduationYear: "2023",
     tag: "US Life",
-    intro: "Arriving in the U.S. as an international student can be overwhelming. Here's a practical checklist to help you settle in smoothly.",
+    intro:
+      "One of the most useful things you can do as a new student in Texas is to get a driver’s license. Here’s a practical, no-fluff guide based on what actually works.",
     content: `
-## Before You Leave Home
+## Why Get a Driver’s License Early?
 
-- Make copies of all important documents (passport, I-20, visa)
-- Notify your bank about international travel
-- Pack essential medications (with prescriptions)
-- Download offline maps and important contacts
+In Houston, having a car and a driver’s license makes life **much easier**:
 
-## Week 1: Immediate Priorities
+- You can drive to campus, work, stores, and events  
+- It works as a strong **ID document**  
+- It often helps with banking, renting, and job applications  
 
-### 1. Check In With International Student Office
-This is your first and most important stop. Bring:
-- Passport with F-1 visa
-- I-20 form
-- I-94 arrival/departure record
-- Proof of health insurance
+Here’s a clear, step-by-step path to getting your **Texas driver’s license** as a student.
 
-### 2. Set Up Your Banking
-Open a U.S. bank account as soon as possible. Popular student-friendly banks include Chase, Bank of America, and Wells Fargo. You'll need:
-- Passport
-- I-20
-- Proof of address (dorm assignment or lease)
-- Initial deposit (varies by bank)
+---
 
-### 3. Get a Phone Number
-Having a U.S. phone number is essential for everything from banking to ordering food. Options include:
-- T-Mobile (good international coverage)
-- AT&T (reliable on campus)
-- Mint Mobile (budget-friendly prepaid)
+## 1. Theoretical Part (Online Courses)
 
-### 4. Register for Classes
-Meet with your academic advisor to finalize your course schedule and ensure you're meeting F-1 full-time enrollment requirements.
+You’ll need to complete **two online courses**:
 
-## Week 2-4: Getting Settled
+### 1) Adult Driver’s Course — 6 hours (~$31)
 
-### Social Security Number (If Eligible)
-If you have on-campus employment, you can apply for a Social Security Number. You'll need a letter from your employer and your immigration documents.
+- Course link:  
+  \`https://www.idrivesafely.com/drivers-ed/texas/adult-driver-education/?utm_source=google&utm_medium=cpc&utm_campaign=9304522507&utm_term=i%20drive%20safely\`
 
-### Learn the Campus
-- Find your classrooms before the first day
-- Locate the library, dining halls, and gym
-- Join student organizations
-- Attend orientation events
+This course covers:
 
-### Transportation
-- Learn the campus shuttle routes
-- Download rideshare apps (Uber, Lyft)
-- Consider a bike for getting around
+- Texas traffic laws  
+- Basic driving rules  
+- Safety information  
 
-### Healthcare
-- Schedule a health check-up at student health services
-- Understand your health insurance coverage
-- Find nearby pharmacies and urgent care centers
+You’ll receive a **certificate** when you finish.
 
-## Essential Apps to Download
+---
 
-- Uber/Lyft (transportation)
-- Venmo/Zelle (peer-to-peer payments)
-- Google Maps (navigation)
-- Campus app (if available)
-- WhatsApp (stay connected with family)
+### 2) Texas DPS Impact Certificate — 1 hour
 
-## Cultural Adjustment Tips
+Take this **after** completing the first course.
 
-- Be patient with yourself
-- Join international student groups
-- Don't hesitate to ask questions
-- Make local friends
-- Explore your new city
+- Course link:  
+  \`https://impacttexasdrivers.dps.texas.gov/ITAD/Profile/Signup.aspx\`
 
-## Important Reminders
+This is a short course required by **Texas DPS**.  
+You’ll receive another **certificate** at the end.
 
-- Always carry your passport and I-20
-- Maintain full-time enrollment
-- Report address changes to SEVIS
-- Keep your immigration documents up to date
-- Attend mandatory international student meetings
+> 📌 Keep both certificates printed or saved as PDFs. You’ll need them for your DPS appointment.
 
-Remember, every international student goes through this adjustment period. Don't hesitate to reach out to the international student office or older students for help!
-    `
+---
+
+## 2. Documents You Need
+
+Before you go to the DPS, collect these documents:
+
+- **I-20**
+- **Passport with visa**
+- **I-94** (download from:  
+  \`https://i94.cbp.dhs.gov/I94/#/recent-search\`)
+- **Address Proof 1**  
+  - Bank statement, rent agreement, etc.
+- **Address Proof 2**  
+  - From a different source (for example, a second bank)
+
+> ⚠️ Very important:  
+> The address on **both proofs** must match **exactly**, including apartment or room number.
+
+If applicable:
+
+- **SSN — Social Security Number**
+
+If you don’t have SSN yet, follow the instructions on the DPS site. Some students enter a placeholder when making the appointment (like “1234”), but always follow **current official rules** and, if unsure, ask NAU’s international office.
+
+---
+
+## 3. Make an Appointment at DPS
+
+Book your spot at the Texas DPS:
+
+- Appointment link:  
+  \`https://public.txdpsscheduler.com/\`
+
+Steps:
+
+1. Choose the service for **Driver’s License**.
+2. Fill out the form with your details.
+3. For SSN, follow the current DPS instructions (or temporarily use a placeholder if allowed).
+4. Plan to bring money for fees:
+   - Around **$33** for the license  
+   - Around **$11** in additional fees (can vary)
+
+> 💡 Check the DPS website for the latest official fees, as they can change.
+
+---
+
+## 4. Road Test
+
+After your theory and initial DPS steps, you must pass a **road test**.
+
+A popular option many students use:
+
+- **111 Driving School**  
+  - Road test price (approximate):
+    - Saturday: **$60**
+    - Monday–Friday: **$75**
+  - Website:  
+    \`https://111drivingschool.com/contact-us/\`
+  - Address on Google Maps:  
+    \`https://www.google.com/maps/dir//4231+Cook+Rd+Houston,+TX+77072/\`
+
+They have experience working with international students, which makes the process less stressful.
+
+What to practice:
+
+- Basic turns and lane changes  
+- Stop signs and traffic lights  
+- Parking  
+- Speed limits and safety habits  
+
+---
+
+## 5. After You Pass the Test
+
+Once you pass the road test:
+
+1. Go again to the DPS appointment website (if needed):  
+   \`https://public.txdpsscheduler.com/\`
+2. Follow the instructions to finalize your **Texas driver’s license**.
+
+Typically:
+
+- You may receive a **temporary paper license** first  
+- Your physical plastic card arrives by mail later
+
+---
+
+## Why This Matters for New NAU Students
+
+Having a Texas driver’s license helps with:
+
+- **Everyday life** — groceries, mosque, friends, events, internships  
+- **Identity verification** — banks, some employers, and agencies prefer it  
+- **Long-term living** — it’s one of the key documents you’ll keep using
+
+Take it step by step:
+
+1. Do the 2 online courses  
+2. Prepare all documents  
+3. Make the DPS appointment  
+4. Do the road test  
+5. Finalize everything and start driving 🚗
+
+You don’t have to do it all in the first week, but starting early will make your life in Houston much easier.
+    `,
   },
   {
     id: "choosing-professors",
     title: "How To Choose Professors + NAU Course Planning Tips",
-    description: "Practical advice on selecting professors, building schedules, and planning your degree smartly.",
+    description:
+      "Practical advice on selecting professors, building schedules, and planning your degree smartly.",
     author: "Anonymous Contributor",
     major: "Business Administration",
     graduationYear: "2024",
     tag: "Academics",
-    intro: "Choosing the right professors can make or break your semester. Here's what I've learned after four years at NAU.",
+    intro:
+      "Choosing the right professors can make or break your semester. Here's what I've learned after four years at NAU.",
     content: `
 ## Research Before You Register
 
@@ -249,17 +440,19 @@ If a class is full, add yourself to the waitlist. Many students drop in the firs
 Your course schedule is more than just a list of classes—it's a strategic plan for your academic success. Take the time to research and plan carefully. Don't be afraid to adjust your schedule during add/drop week if something isn't working.
 
 Remember: A good professor can make a difficult subject enjoyable, and a poor one can make an easy subject miserable. Choose wisely!
-    `
+    `,
   },
   {
     id: "campus-jobs",
     title: "On-Campus Job Guide (Step-by-Step)",
-    description: "A simple guide to finding and applying for on-campus jobs at NAU.",
+    description:
+      "A simple guide to finding and applying for on-campus jobs at NAU.",
     author: "Student Contributor",
     major: "Marketing",
     graduationYear: "2025",
     tag: "Career",
-    intro: "On-campus jobs are perfect for students—flexible hours, convenient location, and they understand your academic priorities.",
+    intro:
+      "On-campus jobs are perfect for students—flexible hours, convenient location, and they understand your academic priorities.",
     content: `
 ## Why Work On-Campus?
 
@@ -407,17 +600,19 @@ Start looking early, be persistent, and don't get discouraged if you don't get t
 Working on campus is about more than just earning money—it's about building professional skills, making connections, and becoming part of the campus community.
 
 Good luck!
-    `
+    `,
   },
   {
     id: "campus-survival",
     title: "NAU Survival Guide — Housing, Transportation, Meal Plan",
-    description: "A friendly, practical survival guide for students living and studying at NAU.",
+    description:
+      "A friendly, practical survival guide for students living and studying at NAU.",
     author: "Student Contributor",
     major: "Biology",
     graduationYear: "2024",
     tag: "Campus Life",
-    intro: "Everything you need to know about navigating daily life at NAU, from housing options to getting around campus.",
+    intro:
+      "Everything you need to know about navigating daily life at NAU, from housing options to getting around campus.",
     content: `
 ## Housing Options
 
@@ -616,14 +811,17 @@ Campus life is about finding what works best for you. Don't be afraid to adjust 
 Take advantage of campus resources—you're already paying for them in your fees! And remember, everyone is figuring it out together. Don't hesitate to ask for help or advice from older students, RAs, or campus staff.
 
 Welcome to NAU, and good luck!
-    `
-  }
+    `,
+  },
 ];
 
 export const getPlaybookById = (id: string): Playbook | undefined => {
-  return playbooks.find(p => p.id === id);
+  return playbooks.find((p) => p.id === id);
 };
 
-export const getRelatedPlaybooks = (currentId: string, count: number = 3): Playbook[] => {
-  return playbooks.filter(p => p.id !== currentId).slice(0, count);
+export const getRelatedPlaybooks = (
+  currentId: string,
+  count: number = 3
+): Playbook[] => {
+  return playbooks.filter((p) => p.id !== currentId).slice(0, count);
 };
