@@ -1,81 +1,51 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BookOpen, Eye } from "lucide-react";
-import { useState, useEffect } from "react";
+import { ArrowRight, BookOpen } from "lucide-react";
+import { useState, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/integrations/supabase/client";
 import { AuthModal } from "@/components/AuthModal";
+import { playbooks as staticPlaybooks, Playbook } from "@/data/playbooks";
 
-interface Playbook {
-  id: string;
-  title: string;
-  description: string;
-  tags: string[];
-  author_name: string;
-  author_major: string | null;
-  author_grad_year: string | null;
-  views: number;
-}
-
-const allTags = ["All", "Academics", "US Life", "Career", "Campus Life", "Immigration", "Money"];
+const allTags = [
+  "All",
+  "Academics",
+  "US Life",
+  "Career",
+  "Campus Life",
+  "Immigration",
+  "Money",
+];
 
 const Playbooks = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [playbooks, setPlaybooks] = useState<Playbook[]>([]);
-  const [filteredPlaybooks, setFilteredPlaybooks] = useState<Playbook[]>([]);
   const [selectedTag, setSelectedTag] = useState("All");
-  const [sortBy, setSortBy] = useState<"newest" | "mostViewed">("newest");
+  const [sortBy, setSortBy] = useState<"newest" | "az">("newest");
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchPlaybooks();
-  }, []);
+  // фильтрация + сортировка поверх статичного массива
+  const filteredPlaybooks = useMemo(() => {
+    let result: Playbook[] = staticPlaybooks;
 
-  const fetchPlaybooks = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('playbooks')
-        .select('id, title, description, tags, author_name, author_major, author_grad_year, views')
-        .eq('status', 'approved')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setPlaybooks(data || []);
-      setFilteredPlaybooks(data || []);
-    } catch (error) {
-      console.error('Error fetching playbooks:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    let filtered = playbooks;
-
-    // Filter by tag
     if (selectedTag !== "All") {
-      filtered = filtered.filter(p => p.tags.includes(selectedTag));
+      result = result.filter((p) => p.tag === selectedTag);
     }
 
-    // Sort
-    if (sortBy === "mostViewed") {
-      filtered = [...filtered].sort((a, b) => b.views - a.views);
+    if (sortBy === "az") {
+      result = [...result].sort((a, b) => a.title.localeCompare(b.title));
     } else {
-      filtered = [...filtered].sort((a, b) => 
-        new Date(b.id).getTime() - new Date(a.id).getTime()
-      );
+      // "newest" — оставляем порядок, как в файле (или можно развернуть)
+      result = [...result];
     }
 
-    setFilteredPlaybooks(filtered);
-  }, [selectedTag, sortBy, playbooks]);
+    return result;
+  }, [selectedTag, sortBy]);
 
   const handleSubmitClick = () => {
     if (!user) {
       setAuthModalOpen(true);
     } else {
-      navigate('/playbooks/submit');
+      navigate("/playbooks/submit");
     }
   };
 
@@ -84,14 +54,15 @@ const Playbooks = () => {
       {/* Hero Section */}
       <section className="relative py-24 md:py-32 px-4 overflow-hidden">
         <div className="absolute inset-0 grid-pattern opacity-30"></div>
-        
+
         <div className="container mx-auto max-w-7xl relative z-10">
           <div className="max-w-3xl">
             <h1 className="text-5xl md:text-6xl font-serif mb-6 leading-tight">
               Student Playbooks
             </h1>
             <p className="text-xl text-muted-foreground leading-relaxed">
-              Practical guides created by NAU students and alumni. Learn from real experiences.
+              Practical guides created by NAU students and alumni. Learn from
+              real experiences.
             </p>
           </div>
         </div>
@@ -109,8 +80,8 @@ const Playbooks = () => {
                   onClick={() => setSelectedTag(tag)}
                   className={`px-4 py-2 rounded-full text-sm border whitespace-nowrap transition-colors ${
                     selectedTag === tag
-                      ? 'bg-foreground text-background border-foreground'
-                      : 'bg-transparent text-foreground border-border hover:bg-muted'
+                      ? "bg-foreground text-background border-foreground"
+                      : "bg-transparent text-foreground border-border hover:bg-muted"
                   }`}
                 >
                   {tag}
@@ -121,11 +92,11 @@ const Playbooks = () => {
             {/* Sort Dropdown */}
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as "newest" | "mostViewed")}
+              onChange={(e) => setSortBy(e.target.value as "newest" | "az")}
               className="px-4 py-2 rounded-md border border-border bg-background text-foreground text-sm"
             >
               <option value="newest">Newest</option>
-              <option value="mostViewed">Most Viewed</option>
+              <option value="az">A–Z</option>
             </select>
           </div>
         </div>
@@ -134,69 +105,58 @@ const Playbooks = () => {
       {/* Playbooks Grid */}
       <section className="py-8 px-4">
         <div className="container mx-auto max-w-7xl">
-          {loading ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">Loading playbooks...</p>
-            </div>
-          ) : filteredPlaybooks.length === 0 ? (
+          {filteredPlaybooks.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">
-                {selectedTag === "All" 
-                  ? "No playbooks yet. Be the first to add one!" 
+                {selectedTag === "All"
+                  ? "No playbooks yet. Be the first to add one!"
                   : `No playbooks found for ${selectedTag}`}
               </p>
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredPlaybooks.map((playbook) => (
-              <Link
-                key={playbook.id}
-                to={`/playbooks/${playbook.id}`}
-                className="group"
-              >
-                <div className="h-full p-6 rounded-lg border border-border bg-card/30 hover:bg-card/50 transition-all duration-300 hover:border-border/50">
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-1 mb-4">
-                    {playbook.tags.slice(0, 2).map((tag) => (
-                      <span key={tag} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-xs text-foreground">
-                        {tag}
+                <Link
+                  key={playbook.id}
+                  to={`/playbooks/${playbook.id}`}
+                  className="group"
+                >
+                  <div className="h-full p-6 rounded-lg border border-border bg-card/30 hover:bg-card/50 transition-all duration-300 hover:border-border/50">
+                    {/* Tag */}
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-xs text-foreground">
+                        {playbook.tag}
                       </span>
-                    ))}
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="text-xl font-serif mb-3 group-hover:text-primary transition-colors">
-                    {playbook.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                    {playbook.description}
-                  </p>
-
-                  {/* Views */}
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground mb-4">
-                    <Eye className="w-3 h-3" />
-                    <span>{playbook.views} views</span>
-                  </div>
-
-                  {/* Author Info */}
-                  <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/50">
-                    <div>
-                      <p className="text-sm font-medium text-foreground">
-                        {playbook.author_name}
-                      </p>
-                      {(playbook.author_major || playbook.author_grad_year) && (
-                        <p className="text-xs text-muted-foreground">
-                          {playbook.author_major}
-                          {playbook.author_grad_year && ` • Class of ${playbook.author_grad_year}`}
-                        </p>
-                      )}
                     </div>
-                    <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+
+                    {/* Title */}
+                    <h3 className="text-xl font-serif mb-3 group-hover:text-primary transition-colors">
+                      {playbook.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                      {playbook.description}
+                    </p>
+
+                    {/* Author Info */}
+                    <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/50">
+                      <div>
+                        <p className="text-sm font-medium text-foreground">
+                          {playbook.author}
+                        </p>
+                        {(playbook.major || playbook.graduationYear) && (
+                          <p className="text-xs text-muted-foreground">
+                            {playbook.major}
+                            {playbook.graduationYear &&
+                              ` • Class of ${playbook.graduationYear}`}
+                          </p>
+                        )}
+                      </div>
+                      <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                    </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
               ))}
             </div>
           )}
@@ -219,7 +179,10 @@ const Playbooks = () => {
         </div>
       </section>
 
-      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+      />
     </div>
   );
 };
