@@ -349,7 +349,7 @@ You don’t have to do it all in the first week, but starting early will make yo
     title: "Software Engineer Skills Guide (For Juniors & Future Devs)",
     description:
       "A practical roadmap of technical, soft, and career skills that make you marketable as a junior software engineer.",
-    author: "UH CS Alumni (2023)",
+    author: "Dosbol Aliev (UH CS Alumni 2023)",
     major: "Computer Science",
     graduationYear: "2023",
     tag: "Career",
@@ -565,7 +565,7 @@ If you keep coding, keep shipping, and keep asking questions, you’ll be fine �
     title: "F-1 → CPT, OPT, H-1B, EB-Green Card: Basics for Students",
     description:
       "Русско-язычный конспект про CPT, OPT (включая STEM), H-1B / H-1B-exempt и базовые категории рабочих грин-карт.",
-    author: "UH CS Alumni (2023)",
+    author: "Dosbol Aliev (UH CS Alumni 2023)",
     major: "Computer Science",
     graduationYear: "2023",
     tag: "Immigration",
