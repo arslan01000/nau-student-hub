@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { User, Session } from '@supabase/supabase-js';
+import type { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
 interface AuthContextType {
@@ -27,17 +27,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Слушаем состояние авторизации
   useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
 
-    // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -46,6 +45,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  // ✅ Авто-создание/обновление профиля в таблице `profiles`
+  useEffect(() => {
+    if (!user) return;
+
+    const ensureProfile = async () => {
+      const email = user.email ?? '';
+      const baseName =
+        email && email.includes('@')
+          ? email.split('@')[0]
+          : (user.user_metadata as any)?.name || 'user';
+
+      const { error } = await supabase.from('profiles').upsert(
+        {
+          id: user.id,            // тот же id, что в reviews.user_id
+          username: baseName,
+          display_name: baseName, // то, что ты показываешь в ReviewCard
+        },
+        { onConflict: 'id' }      // если профиль уже есть — не дублируем
+      );
+
+      if (error) {
+        console.error('Failed to ensure profile', error);
+      }
+    };
+
+    ensureProfile();
+  }, [user]);
 
   return (
     <AuthContext.Provider value={{ user, session, loading }}>
