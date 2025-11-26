@@ -773,476 +773,152 @@ USCIS публикует **H-1B Employer Data Hub** — базу данных р
   /* ---------- EXISTING TEMPLATE PLAYBOOKS (можно потом удалить/упростить) ---------- */
 
   {
-    id: "choosing-professors",
-    title: "How To Choose Professors + NAU Course Planning Tips",
-    description:
-      "Practical advice on selecting professors, building schedules, and planning your degree smartly.",
-    author: "Anonymous Contributor",
-    major: "Business Administration",
-    graduationYear: "2024",
-    tag: "Academics",
-    intro:
-      "Choosing the right professors can make or break your semester. Here's what I've learned after four years at NAU.",
-    content: `
-## Research Before You Register
+  id: "choosing-professors",
+  title: "How To Choose Professors at NAU",
+  description: "Quick tips for picking good professors and building a stress-free schedule.",
+  author: "NAU Student Contributor",
+  major: "Business Administration",
+  graduationYear: "2024",
+  tag: "Academics",
+  intro: "Choosing the right professor makes your semester easier. Here are simple, practical ways NAU students evaluate classes.",
+  content: `
+## Where to Check
 
-### Use Multiple Sources
-Don't rely on just one platform for professor reviews. Check:
-- RateMyProfessors (take extreme reviews with a grain of salt)
-- NAU Threads Reviews page (real student experiences)
-- Talk to students who've taken the class
-- Check department websites for professor research interests
+- RateMyProfessors (very rough but useful)
+- NAU Threads Reviews
+- Ask students in your major
 
-### What to Look For
-- Teaching style (lecture-heavy vs. discussion-based)
-- Grading fairness
-- Availability outside of class
-- Response time to emails
-- Exam format (multiple choice, essays, projects)
+## What to Look For
 
-## Building Your Schedule Strategically
+- Clear syllabus  
+- Fair grading  
+- Responds to emails  
+- Organized lectures  
+- Reasonable workload  
 
-### Balance Your Course Load
-- Mix difficult courses with easier electives
-- Avoid scheduling all your hardest classes in one semester
-- Leave buffer time between classes when possible
-- Consider your personal peak productivity times
+## Building Your Schedule
 
-### First Semester Strategy
-Take a slightly lighter load to adjust to college-level work. It's better to do well in 4 classes than struggle in 6.
+- Mix 1 hard class + 2 medium + 1 easy  
+- Avoid back-to-back heavy classes  
+- Leave time for lunch & work  
+- Check prerequisites early
 
-### Plan Ahead for Prerequisites
-Create a 4-year course plan early. Some courses are only offered in fall or spring, and missing them can delay graduation.
+## Red Flags
 
-## Registration Tips
+- No syllabus  
+- Last-minute cancellations  
+- Poor communication  
+- Many students warn “avoid”
 
-### Priority Registration
-- Register as early as your time ticket allows
-- Have backup options ready
-- Popular professors fill up fast
+## Quick Advice
 
-### Use the Waitlist Strategically
-If a class is full, add yourself to the waitlist. Many students drop in the first week.
+A great professor can make a hard class enjoyable.  
+A bad one can ruin an easy class.
 
-### Check for Course Conflicts
-- Verify no time overlaps
-- Consider commute time between classes
-- Leave time for lunch
-- Don't overbook yourself
-
-## Red Flags to Avoid
-
-- Professors with consistently poor communication
-- Classes with unclear syllabi
-- Courses where students mention unfair grading
-- Professors who don't show up or frequently cancel class
-
-## Green Flags to Seek
-
-- Professors who are passionate about their subject
-- Clear expectations and fair grading criteria
-- Available during office hours
-- Engaging teaching methods
-- Good rapport with students
-
-## Major-Specific Advice
-
-### STEM Majors
-- Start math and science sequences early
-- Take labs when you have lighter course loads
-- Form study groups early
-- Attend professor office hours regularly
-
-### Liberal Arts
-- Build relationships with professors in your major
-- Take courses that fulfill multiple requirements
-- Develop strong writing skills early
-- Participate in class discussions
-
-### Business
-- Look for professors with industry experience
-- Take advantage of networking opportunities
-- Balance theory with practical application courses
-- Consider internship credit options
-
-## Final Thoughts
-
-Your course schedule is more than just a list of classes—it's a strategic plan for your academic success. Take the time to research and plan carefully. Don't be afraid to adjust your schedule during add/drop week if something isn't working.
-
-Remember: A good professor can make a difficult subject enjoyable, and a poor one can make an easy subject miserable. Choose wisely!
+Ask upperclassmen — they know everything.
     `,
-  },
+},
   {
-    id: "campus-jobs",
-    title: "On-Campus Job Guide (Step-by-Step)",
-    description:
-      "A simple guide to finding and applying for on-campus jobs at NAU.",
-    author: "Student Contributor",
-    major: "Marketing",
-    graduationYear: "2025",
-    tag: "Career",
-    intro:
-      "On-campus jobs are perfect for students—flexible hours, convenient location, and they understand your academic priorities.",
-    content: `
-## Why Work On-Campus?
+  id: "campus-jobs",
+  title: "On-Campus Jobs: Quick Guide",
+  description: "Fast overview of how to find and apply for campus jobs at NAU.",
+  author: "NAU Student Contributor",
+  major: "Marketing",
+  graduationYear: "2025",
+  tag: "Career",
+  intro: "On-campus jobs are flexible and student-friendly. Here’s the quick version of how NAU students usually get hired.",
+  content: `
+## Why Work On Campus?
 
-- Flexible schedules built around classes
-- No commute—everything's on campus
-- Employers understand academic commitments
-- Looks great on your resume
-- International students: eligible for on-campus work
+- Flexible hours  
+- Close to classes  
+- Good for your resume  
+- Allowed for F-1 students
 
-## Types of On-Campus Jobs
+## Common Campus Jobs
 
-### Student Assistant Positions
-- Library assistants
-- Lab monitors
-- Administrative office help
-- Tech support
-- Event setup and support
+- Library  
+- Labs & tutoring center  
+- Office assistant  
+- Gym/recreation  
+- Events & student life  
 
-### Dining Services
-- Food service workers
-- Cashiers
-- Kitchen staff
-- Baristas
+## How to Apply
 
-### Recreation & Athletics
-- Gym attendants
-- Intramural sports referees
-- Pool lifeguards
-- Equipment room staff
+1. Check NAU Career Services / student jobs portal  
+2. Prepare a simple 1-page resume  
+3. Apply early in the semester  
+4. Follow up politely  
 
-### Resident Assistants (RA)
-- Free or reduced housing
-- Leadership experience
-- Must live on campus
-- Competitive positions
+## Interview Prep
 
-### Academic Positions
-- Tutoring center
-- Peer mentors
-- Grading assistants (for higher-level students)
-- Research assistants
+- Why do you want this job?  
+- What’s your class schedule?  
+- Are you reliable on deadlines?
 
-## Step-by-Step Application Process
+## Quick Tips
 
-### Step 1: Check Eligibility
-**For U.S. Citizens/Permanent Residents:**
-- Simply need proof of eligibility to work
+- Start with the easiest roles first  
+- Be on time  
+- Communicate early if you can’t attend a shift  
 
-**For International Students:**
-- Must be on valid F-1 visa
-- Can work up to 20 hours/week during school term
-- Can work full-time during breaks
-- Must get authorization from international office
-
-### Step 2: Find Job Listings
-- Check NAU Career Services website
-- Visit student employment portal
-- Browse department bulletin boards
-- Ask professors in your major
-- Network with other students
-
-### Step 3: Prepare Your Application
-Create a simple resume including:
-- Education (your current major)
-- Relevant skills
-- Previous work experience (if any)
-- Volunteer experience
-- Computer/software skills
-
-### Step 4: Apply Online
-- Follow application instructions carefully
-- Tailor your resume for each position
-- Write a brief cover letter if required
-- Submit before deadline
-
-### Step 5: Follow Up
-- Give it about a week
-- Send a polite follow-up email
-- Express continued interest
-- Ask about timeline for decisions
-
-### Step 6: Interview Preparation
-Common questions:
-- Why do you want this position?
-- What's your class schedule?
-- How do you handle stress?
-- Can you work [specific hours]?
-- What are your strengths?
-
-Be ready to discuss:
-- Your availability
-- How you'll balance work and school
-- Examples of reliability and responsibility
-- Any relevant experience
-
-### Step 7: Accept and Complete Paperwork
-Once offered a position:
-- Complete I-9 (proof of work eligibility)
-- Provide Social Security Number
-- Fill out tax forms (W-4)
-- Set up direct deposit
-- Complete any required training
-
-## Tips for Success
-
-### Getting Hired
-- Apply early in the semester
-- Be flexible with your hours
-- Emphasize reliability and punctuality
-- Show enthusiasm
-- Network with professors and staff
-
-### Keeping Your Job
-- Never miss shifts without notice
-- Communicate schedule conflicts early
-- Show up on time
-- Be professional
-- Ask questions when unsure
-- Take initiative
-
-## Best Times to Apply
-
-- **August/September**: Highest number of openings
-- **January**: Second wave of hiring
-- **Throughout the year**: Positions open as students graduate or quit
-
-## Red Flags to Avoid
-
-- Jobs requiring too many hours (remember: school first!)
-- Positions with inflexible schedules
-- Jobs that interfere with classes
-- Employers who don't respect academic priorities
-
-## Average Pay Ranges
-
-- Entry-level positions: $10-12/hour
-- Specialized skills (tutoring, tech): $12-15/hour
-- RA positions: Free/reduced housing + stipend
-- Research assistants: $12-15/hour
-
-## Final Advice
-
-Start looking early, be persistent, and don't get discouraged if you don't get the first job you apply for. Many students don't get hired immediately, but most find something by the second or third application.
-
-Working on campus is about more than just earning money—it's about building professional skills, making connections, and becoming part of the campus community.
-
-Good luck!
+Most students get a job after 1–3 applications.
     `,
-  },
+},
   {
-    id: "campus-survival",
-    title: "NAU Survival Guide — Housing, Transportation, Meal Plan",
-    description:
-      "A friendly, practical survival guide for students living and studying at NAU.",
-    author: "Student Contributor",
-    major: "Biology",
-    graduationYear: "2024",
-    tag: "Campus Life",
-    intro:
-      "Everything you need to know about navigating daily life at NAU, from housing options to getting around campus.",
-    content: `
+  id: "campus-survival",
+  title: "NAU Campus Life Survival Guide (Short)",
+  description: "A simple, friendly overview of housing, transportation, and everyday life at NAU.",
+  author: "NAU Student Contributor",
+  major: "Biology",
+  graduationYear: "2024",
+  tag: "Campus Life",
+  intro: "A quick, practical guide for new NAU students — housing, transportation, food, safety, and daily life.",
+  content: `
 ## Housing Options
 
-### On-Campus Housing
-**Pros:**
-- Walking distance to classes
-- Included utilities
-- Built-in community
-- No commute
-- Easy access to campus resources
+**On-Campus**
+- Close to class  
+- Good for meeting people  
+- Less privacy  
 
-**Cons:**
-- Can be expensive
-- Less privacy
-- Roommate situations
-- Limited cooking options
+**Off-Campus**
+- Cheaper  
+- More freedom  
+- Requires transportation  
 
-**Residence Hall Types:**
-- Traditional dorms (shared bathroom)
-- Suite-style (bathroom shared with suite)
-- Apartment-style (more independent living)
+## Getting Around
 
-### Off-Campus Housing
-**Pros:**
-- Often cheaper
-- More independence
-- Can choose roommates
-- Full kitchen
+- Campus shuttles are free  
+- Biking is fastest  
+- Uber/Lyft for weekends  
+- Parking permits required
 
-**Cons:**
-- Transportation needed
-- Utilities not included
-- Lease commitments
-- Potential isolation from campus
+## Food & Meal Plans
 
-**Popular Off-Campus Areas:**
-- Near campus apartments (walk/bike)
-- Student apartment complexes (shuttles provided)
-- Shared houses (split rent with roommates)
+- Unlimited plan = convenient but expensive  
+- Meal swipes + flex dollars = good balance  
+- Cooking saves money  
 
-### Housing Tips
-- Apply early for on-campus (it fills up!)
-- Visit off-campus apartments before signing
-- Check lease terms carefully
-- Budget for utilities when off-campus
-- Consider roommate compatibility seriously
+## Essentials on Campus
 
-## Transportation
+- Library  
+- Tutoring center  
+- Health center  
+- Gym & recreation  
+- Career services  
 
-### On Campus
-- **Walking**: Most efficient for nearby classes
-- **Campus Shuttle**: Free, regular routes
-- **Bike**: Great for getting around quickly
-  - Invest in a good lock
-  - Register your bike with campus security
-  - Use bike lanes and paths
+## Safety & Tips
 
-### Off Campus
-- **University Shuttle**: Check routes to off-campus housing
-- **Public Transportation**: City bus routes (free with student ID)
-- **Rideshare**: Uber/Lyft for occasional trips
-- **Car**: 
-  - Parking permits required
-  - Can be expensive
-  - Consider if necessary
-  - Share rides to save money
+- Walk with friends at night  
+- Lock your room  
+- Attend student events (free food!)  
+- Learn professor names & office hours  
 
-### Transportation Budget Tips
-- Get a student transit pass
-- Carpool with classmates
-- Bike when weather permits
-- Plan trips efficiently
-- Walk short distances
-
-## Meal Plan Options
-
-### Dining Hall Meal Plans
-**All-Access Plans:**
-- Unlimited swipes
-- Best for students on campus all the time
-- Most expensive
-
-**Limited Plans:**
-- Set number of meals per week/semester
-- Better for lighter eaters
-- More flexible
-
-**Flex Plans:**
-- Combination of meals + flex dollars
-- Use at various campus locations
-- Good middle ground
-
-### Dining Dollars vs. Flex Dollars
-- **Dining Dollars**: Only for dining facilities
-- **Flex Dollars**: Can be used at campus store too
-- Both roll over within semester
-- Plan according to your eating habits
-
-### Eating on a Budget
-- Cook in your dorm/apartment when possible
-- Buy groceries strategically
-- Pack snacks for long class days
-- Share bulk purchases with roommates
-- Take advantage of campus food events
-- Avoid daily coffee shop purchases
-
-### Meal Plan Tips
-- Don't over-purchase meals
-- Guest swipes for visiting friends/family
-- Use flex dollars before they expire
-- Check meal plan balance regularly
-- Adjust plan after first semester
-
-## Campus Resources
-
-### Academic Support
-- Writing center (free tutoring)
-- Math lab
-- Subject-specific tutoring
-- Library resources
-- Study rooms
-
-### Health & Wellness
-- Student health center
-- Counseling services
-- Fitness center (included in fees)
-- Recreational sports
-
-### Other Essentials
-- Campus bookstore
-- Computer labs
-- Printing stations
-- Mail services
-- Career services
-
-## Money-Saving Tips
-
-### General Budget Advice
-- Track your spending
-- Use student discounts everywhere
-- Buy used textbooks
-- Share streaming services
-- Cook instead of eating out
-- Use campus facilities instead of paying for gym
-
-### Free Campus Perks
-- Gym/fitness center
-- Computer labs
-- Printing (limited)
-- Health services
-- Counseling
-- Academic tutoring
-- Campus events
-- Software licenses
-
-## Laundry Hacks
-
-- Do laundry during off-peak times (not Sunday night!)
-- Set timer on your phone
-- Don't leave clothes unattended too long
-- Use laundry apps to check machine availability
-- Keep quarters/laundry card loaded
-
-## Safety Tips
-
-- Walk with friends at night
-- Use campus escort services
-- Keep dorm room locked
-- Register valuables
-- Know emergency numbers
-- Download campus safety app
-
-## Social Life Balance
-
-- Join clubs and organizations
-- Attend campus events (often free food!)
-- Make study groups
-- Balance academics with social time
-- Don't overcommit
-
-## Semester Preparation Checklist
-
-**Before Each Semester:**
-- [ ] Secure housing
-- [ ] Purchase meal plan
-- [ ] Get parking permit (if needed)
-- [ ] Buy textbooks
-- [ ] Set up transportation
-- [ ] Stock up on essentials
-- [ ] Organize your schedule
-
-## Final Thoughts
-
-Campus life is about finding what works best for you. Don't be afraid to adjust your housing, meal plan, or transportation methods after your first semester. Most students figure out their ideal setup by sophomore year.
-
-Take advantage of campus resources—you're already paying for them in your fees! And remember, everyone is figuring it out together. Don't hesitate to ask for help or advice from older students, RAs, or campus staff.
-
-Welcome to NAU, and good luck!
+Everyone learns as they go.  
+You will too.
     `,
-  },
+},
 ];
 
 export const getPlaybookById = (id: string): Playbook | undefined => {
