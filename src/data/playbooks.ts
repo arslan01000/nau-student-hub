@@ -18,7 +18,7 @@ export const playbooks: Playbook[] = [
       "A practical NAU-focused guide on how to use ModernStates + CLEP exams to save time and money on your degree.",
     author: "Azamat Salamatov",
     major: "Computer Science",
-    graduationYear: "2025",
+    graduationYear: "2024",
     tag: "Academics",
     intro:
       "CLEP is a way to earn college credits by taking exams instead of sitting through a full semester. With a smart plan, you can finish undergrad much faster and much cheaper.",
