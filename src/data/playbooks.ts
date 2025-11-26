@@ -188,7 +188,7 @@ If you study consistently, use ModernStates, and plan your exams wisely, CLEP ca
       "Step-by-step checklist for NAU students on how to get a Texas driver's license: courses, documents, appointments, and road test.",
     author: "Azamat Salamatov",
     major: "Computer Science",
-    graduationYear: "2025",
+    graduationYear: "2024",
     tag: "US Life",
     intro:
       "One of the most useful things you can do as a new student in Texas is to get a driver’s license. Here’s a practical, no-fluff guide based on what actually works.",
