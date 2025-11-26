@@ -18,7 +18,7 @@ export const playbooks: Playbook[] = [
       "A practical NAU-focused guide on how to use ModernStates + CLEP exams to save time and money on your degree.",
     author: "Azamat Salamatov",
     major: "Computer Science",
-    graduationYear: "2024",
+    graduationYear: "2023",
     tag: "Academics",
     intro:
       "CLEP is a way to earn college credits by taking exams instead of sitting through a full semester. With a smart plan, you can finish undergrad much faster and much cheaper.",
@@ -182,13 +182,13 @@ If you study consistently, use ModernStates, and plan your exams wisely, CLEP ca
     `,
   },
   {
-    id: "international-student-arrival",
-    title: "New to NAU: What’s Next? (Texas Driver’s License Guide)",
+    id: "new-to-nau-drivers-license",
+    title: "New to NAU: What’s Next? (Driver’s licence in Texas)",
     description:
       "Step-by-step checklist for NAU students on how to get a Texas driver's license: courses, documents, appointments, and road test.",
     author: "Azamat Salamatov",
     major: "Computer Science",
-    graduationYear: "2024",
+    graduationYear: "2023",
     tag: "US Life",
     intro:
       "One of the most useful things you can do as a new student in Texas is to get a driver’s license. Here’s a practical, no-fluff guide based on what actually works.",
@@ -342,6 +342,436 @@ Take it step by step:
 You don’t have to do it all in the first week, but starting early will make your life in Houston much easier.
     `,
   },
+
+  /* ---------- NEW: Software Engineer Skills Guide (UH alumni) ---------- */
+  {
+    id: "software-engineer-skills-guide",
+    title: "Software Engineer Skills Guide (For Juniors & Future Devs)",
+    description:
+      "A practical roadmap of technical, soft, and career skills that make you marketable as a junior software engineer.",
+    author: "UH CS Alumni (2023)",
+    major: "Computer Science",
+    graduationYear: "2023",
+    tag: "Career",
+    intro:
+      "This playbook is written for junior engineers and students who want to understand what skills actually matter in real jobs — beyond just 'learn a language'.",
+    content: `
+## Overview
+
+There are thousands of tools and buzzwords in software, but a small set of **core skills** will make you adaptable in almost any team or company.
+
+This guide focuses on:
+
+1. Core technical skills  
+2. Problem-solving & critical thinking  
+3. Good software engineering practices  
+4. Soft skills  
+5. Domain/specialization  
+6. Long-term career skills  
+
+---
+
+## 1. Core Technical Skills
+
+### Programming Fundamentals
+
+**Why it matters:** Your ability to write clean, efficient code is the foundation of your career.
+
+Focus on:
+
+- 1–2 languages deeply (e.g. **Python, Java, JavaScript, Go**)
+- Data structures & algorithms:
+  - Arrays, lists, hash maps, trees, graphs
+  - When to use what
+- Time/space complexity (Big-O)
+
+> 🎯 Action: solve a few problems a day on LeetCode / Codewars, but always review solutions, not just pass tests.
+
+---
+
+### Version Control (Git)
+
+**Why it matters:** Real work = collaboration. Git is how teams share and protect code.
+
+Focus on:
+
+- Branching and merging  
+- Pull requests & code reviews  
+- Resolving merge conflicts  
+- Writing clear commit messages
+
+> 🎯 Action: keep all your projects on GitHub. Treat every project like a mini real repo.
+
+---
+
+### Debugging & Testing
+
+**Why it matters:** Bugs are guaranteed. Fixing them fast saves everyone time.
+
+Focus on:
+
+- Unit tests + integration tests (Jest, Vitest, Pytest, etc.)
+- Debuggers (Chrome DevTools, VS Code debugger)
+- Reading stack traces calmly
+
+> 🎯 Action: intentionally break your own project, then debug it step by step.
+
+---
+
+## 2. Problem-Solving & Critical Thinking
+
+### Algorithmic Thinking
+
+Even outside FAANG, you’ll solve problems all the time.
+
+- Practice breaking problems into smaller steps
+- Write **pseudocode** before real code
+- Learn common patterns:
+  - Two pointers
+  - Sliding window
+  - Recursion / backtracking
+
+---
+
+### System Design Basics
+
+Even juniors are expected to understand how pieces fit together.
+
+Know at a high level:
+
+- What is an API?  
+- What is a database? (SQL vs NoSQL)  
+- Basic concepts of scalability, caching, queues  
+
+> 🎯 Action: draw boxes & arrows for simple apps (todo app, chat app, ride-sharing app).
+
+---
+
+## 3. Software Development Practices
+
+### Code Quality & Readability
+
+Your code will be read more often than it’s written.
+
+- Use clear names for variables & functions
+- Keep functions focused on one thing
+- Follow style guides (PEP8, ESLint, Prettier)
+
+### Working in Agile Teams
+
+Most teams use some form of **Scrum** or **Kanban**.
+
+- Standups, sprint planning, retrospectives
+- Tools: Jira, Trello, Linear, Asana
+- Writing small, clear tasks
+
+> 🎯 Action: in group projects, practice making tickets and assigning tasks instead of “everyone just codes”.
+
+---
+
+## 4. Soft Skills
+
+### Communication
+
+You’ll often explain technical problems to non-technical people.
+
+- Write short, clear status updates
+- Avoid unnecessary jargon
+- Confirm understanding (“So just to recap, you need…”)
+
+### Learning & Adaptability
+
+Tech changes, fundamentals don’t.
+
+- Every 3–4 months, pick a new tool or framework to explore
+- Don’t learn 10 things at once — go deep on 1–2
+
+> 🎯 Action: build one small project with each new tool you try (not just tutorials).
+
+---
+
+## 5. Domain-Specific Knowledge
+
+Pick a **direction**, even if it changes later:
+
+- **Frontend:** React/Vue, accessibility, performance, UX  
+- **Backend:** APIs, databases, Redis, authentication  
+- **Mobile:** React Native, Flutter, Swift/Kotlin basics  
+- **DevOps/Cloud:** Docker, CI/CD, AWS/Azure/GCP  
+- **Data / ML:** Python, Pandas, basic ML models
+
+> 🎯 Action: build 1–2 “serious” projects in your chosen area (deployed, with a real README).
+
+---
+
+## 6. Career Longevity Skills
+
+### Networking & Mentorship
+
+Jobs often come from people, not job boards.
+
+- Go to meetups, hackathons, tech talks
+- Talk to people after events
+- Ask seniors: “What would you focus on if you were me?”
+
+### Ethics & Professionalism
+
+Tech has real impact.
+
+- Respect privacy & security
+- Think about how your code is used in the real world
+- Be someone people trust
+
+---
+
+## 12-Month Roadmap for a Junior
+
+**Months 1–3**
+
+- Master 1 main language
+- Basic DS & algorithms
+- Learn Git properly
+
+**Months 4–6**
+
+- Build 2–3 full-stack or serious projects  
+- Put them on GitHub and deploy
+
+**Months 7–9**
+
+- Add testing & basic DevOps (Docker, CI/CD)
+- Refactor old projects
+
+**Months 10–12**
+
+- Choose a specialization (frontend, backend, cloud, etc.)
+- Start networking & applying
+
+---
+
+## Final Thoughts
+
+- Build a small but **real** portfolio (not just class labs)
+- Be okay with failing and debugging — that’s normal
+- Stay humble and curious
+
+If you keep coding, keep shipping, and keep asking questions, you’ll be fine 🚀
+    `,
+  },
+
+  /* ---------- NEW: F-1 / CPT / OPT / H-1B Basics (UH alumni, RU-heavy) ---------- */
+  {
+    id: "f1-opt-h1b-immigration-basics",
+    title: "F-1 → CPT, OPT, H-1B, EB-Green Card: Basics for Students",
+    description:
+      "Русско-язычный конспект про CPT, OPT (включая STEM), H-1B / H-1B-exempt и базовые категории рабочих грин-карт.",
+    author: "UH CS Alumni (2023)",
+    major: "Computer Science",
+    graduationYear: "2023",
+    tag: "Immigration",
+    intro:
+      "Это не юрист и не юридическая консультация, а опыт студента F-1, который собрал в одном месте базовые понятия: CPT, OPT, STEM-OPT, H-1B, H-1B-exempt и EB-категории грин-карты.",
+    content: `
+> ❗ Disclaimer: законы и сроки по визам/иммиграции меняются.  
+> Этот текст — студенческий конспект, а **не юридическая консультация**.  
+> Всегда сверяйтесь с сайтом USCIS, своим DSO и (при необходимости) с иммиграционным адвокатом.
+
+---
+
+## Что такое CPT?
+
+**CPT (Curricular Practical Training)** — разрешение для студентов на визе **F-1** работать в США по своей специальности, если это часть учебной программы (интернатура, практикум, coop и т.п.).
+
+- Работа должна быть **связана с вашей основной специальностью**
+- Может быть:
+  - **Part-time** (до 20 часов/неделя во время семестра)
+  - **Full-time** (более 20 часов/неделя летом или на каникулах)
+- За всю программу по F-1 **full-time CPT не должно суммарно превышать 12 месяцев**, иначе можно потерять право на OPT
+- Part-time CPT можно делать дольше, главное — соблюдать правила школы
+
+---
+
+## Когда начинается OPT Basic?
+
+**OPT (Optional Practical Training)** — это работа по специальности после (или иногда до) завершения программы.
+
+- Дата **начала OPT** привязана к дате окончания программы (а не к дате выдачи диплома)
+- Подаваться на OPT можно **за 90 дней** до конца программы
+- Обычный OPT (без STEM-продления) — до **12 месяцев**
+
+Пример:  
+Если программа формально заканчивается 25 июля, даже если финальный экзамен 11 августа, USCIS смотрит на **25 июля** как конец программы.
+
+---
+
+## 60 Days of Grace Period
+
+**60-дневный льготный период** после окончания статуса F-1 / OPT:
+
+- После того, как у вас закончилась программа или OPT + вы исчерпали допустимые дни безработицы, у вас есть **60 дней**:
+  - чтобы выехать из США,  
+  - или перевестись в другую школу,  
+  - или сменить статус (например, на другую визу).
+
+В эти 60 дней **работать нельзя**, это просто «буфер» для легального выезда/смены статуса.
+
+---
+
+## Pre-OPT, OPT и Post-OPT
+
+- **Pre-OPT** — работа по специальности **до** завершения учебной программы (обычно part-time во время учебы).
+- **OPT (basic)** — до **12 месяцев** работы по специальности **после** окончания программы.
+- **Post-OPT** — тот же период после окончания обучения; обычно так называют основной 12-месячный этап.
+
+Общие моменты:
+
+- Работа должна быть **напрямую связана** с вашей специализацией.
+- Минимум **20 часов в неделю**.
+- Может быть оплачиваемой или неоплачиваемой (volunteer), но должна быть реальной и документируемой.
+- Возможен **self-employment**, но там много нюансов — нужно хорошо понимать правила.
+
+---
+
+## STEM OPT (24-месячное продление)
+
+Если ваша специальность попадает в STEM-список:
+
+- Можно продлить OPT ещё на **24 месяца** (в сумме до 36 месяцев: 12 + 24).
+- Требования:
+  - Работодатель должен быть **E-Verified**
+  - Должен быть **обучающий план** (формы у школы/USCIS)
+  - Работа обязана быть **оплачиваемой**
+- В сумме это может дать до **3 лет** работы по F-1 (12 OPT + 24 STEM).
+
+---
+
+## Стоит ли делать Premium Processing для OPT?
+
+Премиум-обработка:
+
+- Дорого (плюс несколько тысяч к обычной пошлине)
+- Имеет смысл, если до желаемой даты начала работы осталось **очень мало времени**
+- Лучше всего — **подать на OPT заранее** (за 90 дней до конца программы), чтобы не попадать в такие крайние ситуации
+
+---
+
+## H-1B и H-1B-exempt
+
+### Обычная H-1B
+
+- Рабочая виза для специалистов
+- Ежегодная квота:
+  - 65 000 для бакалавров
+  - +20 000 для выпускников магистратуры в США
+- Каждый год подаётся ~200–600k заявок → **лотерея**
+
+Максимальный срок:
+
+- Обычно **3 года + продление ещё на 3**, всего до 6 лет (иногда больше, если уже идёт процесс грин-карты).
+
+### H-1B-exempt
+
+Некоторые работодатели **не зависят от квоты**:
+
+- Университеты, колледжи
+- НКО в сфере образования / исследований
+- Некоторые research-центры
+
+Плюс:
+
+- Можно подавать не только весной, нет лотереи.
+
+Минус:
+
+- Такая виза обычно **“привязана” к этому типу работодателя**, перейти потом в обычную коммерческую H-1B не всегда просто — нужно выигрывать лотерею отдельно.
+
+---
+
+## H-1B Employer Data Hub
+
+USCIS публикует **H-1B Employer Data Hub** — базу данных работодателей, которые подавали петиции на H-1B.
+
+Это полезно, чтобы:
+
+- Смотреть, какие компании реально спонсируют H-1B
+- Сравнивать города, штаты и отрасли
+
+Общий подход:
+
+1. Ищете компании по своей специальности на LinkedIn / Indeed.  
+2. Проверяете этих работодателей в H-1B Employer Data Hub или на сайтах вроде MyVisaJobs.  
+3. Так находите тех, кто уже знаком с процессом спонсорства.
+
+---
+
+## Employment-Based Green Cards (EB-1 … EB-5)
+
+Очень кратко:
+
+- **EB-1** — “выдающиеся” (researchers, professors, extraordinary ability, менеджеры международных компаний).
+- **EB-2** — высококвалифицированные (магистры / бакалавр + 5 лет опыта, exceptional ability).
+- **EB-2 NIW** — EB-2, но **без конкретного работодателя**, если ваша деятельность важна для национальных интересов США.
+- **EB-3** — квалифицированные/неквалифицированные работники (2+ года опыта, или без спецквалификации).
+- **EB-4** — “особые категории” (религиозные работники, некоторые сотрудники межд. организаций и т.д.).
+- **EB-5** — инвесторы (грубый порядок: \$800k–1M инвестиций + создание рабочих мест).
+
+Чем выше категория (EB-1, EB-2), тем жестче требования, но обычно быстрее очередь.
+
+---
+
+## Как искать работодателей, которые спонсируют
+
+1. Ищете вакансии по своей специальности (LinkedIn, Indeed и т.п.).
+2. Для компаний, которые нравятся, проверяете:
+   - Спонсировали ли они H-1B / грин-карты раньше (MyVisaJobs, Data Hub).
+3. Если да — значит, у них уже есть опыт и процессы.
+
+Важно:
+
+- Компания вкладывает в спонсорство **10–20k+** и несколько лет ожидания  
+- Обычно они начинают думать о грин-карте через **1–2 года** успешной работы сотрудника  
+- Нужно показать, что вы — человек, в кого стоит инвестировать
+
+---
+
+## F-1 Visa: получение и продление (очень кратко)
+
+### Как получить F-1
+
+1. Поступить в аккредитованное учебное заведение.  
+2. Получить форму **I-20**.  
+3. Оплатить сбор **SEVIS**.  
+4. Заполнить анкету **DS-160**.  
+5. Записаться на интервью в консульство.  
+6. Подготовить пакет документов:
+   - Паспорт
+   - I-20
+   - SEVIS-receipt
+   - DS-160 confirmation
+   - Фото
+   - Финансовые документы  
+7. Пройти интервью (вопросы про программу, планы, финансы).  
+
+### Как продлить F-1 без поездки домой
+
+Иногда возможно продлить визу через специальные сервисы/агентства (например, AIS-USVISA) в третьих странах, но:
+
+- Условия зависят от гражданства и ситуации  
+- Решение всегда за консульством  
+
+Перед любыми действиями:
+
+- Обсудите план с **DSO** вашей школы  
+- Изучите актуальные правила на сайте Госдепа / консульства  
+
+---
+
+Этот плейбук не заменяет официальные источники, но помогает **разобраться в терминах** и задать более точные вопросы вашему DSO или адвокату.
+    `,
+  },
+
+  /* ---------- EXISTING TEMPLATE PLAYBOOKS (можно потом удалить/упростить) ---------- */
+
   {
     id: "choosing-professors",
     title: "How To Choose Professors + NAU Course Planning Tips",
