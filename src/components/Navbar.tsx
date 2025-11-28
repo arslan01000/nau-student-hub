@@ -30,31 +30,31 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link to="/discussions" className="text-sm font-medium hover:text-primary transition-colors transition-colors hover:text-primary/90">
+            <Link to="/discussions" className="text-sm font-medium hover:text-primary transition-colors transition duration-200 hover:brightness-110">
               Discussions
             </Link>
-            <Link to="/reviews" className="text-sm font-medium hover:text-primary transition-colors transition-colors hover:text-primary/90">
+            <Link to="/reviews" className="text-sm font-medium hover:text-primary transition-colors transition duration-200 hover:brightness-110">
               Reviews
             </Link>
-            <Link to="/playbooks" className="text-sm font-medium hover:text-primary transition-colors transition-colors hover:text-primary/90">
+            <Link to="/playbooks" className="text-sm font-medium hover:text-primary transition-colors transition duration-200 hover:brightness-110">
               Playbooks
             </Link>
-            <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors transition-colors hover:text-primary/90">
+            <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors transition duration-200 hover:brightness-110">
               About
             </Link>
-            <Link to="/contact" className="text-sm font-medium hover:text-primary transition-colors transition-colors hover:text-primary/90">
+            <Link to="/contact" className="text-sm font-medium hover:text-primary transition-colors transition duration-200 hover:brightness-110">
               Contact
             </Link>
-            <Link to="/ai-assistant" className="text-sm font-medium hover:text-primary transition-colors transition-colors hover:text-primary/90">
+            <Link to="/ai-assistant" className="text-sm font-medium hover:text-primary transition-colors transition duration-200 hover:brightness-110">
               AI Assistant
             </Link>
             {user && (
-              <Link to="/settings" className="text-sm font-medium hover:text-primary transition-colors transition-colors hover:text-primary/90">
+              <Link to="/settings" className="text-sm font-medium hover:text-primary transition-colors transition duration-200 hover:brightness-110">
                 Settings
               </Link>
             )}
             {isAdmin && (
-              <Link to="/admin" className="text-sm font-medium hover:text-primary transition-colors transition-colors hover:text-primary/90">
+              <Link to="/admin" className="text-sm font-medium hover:text-primary transition-colors transition duration-200 hover:brightness-110">
                 Admin
               </Link>
             )}
