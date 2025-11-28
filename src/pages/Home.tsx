@@ -15,9 +15,10 @@ export default function Home() {
 
   const fetchPosts = async () => {
     try {
+      // 🔒 SECURITY: Don't fetch user_id - prevents user tracking
       const { data, error } = await supabase
         .from("posts_view")
-        .select("*")
+        .select("id, title, content, category, is_anonymous, upvotes, created_at")
         .order("created_at", { ascending: false })
         .limit(6);
 
@@ -169,8 +170,6 @@ export default function Home() {
                   isAnonymous={post.is_anonymous}
                   upvotes={post.upvotes}
                   createdAt={post.created_at}
-                  displayName={post.displayName}
-                  email={post.email}
                 />
               ))}
             </div>
