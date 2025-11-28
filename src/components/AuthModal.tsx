@@ -76,6 +76,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         email: email.trim(),
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/`,
           data: {
             username: username.trim(),
           },
@@ -83,7 +84,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       });
 
       if (error) throw error;
-      toast.success("Account created! Please check your email to verify.");
+      toast.success("Account created! Please verify your email before signing in.");
       onClose();
       resetForm();
     } catch (error: any) {
@@ -117,7 +118,13 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        // Handle email not verified error
+        if (error.message.toLowerCase().includes('email not confirmed')) {
+          throw new Error("Please verify your email before signing in. Check your inbox for the verification link.");
+        }
+        throw error;
+      }
       toast.success("Welcome back!");
       onClose();
       resetForm();
