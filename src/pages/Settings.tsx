@@ -1,6 +1,6 @@
 export default function Settings() {
   return (
-    <div className="min-h-screen py-12 px-4">
+    <div className="min-h-screen py-12 px-4 grid-pattern">
       <div className="container mx-auto max-w-2xl">
         <h1 className="text-4xl font-bold mb-8">Settings</h1>
         <div className="space-y-6">

@@ -1,6 +1,6 @@
 export default function Privacy() {
   return (
-    <div className="min-h-screen py-8 px-4">
+    <div className="min-h-screen py-8 px-4 grid-pattern">
       <div className="container mx-auto max-w-3xl">
         <h1 className="text-4xl font-bold mb-8">Privacy & Anonymity</h1>
         
