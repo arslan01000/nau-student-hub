@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -14,13 +14,18 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isAdmin } = useAdmin();
 
+  // Shared styles
   const navLink =
     "text-sm font-medium text-foreground/80 underline-offset-4 transition-all duration-150 hover:text-primary hover:underline";
+
+  const activeLink =
+    "text-primary underline underline-offset-4";
 
   return (
     <nav className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex h-16 items-center justify-between">
+          
           {/* Logo */}
           <Link
             to="/"
@@ -36,33 +41,81 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link to="/discussions" className={navLink}>
+
+            <NavLink
+              to="/discussions"
+              className={({ isActive }) =>
+                isActive ? `${navLink} ${activeLink}` : navLink
+              }
+            >
               Discussions
-            </Link>
-            <Link to="/reviews" className={navLink}>
+            </NavLink>
+
+            <NavLink
+              to="/reviews"
+              className={({ isActive }) =>
+                isActive ? `${navLink} ${activeLink}` : navLink
+              }
+            >
               Reviews
-            </Link>
-            <Link to="/playbooks" className={navLink}>
+            </NavLink>
+
+            <NavLink
+              to="/playbooks"
+              className={({ isActive }) =>
+                isActive ? `${navLink} ${activeLink}` : navLink
+              }
+            >
               Playbooks
-            </Link>
-            <Link to="/about" className={navLink}>
+            </NavLink>
+
+            <NavLink
+              to="/about"
+              className={({ isActive }) =>
+                isActive ? `${navLink} ${activeLink}` : navLink
+              }
+            >
               About
-            </Link>
-            <Link to="/contact" className={navLink}>
+            </NavLink>
+
+            <NavLink
+              to="/contact"
+              className={({ isActive }) =>
+                isActive ? `${navLink} ${activeLink}` : navLink
+              }
+            >
               Contact
-            </Link>
-            <Link to="/ai-assistant" className={navLink}>
+            </NavLink>
+
+            <NavLink
+              to="/ai-assistant"
+              className={({ isActive }) =>
+                isActive ? `${navLink} ${activeLink}` : navLink
+              }
+            >
               AI Assistant
-            </Link>
+            </NavLink>
+
             {user && (
-              <Link to="/settings" className={navLink}>
+              <NavLink
+                to="/settings"
+                className={({ isActive }) =>
+                  isActive ? `${navLink} ${activeLink}` : navLink
+                }
+              >
                 Settings
-              </Link>
+              </NavLink>
             )}
+
             {isAdmin && (
-              <Link to="/admin" className={navLink}>
+              <NavLink
+                to="/admin"
+                className={({ isActive }) =>
+                  isActive ? `${navLink} ${activeLink}` : navLink
+                }
+              >
                 Admin
-              </Link>
+              </NavLink>
             )}
 
             {/* User section */}
@@ -94,6 +147,7 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden py-4 space-y-3 border-t border-border">
+
             <Link
               to="/discussions"
               className="block text-sm font-medium py-2 transition-all hover:text-primary"
@@ -101,6 +155,7 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
             >
               Discussions
             </Link>
+
             <Link
               to="/reviews"
               className="block text-sm font-medium py-2 transition-all hover:text-primary"
@@ -108,6 +163,7 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
             >
               Reviews
             </Link>
+
             <Link
               to="/playbooks"
               className="block text-sm font-medium py-2 transition-all hover:text-primary"
@@ -115,6 +171,7 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
             >
               Playbooks
             </Link>
+
             <Link
               to="/about"
               className="block text-sm font-medium py-2 transition-all hover:text-primary"
@@ -122,6 +179,7 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
             >
               About
             </Link>
+
             <Link
               to="/contact"
               className="block text-sm font-medium py-2 transition-all hover:text-primary"
@@ -129,6 +187,7 @@ export const Navbar = ({ onLoginClick, user, onLogout }: NavbarProps) => {
             >
               Contact
             </Link>
+
             <Link
               to="/ai-assistant"
               className="block text-sm font-medium py-2 transition-all hover:text-primary"
