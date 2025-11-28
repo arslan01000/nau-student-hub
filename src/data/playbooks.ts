@@ -189,7 +189,7 @@ If you study consistently, use ModernStates, and plan your exams wisely, CLEP ca
     author: "Azamat Salamatov",
     major: "Computer Science",
     graduationYear: "2024",
-    tag: "US Life", "Immigration",
+    tag: "US Life",
     intro:
       "One of the most useful things you can do as a new student in Texas is to get a driver’s license. Here’s a practical, no-fluff guide based on what actually works.",
     content: `
