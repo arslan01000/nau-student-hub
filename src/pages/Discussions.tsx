@@ -55,9 +55,10 @@ export default function Discussions() {
   const fetchPosts = async () => {
     setLoading(true);
     try {
+      // 🔒 SECURITY: Don't fetch user_id - prevents user tracking
       let query = supabase
         .from("posts_view")
-        .select("*")
+        .select("id, title, content, category, is_anonymous, upvotes, created_at")
         .order("created_at", { ascending: false });
 
       if (selectedCategory !== "all") {
@@ -141,8 +142,6 @@ export default function Discussions() {
                 upvotes={post.upvotes}
                 createdAt={post.created_at}
                 replyCount={post.reply_count || 0}
-                displayName={post.display_name}
-                email={post.email}
               />
             ))}
           </div>

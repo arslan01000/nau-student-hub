@@ -118,10 +118,21 @@ export default function Reviews() {
   const fetchReviews = async () => {
   setLoading(true);
   try {
+    // 🔒 SECURITY: Don't fetch user_id - prevents user tracking
     const { data: reviewsData, error: reviewsError } = await supabase
       .from("reviews")
       .select(`
-        *,
+        id,
+        course_code,
+        text,
+        rating,
+        overall_rating,
+        difficulty_rating,
+        grade_received,
+        would_take_again,
+        is_anonymous,
+        created_at,
+        professor_id,
         professors (
           id,
           full_name
@@ -131,28 +142,22 @@ export default function Reviews() {
 
     if (reviewsError) throw reviewsError;
 
-    // 👉 ВАЖНО: только id и display_name, БЕЗ email
-    const { data: profilesData, error: profilesError } = await supabase
-      .from("profiles")
-      .select("id, display_name");
-
-    if (profilesError) throw profilesError;
-
-    const profilesMap = new Map<string, string | null>();
-    profilesData?.forEach((p: any) => {
-      profilesMap.set(p.id, p.display_name);
-    });
-
+    // Map data WITHOUT exposing user_id
     const mappedData =
       reviewsData?.map((review: any) => ({
-        ...review,
-        display_name: profilesMap.get(review.user_id) || null,
-        email: null, // пока просто null
-        professor_name:
-          review.professors?.full_name ||
-          review.professor_name ||
-          "Unknown Professor",
+        id: review.id,
+        course_code: review.course_code,
+        text: review.text,
+        rating: review.rating,
+        overall_rating: review.overall_rating,
+        difficulty_rating: review.difficulty_rating,
+        grade_received: review.grade_received,
+        would_take_again: review.would_take_again,
+        is_anonymous: review.is_anonymous,
+        created_at: review.created_at,
+        professor_name: review.professors?.full_name || "Unknown Professor",
         professor_id: review.professors?.id || null,
+        // 🔒 user_id, display_name, email intentionally omitted for privacy
       })) ?? [];
 
     setReviews(mappedData);
@@ -585,8 +590,6 @@ export default function Reviews() {
                 text={review.text}
                 createdAt={review.created_at}
                 isAnonymous={review.is_anonymous}
-                displayName={review.display_name}
-                email={review.email}
               />
             ))}
           </div>
