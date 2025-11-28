@@ -121,7 +121,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       if (error) {
         // Handle email not verified error
         if (error.message.toLowerCase().includes('email not confirmed')) {
-          throw new Error("Please verify your email before signing in. Check your inbox for the verification link.");
+          throw new Error("Please verify your email — check your inbox.");
         }
         throw error;
       }
