@@ -25,6 +25,8 @@ interface Review {
   course_code: string;
   created_at: string;
   is_anonymous: boolean;
+  display_name: string | null;
+  email: string | null;
 }
 
 interface AggregatedStats {
@@ -62,29 +64,45 @@ export default function ProfessorProfile() {
       if (profError) throw profError;
       setProfessor(profData);
 
-      // 🔒 SECURITY: Don't fetch user_id - prevents user tracking
+      // Fetch reviews for this professor
       const { data: reviewsData, error: reviewsError } = await supabase
         .from("reviews")
-        .select("id, overall_rating, difficulty_rating, grade_received, would_take_again, text, course_code, created_at, is_anonymous")
+        .select("*")
         .eq("professor_id", id)
         .order("created_at", { ascending: false });
 
       if (reviewsError) throw reviewsError;
 
-      setReviews(reviewsData || []);
+      // Get profiles for display names
+      const { data: profilesData } = await supabase
+        .from("profiles")
+        .select("id, display_name");
+
+      const profilesMap = new Map<string, string | null>();
+      profilesData?.forEach(p => {
+        profilesMap.set(p.id, p.display_name);
+      });
+
+      const mappedReviews = reviewsData?.map((review: any) => ({
+        ...review,
+        display_name: profilesMap.get(review.user_id) || null,
+        email: null,
+      })) || [];
+
+      setReviews(mappedReviews);
 
       // Calculate aggregated stats
-      if (reviewsData && reviewsData.length > 0) {
-        const avgOverall = reviewsData.reduce((sum, r) => sum + (r.overall_rating || 0), 0) / reviewsData.length;
-        const avgDiff = reviewsData.reduce((sum, r) => sum + (r.difficulty_rating || 0), 0) / reviewsData.length;
-        const wouldTakeAgainCount = reviewsData.filter(r => r.would_take_again === true).length;
-        const wouldTakeAgainPercent = (wouldTakeAgainCount / reviewsData.length) * 100;
+      if (mappedReviews.length > 0) {
+        const avgOverall = mappedReviews.reduce((sum, r) => sum + (r.overall_rating || 0), 0) / mappedReviews.length;
+        const avgDiff = mappedReviews.reduce((sum, r) => sum + (r.difficulty_rating || 0), 0) / mappedReviews.length;
+        const wouldTakeAgainCount = mappedReviews.filter(r => r.would_take_again === true).length;
+        const wouldTakeAgainPercent = (wouldTakeAgainCount / mappedReviews.length) * 100;
 
         setStats({
           avgOverallRating: avgOverall,
           avgDifficulty: avgDiff,
           wouldTakeAgainPercent,
-          totalRatings: reviewsData.length,
+          totalRatings: mappedReviews.length,
         });
       } else {
         setStats(null);
@@ -195,6 +213,8 @@ export default function ProfessorProfile() {
                   text={review.text}
                   createdAt={review.created_at}
                   isAnonymous={review.is_anonymous}
+                  displayName={review.display_name}
+                  email={review.email}
                   difficultyRating={review.difficulty_rating}
                   gradeReceived={review.grade_received}
                   wouldTakeAgain={review.would_take_again}

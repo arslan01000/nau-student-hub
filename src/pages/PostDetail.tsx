@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatDistanceToNow } from "date-fns";
 import { ThumbsUp, MessageCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { getUserDisplayName, obfuscateEmail } from "@/utils/userDisplay";
 export default function PostDetail() {
   const {
     id
@@ -32,11 +33,10 @@ export default function PostDetail() {
   };
   const fetchPost = async () => {
     try {
-      // 🔒 SECURITY: Don't fetch user_id - prevents user tracking
       const {
         data,
         error
-      } = await supabase.from("posts_view").select("id, title, content, category, is_anonymous, upvotes, created_at").eq("id", id).maybeSingle();
+      } = await supabase.from("posts_view").select("*").eq("id", id).maybeSingle();
       if (error) throw error;
       setPost(data);
     } catch (error) {
@@ -48,21 +48,30 @@ export default function PostDetail() {
   };
   const fetchReplies = async () => {
     try {
-      // 🔒 SECURITY: Don't fetch user_id - prevents user tracking
       const { data: repliesData, error: repliesError } = await supabase
         .from("replies")
-        .select("id, content, created_at")
+        .select("*")
         .eq("post_id", id)
         .order("created_at", { ascending: true });
 
       if (repliesError) throw repliesError;
 
-      // Map replies WITHOUT user identification
+      // Fetch profiles for reply authors
+      const { data: profilesData, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, display_name");
+
+      if (profilesError) throw profilesError;
+
+      const profilesMap = new Map<string, string | null>();
+      profilesData?.forEach(p => {
+        profilesMap.set(p.id, p.display_name);
+      });
+
+      // Map replies with author display names
       const mappedReplies = repliesData?.map((reply: any) => ({
-        id: reply.id,
-        content: reply.content,
-        created_at: reply.created_at,
-        // 🔒 No user_id or display_name to protect user privacy
+        ...reply,
+        display_name: profilesMap.get(reply.user_id) || null,
       })) || [];
 
       setReplies(mappedReplies);
@@ -147,12 +156,16 @@ export default function PostDetail() {
 
         <div className="space-y-4">
           {replies.map(reply => {
+            // Get author display name (replies are never anonymous in current schema)
+            const authorName = reply.display_name || obfuscateEmail(user?.email || 'Unknown User');
+            
             return (
               <Card key={reply.id} className="p-6">
                 <p className="text-muted-foreground mb-3 whitespace-pre-wrap">
                   {reply.content}
                 </p>
-                <div className="flex items-center justify-end text-sm text-muted-foreground">
+                <div className="flex items-center justify-between text-sm text-muted-foreground">
+                  <span>Reply by {authorName}</span>
                   <span>
                     {formatDistanceToNow(new Date(reply.created_at), {
                       addSuffix: true
