@@ -310,7 +310,7 @@ export type Database = {
           is_anonymous?: boolean | null
           title?: string | null
           upvotes?: number | null
-          user_id?: never
+          user_id?: string | null
         }
         Update: {
           category?: Database["public"]["Enums"]["post_category"] | null
@@ -320,7 +320,7 @@ export type Database = {
           is_anonymous?: boolean | null
           title?: string | null
           upvotes?: number | null
-          user_id?: never
+          user_id?: string | null
         }
         Relationships: []
       }
