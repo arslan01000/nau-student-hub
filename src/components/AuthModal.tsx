@@ -139,8 +139,12 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     setLoading(true);
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(
-        email.trim()
-      );
+  email.trim(),
+  {
+    redirectTo: `${window.location.origin}/reset-password`,
+  }
+);
+
 
       if (error) throw error;
 
