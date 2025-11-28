@@ -33,9 +33,9 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Hero Section - Minimalistic */}
-      <section className="relative py-32 md:py-40 px-4 overflow-hidden">
+      <section className="relative py-32 md:py-40 px-4 overflow-hidden grid-pattern">
         {/* Grid Pattern Background */}
-        <div className="absolute inset-0 grid-pattern opacity-30"></div>
+        <div className="absolute inset-0"></div>
 
         <div className="container mx-auto max-w-7xl relative z-10">
           <div className="max-w-4xl mx-auto text-center space-y-8">

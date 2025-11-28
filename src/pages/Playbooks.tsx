@@ -52,8 +52,8 @@ const Playbooks = () => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Hero Section */}
-      <section className="relative py-24 md:py-32 px-4 overflow-hidden">
-        <div className="absolute inset-0 grid-pattern opacity-30"></div>
+      <section className="relative py-24 md:py-32 px-4 overflow-hidden grid-pattern">
+        <div className="absolute inset-0"></div>
 
         <div className="container mx-auto max-w-7xl relative z-10">
           <div className="max-w-3xl">
