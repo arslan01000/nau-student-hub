@@ -127,6 +127,31 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       setLoading(false);
     }
   };
+    const handlePasswordReset = async () => {
+    if (!email.trim()) {
+      setErrors((prev) => ({
+        ...prev,
+        email: "Enter your email to reset your password",
+      }));
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(
+        email.trim()
+      );
+
+      if (error) throw error;
+
+      toast.success("Password reset link sent. Check your email.");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to send reset link");
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   const resetForm = () => {
     setEmail("");
@@ -178,11 +203,12 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   <p className="text-sm text-destructive">{errors.password}</p>
                 )}
                 <button
-  type="button"
-  className="text-xs text-primary underline mt-1"
->
-  Forgot your password?
-</button>
+                  type="button"
+                  className="text-xs text-primary underline mt-1"
+                  onClick={handlePasswordReset}
+                  >
+                  Forgot your password?
+                </button>
 
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
