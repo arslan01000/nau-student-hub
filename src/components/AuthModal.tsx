@@ -177,6 +177,13 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                 {errors.password && (
                   <p className="text-sm text-destructive">{errors.password}</p>
                 )}
+                <button
+  type="button"
+  className="text-xs text-primary underline mt-1"
+>
+  Forgot your password?
+</button>
+
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Signing in..." : "Sign In"}
