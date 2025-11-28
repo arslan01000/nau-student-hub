@@ -296,31 +296,13 @@ export type Database = {
           category: Database["public"]["Enums"]["post_category"] | null
           content: string | null
           created_at: string | null
+          display_name: string | null
           id: string | null
           is_anonymous: boolean | null
+          reply_count: number | null
           title: string | null
           upvotes: number | null
           user_id: string | null
-        }
-        Insert: {
-          category?: Database["public"]["Enums"]["post_category"] | null
-          content?: string | null
-          created_at?: string | null
-          id?: string | null
-          is_anonymous?: boolean | null
-          title?: string | null
-          upvotes?: number | null
-          user_id?: string | null
-        }
-        Update: {
-          category?: Database["public"]["Enums"]["post_category"] | null
-          content?: string | null
-          created_at?: string | null
-          id?: string | null
-          is_anonymous?: boolean | null
-          title?: string | null
-          upvotes?: number | null
-          user_id?: string | null
         }
         Relationships: []
       }
