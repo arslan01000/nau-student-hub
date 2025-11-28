@@ -1,6 +1,7 @@
 import { Card } from "./ui/card";
 import { Star, TrendingUp, Award, ThumbsUp } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { getUserDisplayName } from "@/utils/userDisplay";
 import { useNavigate } from "react-router-dom";
 
 interface ReviewCardProps {
@@ -10,6 +11,8 @@ interface ReviewCardProps {
   text: string;
   createdAt: string;
   isAnonymous: boolean;
+  displayName?: string | null;
+  email?: string | null;
   professorId?: string;
   difficultyRating?: number;
   gradeReceived?: string | null;
@@ -23,11 +26,14 @@ export const ReviewCard = ({
   text,
   createdAt,
   isAnonymous,
+  displayName,
+  email,
   professorId,
   difficultyRating,
   gradeReceived,
   wouldTakeAgain,
 }: ReviewCardProps) => {
+  const reviewerName = getUserDisplayName(isAnonymous, displayName, email);
   const navigate = useNavigate();
   
   const handleProfessorClick = () => {
@@ -82,7 +88,8 @@ export const ReviewCard = ({
       </div>
 
       <p className="text-muted-foreground mb-3">{text}</p>
-      <div className="flex items-center justify-end text-sm text-muted-foreground">
+      <div className="flex items-center justify-between text-sm text-muted-foreground">
+        <span>Review by {reviewerName}</span>
         <span>{formatDistanceToNow(new Date(createdAt), { addSuffix: true })}</span>
       </div>
     </Card>
