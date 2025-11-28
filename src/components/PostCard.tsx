@@ -3,7 +3,6 @@ import { Badge } from "./ui/badge";
 import { ThumbsUp, MessageCircle } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
-import { getUserDisplayName } from "@/utils/userDisplay";
 
 interface PostCardProps {
   id: string;
@@ -14,8 +13,6 @@ interface PostCardProps {
   upvotes: number;
   createdAt: string;
   replyCount?: number;
-  displayName?: string | null;
-  email?: string | null;
 }
 
 const categoryColors: Record<string, string> = {
@@ -36,10 +33,7 @@ export const PostCard = ({
   upvotes,
   createdAt,
   replyCount = 0,
-  displayName,
-  email,
 }: PostCardProps) => {
-  const displayedName = getUserDisplayName(isAnonymous, displayName, email);
   const categoryLabel = category.replace("_", " / ").toUpperCase();
 
   return (
@@ -63,7 +57,6 @@ export const PostCard = ({
             <MessageCircle size={16} />
             <span>{replyCount}</span>
           </div>
-          <span>Posted by {displayedName}</span>
           <span className="ml-auto">
             {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
           </span>
