@@ -189,7 +189,7 @@ If you study consistently, use ModernStates, and plan your exams wisely, CLEP ca
     author: "Azamat Salamatov",
     major: "Computer Science",
     graduationYear: "2024",
-    tag: "US Life", "Immigration",
+    tag: "US Life",
     intro:
       "One of the most useful things you can do as a new student in Texas is to get a driver’s license. Here’s a practical, no-fluff guide based on what actually works.",
     content: `
@@ -784,9 +784,9 @@ USCIS публикует **H-1B Employer Data Hub** — базу данных р
   content: `
 ## Where to Check
 
-- NAU Threads Reviews (primary source — actually has NAU professors reviewed)
-- Ask upperclassmen in your major
-- RateMyProfessors (optional — almost no NAU reviews, so not very useful)
+- RateMyProfessors (very rough but useful)
+- NAU Threads Reviews
+- Ask students in your major
 
 ## What to Look For
 
@@ -821,60 +821,48 @@ Ask upperclassmen — they know everything.
   {
   id: "campus-jobs",
   title: "On-Campus Jobs: Quick Guide",
-  description: "A clear, accurate overview of how to find and apply for campus jobs at NAU.",
+  description: "Fast overview of how to find and apply for campus jobs at NAU.",
   author: "NAU Student Contributor",
   major: "Criminal Justice",
   graduationYear: "2025",
   tag: "Career",
-  intro: "On-campus jobs at NAU are part-time, flexible, and limited to 20 hours/week. Here’s how hiring usually works and what NAU officially requires.",
+  intro: "On-campus jobs are flexible and student-friendly. Here’s the quick version of how NAU students usually get hired.",
   content: `
-## What NAU Says About Student Jobs
+## Why Work On Campus?
 
-- Student employees are part-time and must be currently enrolled  
-- Maximum: **20 hours/week** (important for F-1 visa students)  
-- All positions are temporary and hourly  
-- Working more than 20 hours/week can violate international student visa status  
+- Flexible hours  
+- Close to classes  
+- Good for your resume  
+- Allowed for F-1 students
 
-## Common On-Campus Jobs at NAU
+## Common Campus Jobs
 
-These positions change each semester, but typically include:  
-- Athletics Department student assistants  
-- UMCR / Sports Information statistician roles  
-- Library & tutoring center help  
-- Office and administrative assistants  
-- IT, labs, and student life support  
-- Event staff & recreation center
+- Library  
+- Labs & tutoring center  
+- Office assistant  
+- Gym/recreation  
+- Events & student life  
 
-## How to Apply at NAU
+## How to Apply
 
-1. **Check the official NAU Student Jobs page** — new openings appear here first  
-2. Read each listing’s instructions (most roles say “apply as directed”)  
-3. Prepare a short, clean **1-page resume**  
-4. Optional but helpful: visit **Career & Alumni Services** for resume/cover-letter support  
-5. Submit your application early — positions are limited and fill quickly  
+1. Check NAU Career Services / student jobs portal  
+2. Prepare a simple 1-page resume  
+3. Apply early in the semester  
+4. Follow up politely  
 
-## What to Expect From the Hiring Process
+## Interview Prep
 
-- Schedules are flexible around classes  
-- Most roles allow up to 20 hours/week  
-- Offices may ask for availability, reliability, or basic skills  
-- Some positions are filled quickly through “first qualified applicant”  
+- Why do you want this job?  
+- What’s your class schedule?  
+- Are you reliable on deadlines?
 
-## Interview Prep For NAU Jobs
+## Quick Tips
 
-Typical questions you may hear:  
-- What is your class schedule and availability?  
-- Why do you want this specific student job?  
-- Are you comfortable with basic office, event, or support tasks?
+- Start with the easiest roles first  
+- Be on time  
+- Communicate early if you can’t attend a shift  
 
-## Quick Tips From NAU Students
-
-- Apply at the start of the semester for the best chances  
-- Follow instructions **exactly** as listed on the job posting  
-- Be professional — even student jobs require reliability  
-- If you're international, **never exceed 20 hours/week**
-
-Most NAU students get hired after a few applications, especially if they apply early and check the jobs page regularly.
+Most students get a job after 1–3 applications.
     `,
 },
   {
