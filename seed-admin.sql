@@ -2,15 +2,15 @@
 -- 
 -- Instructions:
 -- 1. Replace 'YOUR-USER-ID-HERE' with your actual user ID from auth.users
--- 2. Run this in the Lovable Cloud SQL editor or Supabase dashboard
+-- 2. Run this in your project's SQL editor (e.g., Supabase SQL Editor)
 --
 -- To find your user ID:
 -- SELECT id, email FROM auth.users WHERE email = 'your-email@example.com';
 
--- Add admin role to your user
+-- Grant admin role to your user
 INSERT INTO public.user_roles (user_id, role)
 VALUES (
-  'YOUR-USER-ID-HERE',  -- Replace with your actual user ID
+  'YOUR-USER-ID-HERE',   -- Replace with your actual user ID
   'admin'::app_role
 )
 ON CONFLICT DO NOTHING;
