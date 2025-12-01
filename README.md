@@ -34,17 +34,3 @@ A modern web application for NAU students to share reviews, browse student-creat
 - Node.js (LTS recommended, e.g. 18+)
 - npm or pnpm or yarn
 
-### Installation
-
-```bash
-# 1. Clone the repository
-git clone <YOUR_REPO_URL>
-
-# 2. Go into the project folder
-cd <YOUR_PROJECT_NAME>
-
-# 3. Install dependencies
-npm install
-
-# 4. Start the dev server
-npm run dev
