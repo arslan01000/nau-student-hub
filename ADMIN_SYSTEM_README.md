@@ -1,7 +1,7 @@
-# NAU Threads Admin System v1 - Implementation Summary
+# NAU Students Hub Admin System v1 - Implementation Summary
 
 ## Overview
-This document describes the admin system implementation for NAU Threads, including moderation capabilities, role-based access control, and security measures.
+This document describes the admin system implementation for NAU Students Hub, including moderation capabilities, role-based access control, and security measures.
 
 ## 🎯 What Was Implemented
 
@@ -23,7 +23,7 @@ This document describes the admin system implementation for NAU Threads, includi
 - ✅ Status workflow: `pending` → `approved` / `rejected`
 - ✅ Student submissions automatically set to `pending`
 - ✅ Success message: "Your playbook was submitted and is waiting for approval"
-- ✅ Admin can approve/reject with single click
+- ✅ Admin can approve/reject with a single click
 - ✅ Public page shows only `approved` playbooks
 - ✅ Renamed database columns: `reviewed_by` → `approved_by`, `reviewed_at` → `approved_at`
 
@@ -67,7 +67,8 @@ This document describes the admin system implementation for NAU Threads, includi
 1. **Find your user ID**:
    - Log into your app
    - Go to Settings or check the navbar where your email is displayed
-   - OR run this in Lovable Cloud SQL editor:
+   - OR run this in your SQL editor (e.g., Supabase):
+
      ```sql
      SELECT id, email FROM auth.users WHERE email = 'your-email@example.com';
      ```
@@ -75,13 +76,13 @@ This document describes the admin system implementation for NAU Threads, includi
 2. **Run the seed script**:
    - Open `seed-admin.sql`
    - Replace `'YOUR-USER-ID-HERE'` with your actual user ID
-   - Run it in Lovable Cloud SQL editor
-   
-   ```sql
-   INSERT INTO public.user_roles (user_id, role)
-   VALUES ('your-actual-user-id', 'admin'::app_role)
-   ON CONFLICT DO NOTHING;
-   ```
+   - Run it in the database SQL editor
+
+     ```sql
+     INSERT INTO public.user_roles (user_id, role)
+     VALUES ('your-actual-user-id', 'admin'::app_role)
+     ON CONFLICT DO NOTHING;
+     ```
 
 3. **Verify**:
    - Refresh your app
@@ -178,7 +179,7 @@ This document describes the admin system implementation for NAU Threads, includi
 ## 📖 Notes
 
 - Security warnings about existing views (posts_view, reviews_view) are pre-existing and not related to this migration
-- The system uses Lovable Cloud (Supabase) for backend
+- The system uses Supabase for the backend
 - All admin actions are logged through Supabase's built-in audit system
 - Deleted duplicate reviews (kept most recent) before adding unique constraint
 
