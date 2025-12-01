@@ -84,7 +84,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       });
 
       if (error) throw error;
-      toast.success("Account created! Please verify your email before signing in.");
+      toast.success("Welcome to NAU Threads!");
       onClose();
       resetForm();
     } catch (error: any) {
@@ -118,13 +118,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         password,
       });
 
-      if (error) {
-        // Handle email not verified error
-        if (error.message.toLowerCase().includes('email not confirmed')) {
-          throw new Error("Please verify your email — check your inbox.");
-        }
-        throw error;
-      }
+      if (error) throw error;
       toast.success("Welcome back!");
       onClose();
       resetForm();
