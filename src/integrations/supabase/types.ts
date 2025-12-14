@@ -54,6 +54,7 @@ export type Database = {
           description: string
           external_links: string[] | null
           id: string
+          intro: string | null
           status: string
           tags: string[]
           title: string
@@ -72,6 +73,7 @@ export type Database = {
           description: string
           external_links?: string[] | null
           id?: string
+          intro?: string | null
           status?: string
           tags: string[]
           title: string
@@ -90,6 +92,7 @@ export type Database = {
           description?: string
           external_links?: string[] | null
           id?: string
+          intro?: string | null
           status?: string
           tags?: string[]
           title?: string
