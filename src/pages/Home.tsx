@@ -1,39 +1,128 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { PostCard } from "@/components/PostCard";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, MessageSquare, Star, FileText, TrendingUp, Users, BookOpen } from "lucide-react";
+import { Loader2, MessageSquare, Star, FileText, Users, BookOpen, ThumbsUp } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { formatDistanceToNow } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface HomeProps {
   onLoginClick: () => void;
 }
 
+interface FeedItem {
+  id: string;
+  type: 'discussion' | 'review';
+  title: string;
+  content: string;
+  category: string;
+  upvotes: number;
+  replyCount: number;
+  createdAt: string;
+  displayName: string | null;
+  isAnonymous: boolean;
+  // For reviews
+  professorId?: string;
+}
+
+const categoryColors: { [key: string]: string } = {
+  professors: "bg-purple-500/20 text-purple-400 border-purple-500/30",
+  courses: "bg-blue-500/20 text-blue-400 border-blue-500/30",
+  internships: "bg-green-500/20 text-green-400 border-green-500/30",
+  opt_cpt: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
+  campus_life: "bg-pink-500/20 text-pink-400 border-pink-500/30",
+  buy_sell: "bg-orange-500/20 text-orange-400 border-orange-500/30",
+  review: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+};
+
 export default function Home({ onLoginClick }: HomeProps) {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [posts, setPosts] = useState<any[]>([]);
+  const [feedItems, setFeedItems] = useState<FeedItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchPosts();
+    fetchFeedItems();
   }, []);
 
-  const fetchPosts = async () => {
+  const fetchFeedItems = async () => {
     try {
-      const { data, error } = await supabase
-        .from("posts_view")
-        .select("*")
-        .order("created_at", { ascending: false })
-        .limit(6);
+      // Fetch posts and reviews in parallel
+      const [postsResult, reviewsResult] = await Promise.all([
+        supabase
+          .from("posts_view")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(6),
+        supabase
+          .from("reviews_view")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(6)
+      ]);
 
-      if (error) throw error;
-      setPosts(data || []);
+      const posts = (postsResult.data || []).map((post): FeedItem => ({
+        id: post.id!,
+        type: 'discussion',
+        title: post.title || '',
+        content: post.content || '',
+        category: post.category || 'campus_life',
+        upvotes: post.upvotes || 0,
+        replyCount: post.reply_count || 0,
+        createdAt: post.created_at || '',
+        displayName: post.display_name,
+        isAnonymous: post.is_anonymous || false,
+      }));
+
+      const reviews = (reviewsResult.data || []).map((review): FeedItem => ({
+        id: review.id!,
+        type: 'review',
+        title: review.professor_name 
+          ? `Review: ${review.professor_name}` 
+          : `Review: ${review.course_code}`,
+        content: review.text || '',
+        category: 'review',
+        upvotes: 0,
+        replyCount: 0,
+        createdAt: review.created_at || '',
+        displayName: null,
+        isAnonymous: review.is_anonymous || true,
+        professorId: review.professor_id || undefined,
+      }));
+
+      // Merge and sort by created_at DESC
+      const merged = [...posts, ...reviews]
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .slice(0, 6);
+
+      setFeedItems(merged);
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      console.error("Error fetching feed items:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const formatCategory = (category: string) => {
+    if (category === 'review') return 'REVIEW';
+    return category.replace("_", " / ").toUpperCase();
+  };
+
+  const getDisplayName = (item: FeedItem) => {
+    if (item.isAnonymous) return "Anonymous";
+    if (item.displayName) return item.displayName;
+    return "Unknown User";
+  };
+
+  const handleItemClick = (item: FeedItem) => {
+    if (item.type === 'discussion') {
+      navigate(`/discussions/${item.id}`);
+    } else if (item.type === 'review' && item.professorId) {
+      navigate(`/professors/${item.professorId}`);
+    } else {
+      navigate('/reviews');
     }
   };
 
@@ -155,12 +244,12 @@ export default function Home({ onLoginClick }: HomeProps) {
         </div>
       </section>
 
-      {/* Latest Discussions */}
+      {/* Latest Discussions & Reviews */}
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="flex items-center justify-between mb-12">
             <div>
-              <h2 className="text-4xl font-serif mb-2">Latest Discussions</h2>
+              <h2 className="text-4xl font-serif mb-2">Latest Discussions & Reviews</h2>
               <p className="text-sm text-muted-foreground">See what the community is talking about</p>
             </div>
             <Link to="/discussions">
@@ -175,27 +264,53 @@ export default function Home({ onLoginClick }: HomeProps) {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 gap-6">
-              {posts.map((post) => (
-                <PostCard
-                  key={post.id}
-                  id={post.id}
-                  title={post.title}
-                  content={post.content}
-                  category={post.category}
-                  isAnonymous={post.is_anonymous}
-                  upvotes={post.upvotes}
-                  createdAt={post.created_at}
-                  displayName={post.displayName}
-                  email={post.email}
-                />
+              {feedItems.map((item) => (
+                <Card 
+                  key={`${item.type}-${item.id}`}
+                  className="group cursor-pointer hover:border-muted-foreground/50 transition-colors bg-card/50"
+                  onClick={() => handleItemClick(item)}
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between gap-4 mb-3">
+                      <h3 className="font-serif text-lg text-foreground group-hover:text-foreground/80 line-clamp-1">
+                        {item.title}
+                      </h3>
+                      <Badge 
+                        variant="outline" 
+                        className={`shrink-0 text-xs ${categoryColors[item.category] || categoryColors.campus_life}`}
+                      >
+                        {formatCategory(item.category)}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+                      {item.content}
+                    </p>
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <div className="flex items-center gap-4">
+                        <span className="flex items-center gap-1">
+                          <ThumbsUp className="w-3.5 h-3.5" />
+                          {item.upvotes}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <MessageSquare className="w-3.5 h-3.5" />
+                          {item.replyCount}
+                        </span>
+                        <span>Posted by {getDisplayName(item)}</span>
+                      </div>
+                      <span>
+                        {item.createdAt && formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           )}
-          {!loading && posts.length === 0 && (
+          {!loading && feedItems.length === 0 && (
             <div className="text-center py-20 bg-card/50 rounded-2xl border border-border/50">
               <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
               <p className="text-muted-foreground text-lg">
-                No discussions yet. Be the first to start one!
+                No discussions or reviews yet. Be the first to start one!
               </p>
             </div>
           )}
