@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BookOpen } from "lucide-react";
-import { useState, useMemo } from "react";
+import { ArrowRight, BookOpen, Loader2 } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { AuthModal } from "@/components/AuthModal";
-import { playbooks as staticPlaybooks, Playbook } from "@/data/playbooks";
+import { supabase } from "@/integrations/supabase/client";
 
 const allTags = [
   "All",
@@ -16,30 +16,59 @@ const allTags = [
   "Money",
 ];
 
+interface PlaybookData {
+  id: string;
+  title: string;
+  description: string;
+  author_name: string;
+  author_major: string | null;
+  author_grad_year: string | null;
+  tags: string[];
+  views: number;
+}
+
 const Playbooks = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [selectedTag, setSelectedTag] = useState("All");
   const [sortBy, setSortBy] = useState<"newest" | "az">("newest");
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [playbooks, setPlaybooks] = useState<PlaybookData[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  // фильтрация + сортировка поверх статичного массива
+  useEffect(() => {
+    const fetchPlaybooks = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("playbooks")
+        .select("id, title, description, author_name, author_major, author_grad_year, tags, views")
+        .eq("status", "approved")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching playbooks:", error);
+      } else {
+        setPlaybooks(data || []);
+      }
+      setLoading(false);
+    };
+
+    fetchPlaybooks();
+  }, []);
+
   const filteredPlaybooks = useMemo(() => {
-    let result: Playbook[] = staticPlaybooks;
+    let result = playbooks;
 
     if (selectedTag !== "All") {
-      result = result.filter((p) => p.tag === selectedTag);
+      result = result.filter((p) => p.tags?.includes(selectedTag));
     }
 
     if (sortBy === "az") {
       result = [...result].sort((a, b) => a.title.localeCompare(b.title));
-    } else {
-      // "newest" — оставляем порядок, как в файле (или можно развернуть)
-      result = [...result];
     }
 
     return result;
-  }, [selectedTag, sortBy]);
+  }, [playbooks, selectedTag, sortBy]);
 
   const handleSubmitClick = () => {
     if (!user) {
@@ -105,7 +134,11 @@ const Playbooks = () => {
       {/* Playbooks Grid */}
       <section className="py-8 px-4">
         <div className="container mx-auto max-w-7xl">
-          {filteredPlaybooks.length === 0 ? (
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : filteredPlaybooks.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">
                 {selectedTag === "All"
@@ -124,9 +157,14 @@ const Playbooks = () => {
                   <div className="h-full p-6 rounded-lg border border-border bg-card/30 hover:bg-card/50 transition-all duration-300 hover:border-border/50">
                     {/* Tag */}
                     <div className="flex flex-wrap gap-1 mb-4">
-                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-xs text-foreground">
-                        {playbook.tag}
-                      </span>
+                      {playbook.tags?.slice(0, 2).map((tag) => (
+                        <span
+                          key={tag}
+                          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-xs text-foreground"
+                        >
+                          {tag}
+                        </span>
+                      ))}
                     </div>
 
                     {/* Title */}
@@ -143,13 +181,13 @@ const Playbooks = () => {
                     <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/50">
                       <div>
                         <p className="text-sm font-medium text-foreground">
-                          {playbook.author}
+                          {playbook.author_name}
                         </p>
-                        {(playbook.major || playbook.graduationYear) && (
+                        {(playbook.author_major || playbook.author_grad_year) && (
                           <p className="text-xs text-muted-foreground">
-                            {playbook.major}
-                            {playbook.graduationYear &&
-                              ` • Class of ${playbook.graduationYear}`}
+                            {playbook.author_major}
+                            {playbook.author_grad_year &&
+                              ` • Class of ${playbook.author_grad_year}`}
                           </p>
                         )}
                       </div>
