@@ -137,26 +137,35 @@ export type Database = {
       professors: {
         Row: {
           created_at: string
+          created_by_user_id: string | null
           department: string
           full_name: string
           id: string
+          name_normalized: string | null
           school: string
+          source: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
+          created_by_user_id?: string | null
           department: string
           full_name: string
           id?: string
+          name_normalized?: string | null
           school?: string
+          source?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
+          created_by_user_id?: string | null
           department?: string
           full_name?: string
           id?: string
+          name_normalized?: string | null
           school?: string
+          source?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -357,6 +366,7 @@ export type Database = {
         Args: { playbook_id: string }
         Returns: undefined
       }
+      normalize_professor_name: { Args: { name: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
