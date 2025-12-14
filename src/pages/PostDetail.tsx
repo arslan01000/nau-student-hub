@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDistanceToNow } from "date-fns";
 import { ThumbsUp, MessageCircle, Loader2 } from "lucide-react";
@@ -16,6 +18,7 @@ export default function PostDetail() {
   const [post, setPost] = useState<any>(null);
   const [replies, setReplies] = useState<any[]>([]);
   const [newReply, setNewReply] = useState("");
+  const [isAnonymous, setIsAnonymous] = useState(false);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
   useEffect(() => {
@@ -59,20 +62,24 @@ export default function PostDetail() {
       // Fetch profiles for reply authors
       const { data: profilesData, error: profilesError } = await supabase
         .from("profiles")
-        .select("id, display_name");
+        .select("id, display_name, username");
 
       if (profilesError) throw profilesError;
 
-      const profilesMap = new Map<string, string | null>();
+      const profilesMap = new Map<string, { display_name: string | null, username: string | null }>();
       profilesData?.forEach(p => {
-        profilesMap.set(p.id, p.display_name);
+        profilesMap.set(p.id, { display_name: p.display_name, username: p.username });
       });
 
       // Map replies with author display names
-      const mappedReplies = repliesData?.map((reply: any) => ({
-        ...reply,
-        display_name: profilesMap.get(reply.user_id) || null,
-      })) || [];
+      const mappedReplies = repliesData?.map((reply: any) => {
+        const profile = profilesMap.get(reply.user_id);
+        return {
+          ...reply,
+          display_name: profile?.display_name || null,
+          user_email: profile?.username ? `${profile.username}@` : null,
+        };
+      }) || [];
 
       setReplies(mappedReplies);
     } catch (error) {
@@ -91,10 +98,12 @@ export default function PostDetail() {
       } = await supabase.from("replies").insert({
         post_id: id,
         content: newReply,
-        user_id: user.id
+        user_id: user.id,
+        is_anonymous: isAnonymous
       });
       if (error) throw error;
       setNewReply("");
+      setIsAnonymous(false);
       fetchReplies();
       toast.success("Reply posted!");
     } catch (error: any) {
@@ -148,6 +157,18 @@ export default function PostDetail() {
           <h2 className="text-2xl mb-4 font-serif font-medium">Replies ({replies.length})</h2>
           <Card className="p-6">
             <Textarea value={newReply} onChange={e => setNewReply(e.target.value)} placeholder={user ? "Write a reply..." : "Please login to reply"} rows={4} disabled={!user} className="mb-4" />
+            {user && (
+              <div className="flex items-start space-x-2 mb-4">
+                <Checkbox
+                  id="anonymous-reply"
+                  checked={isAnonymous}
+                  onCheckedChange={(checked) => setIsAnonymous(checked as boolean)}
+                />
+                <Label htmlFor="anonymous-reply" className="cursor-pointer text-sm text-muted-foreground leading-relaxed">
+                  Post as Anonymous
+                </Label>
+              </div>
+            )}
             <Button onClick={handleReply} disabled={!user || !newReply.trim()}>
               Post Reply
             </Button>
@@ -156,8 +177,10 @@ export default function PostDetail() {
 
         <div className="space-y-4">
           {replies.map(reply => {
-            // Get author display name (replies are never anonymous in current schema)
-            const authorName = reply.display_name || obfuscateEmail(user?.email || 'Unknown User');
+            // Get author display name - if anonymous, show "Anonymous"
+            const authorName = reply.is_anonymous 
+              ? "Anonymous" 
+              : (reply.display_name || obfuscateEmail(reply.user_email || 'Unknown User'));
             
             return (
               <Card key={reply.id} className="p-6">

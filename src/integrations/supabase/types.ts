@@ -196,6 +196,7 @@ export type Database = {
           content: string
           created_at: string | null
           id: string
+          is_anonymous: boolean | null
           post_id: string
           user_id: string
         }
@@ -203,6 +204,7 @@ export type Database = {
           content: string
           created_at?: string | null
           id?: string
+          is_anonymous?: boolean | null
           post_id: string
           user_id: string
         }
@@ -210,6 +212,7 @@ export type Database = {
           content?: string
           created_at?: string | null
           id?: string
+          is_anonymous?: boolean | null
           post_id?: string
           user_id?: string
         }
