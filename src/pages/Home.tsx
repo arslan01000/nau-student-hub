@@ -112,7 +112,7 @@ export default function Home({ onLoginClick }: HomeProps) {
               </div>
               <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
                 <MessageSquare className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm text-foreground">Is 4 classes too much in one semester? • 9 replies</span>
+                <span className="text-sm text-foreground">Is 5 classes too much in one semester? • 9 replies</span>
               </div>
               <div className="inline-flex items-center gap-3 px-4 py-3 bg-card/50 backdrop-blur border border-border rounded-lg">
                 <MessageSquare className="w-4 h-4 text-muted-foreground" />
