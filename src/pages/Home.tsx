@@ -70,7 +70,7 @@ export default function Home({ onLoginClick }: HomeProps) {
                   Explore Professor Reviews
                 </Button>
               </Link>
-              <Link to="/create">
+              <Link to={user ? "/create" : "/discussions"}>
                 <Button size="lg" variant="outline" className="w-full sm:w-auto text-base px-8 h-12">
                   Ask a Question
                 </Button>
