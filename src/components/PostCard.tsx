@@ -4,6 +4,9 @@ import { ThumbsUp, MessageCircle } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Link } from "react-router-dom";
 import { getUserDisplayName } from "@/utils/userDisplay";
+import { useLike } from "@/hooks/useLike";
+import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
 
 interface PostCardProps {
   id: string;
@@ -39,8 +42,16 @@ export const PostCard = ({
   displayName,
   email,
 }: PostCardProps) => {
+  const { user } = useAuth();
+  const { liked, count, loading, toggleLike } = useLike("post", id, upvotes, user?.id || null);
   const displayedName = getUserDisplayName(isAnonymous, displayName, email);
   const categoryLabel = category.replace("_", " / ").toUpperCase();
+
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleLike();
+  };
 
   return (
     <Link to={`/post/${id}`}>
@@ -55,10 +66,17 @@ export const PostCard = ({
         </div>
         <p className="text-muted-foreground line-clamp-2 mb-4">{content}</p>
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <ThumbsUp size={16} />
-            <span>{upvotes}</span>
-          </div>
+          <button
+            onClick={handleLikeClick}
+            disabled={loading}
+            className={cn(
+              "flex items-center gap-1 transition-colors hover:text-primary",
+              liked && "text-primary"
+            )}
+          >
+            <ThumbsUp size={16} className={cn(liked && "fill-primary")} />
+            <span>{count}</span>
+          </button>
           <div className="flex items-center gap-1">
             <MessageCircle size={16} />
             <span>{replyCount}</span>

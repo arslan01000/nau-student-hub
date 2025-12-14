@@ -101,6 +101,42 @@ export type Database = {
         }
         Relationships: []
       }
+      post_likes: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts: {
         Row: {
           category: Database["public"]["Enums"]["post_category"]
@@ -233,6 +269,42 @@ export type Database = {
           },
         ]
       }
+      review_likes: {
+        Row: {
+          created_at: string
+          id: string
+          review_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          review_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          review_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_likes_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "reviews"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "review_likes_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "reviews_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reviews: {
         Row: {
           course_code: string
@@ -241,6 +313,7 @@ export type Database = {
           grade_received: string | null
           id: string
           is_anonymous: boolean | null
+          likes_count: number
           overall_rating: number | null
           professor_id: string | null
           rating: number
@@ -255,6 +328,7 @@ export type Database = {
           grade_received?: string | null
           id?: string
           is_anonymous?: boolean | null
+          likes_count?: number
           overall_rating?: number | null
           professor_id?: string | null
           rating: number
@@ -269,6 +343,7 @@ export type Database = {
           grade_received?: string | null
           id?: string
           is_anonymous?: boolean | null
+          likes_count?: number
           overall_rating?: number | null
           professor_id?: string | null
           rating?: number
@@ -370,6 +445,8 @@ export type Database = {
         Returns: undefined
       }
       normalize_professor_name: { Args: { name: string }; Returns: string }
+      toggle_post_like: { Args: { p_post_id: string }; Returns: boolean }
+      toggle_review_like: { Args: { p_review_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

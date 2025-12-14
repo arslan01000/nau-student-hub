@@ -27,6 +27,7 @@ interface Review {
   is_anonymous: boolean;
   display_name: string | null;
   email: string | null;
+  likes_count: number;
 }
 
 interface AggregatedStats {
@@ -87,6 +88,7 @@ export default function ProfessorProfile() {
         ...review,
         display_name: profilesMap.get(review.user_id) || null,
         email: null,
+        likes_count: review.likes_count || 0,
       })) || [];
 
       setReviews(mappedReviews);
@@ -207,6 +209,7 @@ export default function ProfessorProfile() {
               {reviews.map((review) => (
                 <ReviewCard
                   key={review.id}
+                  id={review.id}
                   professorName={professor.full_name}
                   courseCode={review.course_code}
                   rating={review.overall_rating || 0}
@@ -218,6 +221,7 @@ export default function ProfessorProfile() {
                   difficultyRating={review.difficulty_rating}
                   gradeReceived={review.grade_received}
                   wouldTakeAgain={review.would_take_again}
+                  likesCount={review.likes_count}
                 />
               ))}
             </div>

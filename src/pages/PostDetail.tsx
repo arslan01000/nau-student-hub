@@ -11,6 +11,52 @@ import { formatDistanceToNow } from "date-fns";
 import { ThumbsUp, MessageCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { getUserDisplayName, obfuscateEmail } from "@/utils/userDisplay";
+import { useLike } from "@/hooks/useLike";
+import { cn } from "@/lib/utils";
+
+// Inline like button component for the post detail
+function PostLikeButton({ 
+  postId, 
+  initialCount, 
+  userId, 
+  repliesCount, 
+  createdAt 
+}: { 
+  postId: string; 
+  initialCount: number; 
+  userId: string | null; 
+  repliesCount: number; 
+  createdAt: string;
+}) {
+  const { liked, count, loading, toggleLike } = useLike("post", postId, initialCount, userId);
+
+  return (
+    <div className="flex items-center gap-6 text-muted-foreground">
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleLike();
+        }}
+        disabled={loading}
+        className={cn(
+          "flex items-center gap-2 transition-colors hover:text-primary",
+          liked && "text-primary"
+        )}
+      >
+        <ThumbsUp size={20} className={cn(liked && "fill-primary")} />
+        <span>{count}</span>
+      </button>
+      <div className="flex items-center gap-2">
+        <MessageCircle size={20} />
+        <span>{repliesCount}</span>
+      </div>
+      <span className="ml-auto">
+        {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
+      </span>
+    </div>
+  );
+}
+
 export default function PostDetail() {
   const {
     id
@@ -123,7 +169,9 @@ export default function PostDetail() {
       </div>;
   }
   const categoryLabel = post.category.replace("_", " / ").toUpperCase();
-  return <div className="min-h-screen py-8 px-4">
+
+  return (
+    <div className="min-h-screen py-8 px-4">
       <div className="container mx-auto max-w-4xl">
         <Card className="p-8 mb-8">
           <div className="flex items-start justify-between mb-4">
@@ -136,21 +184,7 @@ export default function PostDetail() {
           <p className="text-lg text-muted-foreground mb-6 whitespace-pre-wrap">
             {post.content}
           </p>
-          <div className="flex items-center gap-6 text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <ThumbsUp size={20} />
-              <span>{post.upvotes}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <MessageCircle size={20} />
-              <span>{replies.length}</span>
-            </div>
-            <span className="ml-auto">
-              {formatDistanceToNow(new Date(post.created_at), {
-              addSuffix: true
-            })}
-            </span>
-          </div>
+          <PostLikeButton postId={post.id} initialCount={post.upvotes || 0} userId={user?.id || null} repliesCount={replies.length} createdAt={post.created_at} />
         </Card>
 
         <div className="mb-8">
@@ -200,5 +234,6 @@ export default function PostDetail() {
           })}
         </div>
       </div>
-    </div>;
+    </div>
+  );
 }
