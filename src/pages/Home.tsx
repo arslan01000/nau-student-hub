@@ -118,7 +118,7 @@ export default function Home({ onLoginClick }: HomeProps) {
 
   const handleItemClick = (item: FeedItem) => {
     if (item.type === 'discussion') {
-      navigate(`/discussions/${item.id}`);
+      navigate(`/post/${item.id}`);
     } else if (item.type === 'review' && item.professorId) {
       navigate(`/professors/${item.professorId}`);
     } else {
