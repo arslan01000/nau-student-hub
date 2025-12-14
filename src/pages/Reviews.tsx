@@ -493,6 +493,7 @@ export default function Reviews() {
             {filteredReviews.map((review) => (
               <ReviewCard
                 key={review.id}
+                id={review.id}
                 professorName={review.professor_name}
                 professorId={review.professor_id}
                 courseCode={review.course_code}
@@ -505,6 +506,7 @@ export default function Reviews() {
                 isAnonymous={review.is_anonymous}
                 displayName={review.display_name}
                 email={review.email}
+                likesCount={review.likes_count || 0}
               />
             ))}
           </div>
