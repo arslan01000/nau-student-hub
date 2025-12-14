@@ -15,25 +15,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { ProfessorSelector } from "@/components/ProfessorSelector";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, Search, Check, ChevronsUpDown } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { z } from "zod";
 import { useAuth } from "@/contexts/AuthContext";
-import { cn } from "@/lib/utils";
 
 const reviewSchema = z.object({
   professor_id: z
@@ -63,7 +50,6 @@ const reviewSchema = z.object({
 
 interface Professor {
   id: string;
-  title?: string;
   full_name: string;
   department: string;
 }
@@ -76,9 +62,8 @@ export default function Reviews() {
 
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [professors, setProfessors] = useState<Professor[]>([]);
+  const [selectedProfessor, setSelectedProfessor] = useState<Professor | null>(null);
   const [selectedProfessorId, setSelectedProfessorId] = useState("");
-  const [professorComboOpen, setProfessorComboOpen] = useState(false);
   const [courseCode, setCourseCode] = useState("");
   const [overallRating, setOverallRating] = useState("");
   const [difficultyRating, setDifficultyRating] = useState("");
@@ -92,7 +77,6 @@ export default function Reviews() {
 
   useEffect(() => {
     fetchReviews();
-    fetchProfessors();
   }, []);
 
   useEffect(() => {
@@ -101,17 +85,10 @@ export default function Reviews() {
     }
   }, [professorIdFromUrl]);
 
-  const fetchProfessors = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("professors")
-        .select("id, full_name, department")
-        .order("full_name");
-
-      if (error) throw error;
-      setProfessors(data || []);
-    } catch (error) {
-      console.error("Error fetching professors:", error);
+  const handleProfessorSelect = (professorId: string, professor?: Professor) => {
+    setSelectedProfessorId(professorId);
+    if (professor) {
+      setSelectedProfessor(professor);
     }
   };
 
@@ -221,6 +198,7 @@ export default function Reviews() {
 
       toast.success("Review submitted successfully!");
       setSelectedProfessorId("");
+      setSelectedProfessor(null);
       setCourseCode("");
       setOverallRating("");
       setDifficultyRating("");
@@ -286,77 +264,17 @@ export default function Reviews() {
           <h2 className="text-2xl font-bold mb-4">Add a Review</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="professor">Select Professor *</Label>
-                <Popover
-                  open={professorComboOpen}
-                  onOpenChange={setProfessorComboOpen}
-                >
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={professorComboOpen}
-                      className="w-full justify-between"
-                      disabled={!user}
-                    >
-                      {selectedProfessorId
-                        ? professors.find((p) => p.id === selectedProfessorId)
-                            ?.full_name
-                        : "Search for a professor..."}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[400px] p-0 bg-popover z-50">
-                    <Command>
-                      <CommandInput placeholder="Search professor..." />
-                      <CommandList>
-                        <CommandEmpty>No professor found.</CommandEmpty>
-                        <CommandGroup>
-                          {professors.map((prof) => (
-                            <CommandItem
-                              key={prof.id}
-                              value={`${prof.full_name} ${prof.department}`}
-                              onSelect={() => {
-                                setSelectedProfessorId(prof.id);
-                                setProfessorComboOpen(false);
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  selectedProfessorId === prof.id
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
-                              <span className="font-medium">
-                                {prof.title ? `${prof.title} ` : ""}
-                                {prof.full_name} – {prof.department}
-                              </span>
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                {errors.professor_id && (
-                  <p className="text-sm text-destructive">
-                    {errors.professor_id}
-                  </p>
-                )}
-              </div>
+              <ProfessorSelector
+                selectedProfessorId={selectedProfessorId}
+                onSelect={handleProfessorSelect}
+                disabled={!user}
+                error={errors.professor_id}
+              />
               <div className="space-y-2">
                 <Label htmlFor="department">Department</Label>
                 <Input
                   id="department"
-                  value={
-                    selectedProfessorId
-                      ? professors.find((p) => p.id === selectedProfessorId)
-                          ?.department || ""
-                      : ""
-                  }
+                  value={selectedProfessor?.department || ""}
                   placeholder="Select a professor first"
                   disabled
                   className="bg-muted"
