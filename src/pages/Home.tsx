@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { PostCard } from "@/components/PostCard";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2, MessageSquare, Star, FileText, TrendingUp, Users, BookOpen } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
-export default function Home() {
+interface HomeProps {
+  onLoginClick: () => void;
+}
+
+export default function Home({ onLoginClick }: HomeProps) {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -58,23 +65,32 @@ export default function Home() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 pt-6 justify-center">
-              <Link to="/discussions">
+              <Link to="/reviews">
                 <Button size="lg" className="w-full sm:w-auto text-base px-8 h-12">
-                  Browse Discussions
+                  Explore Professor Reviews
                 </Button>
               </Link>
-              <Link to="/discussions">
+              <Link to="/create">
                 <Button size="lg" variant="outline" className="w-full sm:w-auto text-base px-8 h-12">
                   Ask a Question
                 </Button>
               </Link>
             </div>
 
-            <Link to="/discussions">
-              <Button variant="ghost" size="lg" className="text-muted-foreground hover:text-foreground mt-4">
-                Join the Community →
-              </Button>
-            </Link>
+            <Button 
+              variant="ghost" 
+              size="lg" 
+              className="text-muted-foreground hover:text-foreground mt-4"
+              onClick={() => {
+                if (user) {
+                  navigate("/discussions");
+                } else {
+                  onLoginClick();
+                }
+              }}
+            >
+              Join the Community →
+            </Button>
           </div>
         </div>
 
