@@ -3,8 +3,12 @@ import { Star, TrendingUp, Award, ThumbsUp } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { getUserDisplayName } from "@/utils/userDisplay";
 import { useNavigate } from "react-router-dom";
+import { useLike } from "@/hooks/useLike";
+import { useAuth } from "@/contexts/AuthContext";
+import { cn } from "@/lib/utils";
 
 interface ReviewCardProps {
+  id?: string;
   professorName: string;
   courseCode: string;
   rating: number;
@@ -17,9 +21,11 @@ interface ReviewCardProps {
   difficultyRating?: number;
   gradeReceived?: string | null;
   wouldTakeAgain?: boolean | null;
+  likesCount?: number;
 }
 
 export const ReviewCard = ({
+  id,
   professorName,
   courseCode,
   rating,
@@ -32,13 +38,29 @@ export const ReviewCard = ({
   difficultyRating,
   gradeReceived,
   wouldTakeAgain,
+  likesCount = 0,
 }: ReviewCardProps) => {
+  const { user } = useAuth();
   const reviewerName = getUserDisplayName(isAnonymous, displayName, email);
   const navigate = useNavigate();
+  
+  const { liked, count, loading, toggleLike } = useLike(
+    "review", 
+    id || "", 
+    likesCount, 
+    user?.id || null
+  );
   
   const handleProfessorClick = () => {
     if (professorId) {
       navigate(`/professors/${professorId}`);
+    }
+  };
+
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (id) {
+      toggleLike();
     }
   };
 
@@ -89,7 +111,22 @@ export const ReviewCard = ({
 
       <p className="text-muted-foreground mb-3">{text}</p>
       <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <span>Review by {reviewerName}</span>
+        <div className="flex items-center gap-4">
+          <span>Review by {reviewerName}</span>
+          {id && (
+            <button
+              onClick={handleLikeClick}
+              disabled={loading}
+              className={cn(
+                "flex items-center gap-1 transition-colors hover:text-primary",
+                liked && "text-primary"
+              )}
+            >
+              <ThumbsUp size={14} className={cn(liked && "fill-primary")} />
+              <span>{count}</span>
+            </button>
+          )}
+        </div>
         <span>{formatDistanceToNow(new Date(createdAt), { addSuffix: true })}</span>
       </div>
     </Card>
