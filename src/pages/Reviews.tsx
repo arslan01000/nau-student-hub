@@ -16,7 +16,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ProfessorSelector } from "@/components/ProfessorSelector";
-import { CourseSelector } from "@/components/CourseSelector";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, Search } from "lucide-react";
@@ -283,12 +282,22 @@ export default function Reviews() {
               </div>
             </div>
 
-            <CourseSelector
-              selectedCourseCode={courseCode}
-              onSelect={(code) => setCourseCode(code)}
-              disabled={!user}
-              error={errors.course_code}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="course">Course Code *</Label>
+              <Input
+                id="course"
+                value={courseCode}
+                onChange={(e) => setCourseCode(e.target.value)}
+                placeholder="e.g., COMP 2415"
+                required
+                disabled={!user}
+              />
+              {errors.course_code && (
+                <p className="text-sm text-destructive">
+                  {errors.course_code}
+                </p>
+              )}
+            </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
