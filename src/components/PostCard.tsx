@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { getUserDisplayName } from "@/utils/userDisplay";
 import { useLike } from "@/hooks/useLike";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 import { cn } from "@/lib/utils";
 
 interface PostCardProps {
@@ -43,7 +44,14 @@ export const PostCard = ({
   email,
 }: PostCardProps) => {
   const { user } = useAuth();
-  const { liked, count, loading, toggleLike } = useLike("post", id, upvotes, user?.id || null);
+  const { showLoginPrompt } = useLoginPrompt();
+  const { liked, count, loading, toggleLike } = useLike(
+    "post", 
+    id, 
+    upvotes, 
+    user?.id || null,
+    showLoginPrompt
+  );
   const displayedName = getUserDisplayName(isAnonymous, displayName, email);
   const categoryLabel = category.replace("_", " / ").toUpperCase();
 
