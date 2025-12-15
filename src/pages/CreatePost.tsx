@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { z } from "zod";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 
 const categories = [
   { value: "professors", label: "Professors & Courses" },
@@ -41,7 +42,8 @@ const postSchema = z.object({
 
 export default function CreatePost() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  const { showLoginPrompt } = useLoginPrompt();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
@@ -50,11 +52,12 @@ export default function CreatePost() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    if (!user) {
-      toast.error("Please login to create a post");
-      navigate("/");
+    // Wait for auth to load, then show login prompt if not logged in
+    if (!authLoading && !user) {
+      showLoginPrompt();
+      navigate("/discussions");
     }
-  }, [user, navigate]);
+  }, [user, authLoading, navigate, showLoginPrompt]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
