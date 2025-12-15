@@ -12,6 +12,7 @@ import { ThumbsUp, MessageCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { getUserDisplayName, obfuscateEmail } from "@/utils/userDisplay";
 import { useLike } from "@/hooks/useLike";
+import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 import { cn } from "@/lib/utils";
 
 // Inline like button component for the post detail
@@ -20,15 +21,23 @@ function PostLikeButton({
   initialCount, 
   userId, 
   repliesCount, 
-  createdAt 
+  createdAt,
+  onLoginRequired
 }: { 
   postId: string; 
   initialCount: number; 
   userId: string | null; 
   repliesCount: number; 
   createdAt: string;
+  onLoginRequired: () => void;
 }) {
-  const { liked, count, loading, toggleLike } = useLike("post", postId, initialCount, userId);
+  const { liked, count, loading, toggleLike } = useLike(
+    "post", 
+    postId, 
+    initialCount, 
+    userId,
+    onLoginRequired
+  );
 
   return (
     <div className="flex items-center gap-6 text-muted-foreground">
@@ -58,25 +67,24 @@ function PostLikeButton({
 }
 
 export default function PostDetail() {
-  const {
-    id
-  } = useParams();
+  const { id } = useParams();
+  const { showLoginPrompt } = useLoginPrompt();
   const [post, setPost] = useState<any>(null);
   const [replies, setReplies] = useState<any[]>([]);
   const [newReply, setNewReply] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
+
   useEffect(() => {
     checkUser();
     fetchPost();
     fetchReplies();
   }, [id]);
+
   const checkUser = async () => {
     const {
-      data: {
-        session
-      }
+      data: { session }
     } = await supabase.auth.getSession();
     setUser(session?.user || null);
   };
@@ -134,7 +142,7 @@ export default function PostDetail() {
   };
   const handleReply = async () => {
     if (!user) {
-      toast.error("Please login to reply");
+      showLoginPrompt();
       return;
     }
     if (!newReply.trim()) return;
@@ -184,13 +192,21 @@ export default function PostDetail() {
           <p className="text-lg text-muted-foreground mb-6 whitespace-pre-wrap">
             {post.content}
           </p>
-          <PostLikeButton postId={post.id} initialCount={post.upvotes || 0} userId={user?.id || null} repliesCount={replies.length} createdAt={post.created_at} />
+          <PostLikeButton postId={post.id} initialCount={post.upvotes || 0} userId={user?.id || null} repliesCount={replies.length} createdAt={post.created_at} onLoginRequired={showLoginPrompt} />
         </Card>
 
         <div className="mb-8">
           <h2 className="text-2xl mb-4 font-serif font-medium">Replies ({replies.length})</h2>
           <Card className="p-6">
-            <Textarea value={newReply} onChange={e => setNewReply(e.target.value)} placeholder={user ? "Write a reply..." : "Please login to reply"} rows={4} disabled={!user} className="mb-4" />
+            <Textarea 
+              value={newReply} 
+              onChange={e => setNewReply(e.target.value)} 
+              onFocus={() => { if (!user) showLoginPrompt(); }}
+              placeholder={user ? "Write a reply..." : "Log in to reply..."} 
+              rows={4} 
+              readOnly={!user}
+              className="mb-4" 
+            />
             {user && (
               <div className="flex items-start space-x-2 mb-4">
                 <Checkbox
