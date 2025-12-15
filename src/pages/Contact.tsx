@@ -62,7 +62,7 @@ export default function Contact() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="your.email@nau.edu"
+                placeholder="your.email@na.edu"
                 required
               />
             </div>
