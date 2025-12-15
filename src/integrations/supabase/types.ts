@@ -41,6 +41,30 @@ export type Database = {
         }
         Relationships: []
       }
+      courses: {
+        Row: {
+          code: string
+          created_at: string
+          department: string
+          id: string
+          name: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          department: string
+          id?: string
+          name: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          department?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       playbooks: {
         Row: {
           approved_at: string | null
