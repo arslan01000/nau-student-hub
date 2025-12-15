@@ -5,6 +5,7 @@ import { getUserDisplayName } from "@/utils/userDisplay";
 import { useNavigate } from "react-router-dom";
 import { useLike } from "@/hooks/useLike";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 import { cn } from "@/lib/utils";
 
 interface ReviewCardProps {
@@ -41,6 +42,7 @@ export const ReviewCard = ({
   likesCount = 0,
 }: ReviewCardProps) => {
   const { user } = useAuth();
+  const { showLoginPrompt } = useLoginPrompt();
   const reviewerName = getUserDisplayName(isAnonymous, displayName, email);
   const navigate = useNavigate();
   
@@ -48,7 +50,8 @@ export const ReviewCard = ({
     "review", 
     id || "", 
     likesCount, 
-    user?.id || null
+    user?.id || null,
+    showLoginPrompt
   );
   
   const handleProfessorClick = () => {

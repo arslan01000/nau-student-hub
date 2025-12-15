@@ -36,6 +36,7 @@ import { toast } from "sonner";
 import { Check, ChevronsUpDown, Plus, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 
 interface Professor {
   id: string;
@@ -80,6 +81,7 @@ export function ProfessorSelector({
   error,
 }: ProfessorSelectorProps) {
   const { user } = useAuth();
+  const { showLoginPrompt } = useLoginPrompt();
   const [professors, setProfessors] = useState<Professor[]>([]);
   const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -166,7 +168,7 @@ export function ProfessorSelector({
 
   const handleAddProfessor = async () => {
     if (!user) {
-      toast.error("Please login to add a professor");
+      showLoginPrompt();
       return;
     }
 

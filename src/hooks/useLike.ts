@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -8,7 +8,8 @@ export function useLike(
   type: LikeType,
   itemId: string,
   initialCount: number,
-  userId: string | null
+  userId: string | null,
+  onLoginRequired?: () => void
 ) {
   const [liked, setLiked] = useState(false);
   const [count, setCount] = useState(initialCount);
@@ -46,9 +47,13 @@ export function useLike(
     setCount(initialCount);
   }, [initialCount]);
 
-  const toggleLike = async () => {
+  const toggleLike = useCallback(async () => {
     if (!userId) {
-      toast.error("Please login to like");
+      if (onLoginRequired) {
+        onLoginRequired();
+      } else {
+        toast.error("Please login to like");
+      }
       return;
     }
 
@@ -81,7 +86,7 @@ export function useLike(
     } finally {
       setLoading(false);
     }
-  };
+  }, [userId, onLoginRequired, loading, liked, type, itemId]);
 
   return { liked, count, loading, toggleLike };
 }
