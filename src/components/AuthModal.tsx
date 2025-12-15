@@ -160,7 +160,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your.email@nau.edu"
+                  placeholder="your.email@na.edu"
                   maxLength={255}
                 />
                 {errors.email && (
@@ -197,7 +197,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your.email@nau.edu"
+                  placeholder="your.email@na.edu"
                   maxLength={255}
                 />
                 {errors.email && (
