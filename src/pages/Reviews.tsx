@@ -16,12 +16,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ProfessorSelector } from "@/components/ProfessorSelector";
+import { CourseSuggestionModal } from "@/components/CourseSuggestionModal";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, Search } from "lucide-react";
 import { z } from "zod";
 import { useAuth } from "@/contexts/AuthContext";
-
 const reviewSchema = z.object({
   professor_id: z
     .string()
@@ -74,6 +74,7 @@ export default function Reviews() {
   const [searchQuery, setSearchQuery] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showCourseSuggestion, setShowCourseSuggestion] = useState(false);
 
   useEffect(() => {
     fetchReviews();
@@ -297,6 +298,14 @@ export default function Reviews() {
                   {errors.course_code}
                 </p>
               )}
+              <button
+                type="button"
+                onClick={() => setShowCourseSuggestion(true)}
+                className="text-xs text-muted-foreground hover:text-primary underline"
+                disabled={!user}
+              >
+                Can't find your course?
+              </button>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
@@ -537,6 +546,11 @@ export default function Reviews() {
           opinions.
         </div>
       </div>
+      
+      <CourseSuggestionModal 
+        open={showCourseSuggestion} 
+        onOpenChange={setShowCourseSuggestion} 
+      />
     </div>
   );
 }
