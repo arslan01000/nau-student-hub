@@ -13,45 +13,115 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 
+type CourseRow = {
+  id: string;
+  code: string;
+  name: string;
+  department: string | null;
+};
+
 interface CourseSuggestionModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onCourseAdded?: (course: CourseRow) => void;
 }
 
-export function CourseSuggestionModal({ open, onOpenChange }: CourseSuggestionModalProps) {
+// normalize: trim, uppercase, collapse spaces, add space between prefix+digits if missing (COMP2415 -> COMP 2415)
+function normalizeCourseCode(input: string): string {
+  let s = input.trim().toUpperCase().replace(/\s+/g, " ");
+  s = s.replace(/^([A-Z]{2,6})(\d)/, "$1 $2");
+  return s;
+}
+
+export function CourseSuggestionModal({
+  open,
+  onOpenChange,
+  onCourseAdded,
+}: CourseSuggestionModalProps) {
   const { user } = useAuth();
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
   const [department, setDepartment] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const reset = () => {
+    setCode("");
+    setName("");
+    setDepartment("");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
 
-    if (!code.trim() || !name.trim()) {
-      toast.error("Please fill in the required fields");
+    const normCode = normalizeCourseCode(code);
+    const trimmedName = name.trim();
+    const trimmedDept = department.trim();
+
+    if (!normCode || !trimmedName) {
+      toast.error("Please fill in Course Code and Course Name");
       return;
     }
 
     setLoading(true);
     try {
-      const { error } = await supabase.from("course_suggestions").insert({
-        code: code.trim(),
-        name: name.trim(),
-        department: department.trim() || null,
-        submitted_by_user_id: user.id,
-      });
+      // 1) If course already exists (system or user), just return it (no update)
+      const { data: existing, error: existingErr } = await supabase
+        .from("courses")
+        .select("id, code, name, department")
+        .eq("code", normCode)
+        .maybeSingle();
 
-      if (error) throw error;
+      if (existingErr) throw existingErr;
 
-      toast.success("Thanks! We'll review and add it shortly.");
-      setCode("");
-      setName("");
-      setDepartment("");
+      if (existing) {
+        toast.success("Course already exists — selected it for you.");
+        onCourseAdded?.(existing as CourseRow);
+        reset();
+        onOpenChange(false);
+        return;
+      }
+
+      // 2) Insert immediately into courses as user-added
+      const { data: created, error: insertErr } = await supabase
+        .from("courses")
+        .insert({
+          code: normCode,
+          name: trimmedName,
+          department: trimmedDept || null,
+          source: "user",
+          created_by_user_id: user.id,
+        })
+        .select("id, code, name, department")
+        .single();
+
+      if (insertErr) {
+        // if race condition: someone inserted same code, fetch it
+        if (insertErr.code === "23505") {
+          const { data: again } = await supabase
+            .from("courses")
+            .select("id, code, name, department")
+            .eq("code", normCode)
+            .maybeSingle();
+
+          if (again) {
+            toast.success("Course added (already existed) — selected it for you.");
+            onCourseAdded?.(again as CourseRow);
+            reset();
+            onOpenChange(false);
+            return;
+          }
+        }
+        throw insertErr;
+      }
+
+      toast.success("Course added! You can review it now.");
+      onCourseAdded?.(created as CourseRow);
+
+      reset();
       onOpenChange(false);
     } catch (error: any) {
-      toast.error(error.message || "Failed to submit suggestion");
+      toast.error(error.message || "Failed to add course");
     } finally {
       setLoading(false);
     }
@@ -61,11 +131,12 @@ export function CourseSuggestionModal({ open, onOpenChange }: CourseSuggestionMo
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Suggest a Course</DialogTitle>
+          <DialogTitle>Add a Course</DialogTitle>
           <DialogDescription>
-            Can't find your course? Let us know and we'll add it.
+            Can't find your course? Add it now — it will appear immediately.
           </DialogDescription>
         </DialogHeader>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="suggestion-code">Course Code *</Label>
@@ -77,16 +148,18 @@ export function CourseSuggestionModal({ open, onOpenChange }: CourseSuggestionMo
               required
             />
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="suggestion-name">Course Name *</Label>
             <Input
               id="suggestion-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Data Structures"
+              placeholder="e.g., Systems Programming"
               required
             />
           </div>
+
           <div className="space-y-2">
             <Label htmlFor="suggestion-department">Department (optional)</Label>
             <Input
@@ -96,12 +169,18 @@ export function CourseSuggestionModal({ open, onOpenChange }: CourseSuggestionMo
               placeholder="e.g., Computer Science"
             />
           </div>
+
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={loading}
+            >
               Cancel
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? "Submitting..." : "Submit"}
+              {loading ? "Adding..." : "Add"}
             </Button>
           </div>
         </form>
