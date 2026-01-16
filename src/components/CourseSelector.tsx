@@ -100,8 +100,11 @@ export function CourseSelector({
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent className="w-[520px] p-0 bg-popover z-50">
-          <Command shouldFilter={false}>
+        <PopoverContent 
+          align="start" 
+          className="w-[--radix-popover-trigger-width] p-0 bg-popover z-50"
+        >
+          <Command className="w-full" shouldFilter={false}>
             <CommandInput
               placeholder="Type course code or name..."
               value={searchValue}
