@@ -22,15 +22,10 @@ import { toast } from "sonner";
 import { Loader2, Search } from "lucide-react";
 import { z } from "zod";
 import { useAuth } from "@/contexts/AuthContext";
+
 const reviewSchema = z.object({
-  professor_id: z
-    .string()
-    .min(1, "Please select a professor"),
-  course_code: z
-    .string()
-    .trim()
-    .min(1, "Course code is required")
-    .max(20, "Course code must be less than 20 characters"),
+  professor_id: z.string().min(1, "Please select a professor"),
+  course_id: z.string().min(1, "Please select a course"),
   overall_rating: z
     .number()
     .int()
@@ -62,22 +57,99 @@ export default function Reviews() {
 
   const [reviews, setReviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedProfessor, setSelectedProfessor] = useState<Professor | null>(null);
+
+  const [selectedProfessor, setSelectedProfessor] = useState<Professor | null>(
+    null
+  );
   const [selectedProfessorId, setSelectedProfessorId] = useState("");
+
+  // keep for search/display
   const [courseCode, setCourseCode] = useState("");
+  // actual FK
+  const [selectedCourseId, setSelectedCourseId] = useState("");
+  const [courses, setCourses] = useState<any[]>([]);
+
   const [overallRating, setOverallRating] = useState("");
   const [difficultyRating, setDifficultyRating] = useState("");
   const [gradeReceived, setGradeReceived] = useState("");
   const [wouldTakeAgain, setWouldTakeAgain] = useState<string>("");
   const [reviewText, setReviewText] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
+
   const [searchQuery, setSearchQuery] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showCourseSuggestion, setShowCourseSuggestion] = useState(false);
 
+  const fetchCourses = async () => {
+    const { data, error } = await supabase
+      .from("courses")
+      .select("id, code, name, department")
+      .order("department", { ascending: true })
+      .order("code", { ascending: true });
+
+    if (error) {
+      console.error("Error fetching courses:", error);
+      return;
+    }
+    setCourses(data || []);
+  };
+
+  const fetchReviews = async () => {
+    setLoading(true);
+    try {
+      const { data: reviewsData, error: reviewsError } = await supabase
+        .from("reviews")
+        .select(
+          `
+          *,
+          professors (
+            id,
+            full_name
+          )
+        `
+        )
+        .order("created_at", { ascending: false });
+
+      if (reviewsError) throw reviewsError;
+
+      // 👉 ВАЖНО: только id и display_name, БЕЗ email
+      const { data: profilesData, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, display_name");
+
+      if (profilesError) throw profilesError;
+
+      const profilesMap = new Map<string, string | null>();
+      profilesData?.forEach((p: any) => {
+        profilesMap.set(p.id, p.display_name);
+      });
+
+      const mappedData =
+        reviewsData?.map((review: any) => ({
+          ...review,
+          display_name: profilesMap.get(review.user_id) || null,
+          email: null, // пока просто null
+          professor_name:
+            review.professors?.full_name ||
+            review.professor_name ||
+            "Unknown Professor",
+          professor_id: review.professors?.id || null,
+        })) ?? [];
+
+      setReviews(mappedData);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+      setReviews([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
+    fetchCourses();
     fetchReviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -93,55 +165,6 @@ export default function Reviews() {
     }
   };
 
-  const fetchReviews = async () => {
-  setLoading(true);
-  try {
-    const { data: reviewsData, error: reviewsError } = await supabase
-      .from("reviews")
-      .select(`
-        *,
-        professors (
-          id,
-          full_name
-        )
-      `)
-      .order("created_at", { ascending: false });
-
-    if (reviewsError) throw reviewsError;
-
-    // 👉 ВАЖНО: только id и display_name, БЕЗ email
-    const { data: profilesData, error: profilesError } = await supabase
-      .from("profiles")
-      .select("id, display_name");
-
-    if (profilesError) throw profilesError;
-
-    const profilesMap = new Map<string, string | null>();
-    profilesData?.forEach((p: any) => {
-      profilesMap.set(p.id, p.display_name);
-    });
-
-    const mappedData =
-      reviewsData?.map((review: any) => ({
-        ...review,
-        display_name: profilesMap.get(review.user_id) || null,
-        email: null, // пока просто null
-        professor_name:
-          review.professors?.full_name ||
-          review.professor_name ||
-          "Unknown Professor",
-        professor_id: review.professors?.id || null,
-      })) ?? [];
-
-    setReviews(mappedData);
-  } catch (error) {
-    console.error("Error fetching reviews:", error);
-    setReviews([]);
-  } finally {
-    setLoading(false);
-  }
-};
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) {
@@ -151,7 +174,7 @@ export default function Reviews() {
 
     const result = reviewSchema.safeParse({
       professor_id: selectedProfessorId,
-      course_code: courseCode,
+      course_id: selectedCourseId,
       overall_rating: parseInt(overallRating),
       difficulty_rating: parseInt(difficultyRating),
       text: reviewText,
@@ -173,7 +196,8 @@ export default function Reviews() {
     try {
       const { error } = await supabase.from("reviews").insert({
         professor_id: selectedProfessorId,
-        course_code: courseCode.trim(),
+        course_id: selectedCourseId,
+        course_code: courseCode.trim(), // keep for search/display
         overall_rating: parseInt(overallRating),
         difficulty_rating: parseInt(difficultyRating),
         grade_received: gradeReceived || null,
@@ -187,10 +211,10 @@ export default function Reviews() {
       if (error) {
         if (
           error.code === "23505" &&
-          error.message.includes("reviews_user_professor_unique")
+          error.message.includes("reviews_one_per_user_per_course")
         ) {
           toast.error(
-            "You've already reviewed this professor. For now you can't submit a second review."
+            "You've already reviewed this course. You can only submit one review per course."
           );
           return;
         }
@@ -200,6 +224,7 @@ export default function Reviews() {
       toast.success("Review submitted successfully!");
       setSelectedProfessorId("");
       setSelectedProfessor(null);
+      setSelectedCourseId("");
       setCourseCode("");
       setOverallRating("");
       setDifficultyRating("");
@@ -222,17 +247,11 @@ export default function Reviews() {
     ? allReviews.filter(
         (review) =>
           review.professor_name
-            .toLowerCase()
+            ?.toLowerCase?.()
             .includes(searchTerm.toLowerCase()) ||
-          review.course_code
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
+          review.course_code?.toLowerCase?.().includes(searchTerm.toLowerCase())
       )
     : allReviews;
-
-  console.log("allReviews length:", allReviews.length);
-  console.log("filteredReviews length:", filteredReviews.length);
-  console.log("searchTerm:", searchTerm);
 
   return (
     <div className="min-h-screen py-8 px-4 grid-pattern">
@@ -283,21 +302,34 @@ export default function Reviews() {
               </div>
             </div>
 
+            {/* Course dropdown */}
             <div className="space-y-2">
-              <Label htmlFor="course">Course Code *</Label>
-              <Input
-                id="course"
-                value={courseCode}
-                onChange={(e) => setCourseCode(e.target.value)}
-                placeholder="e.g., COMP 2415"
-                required
+              <Label>Course *</Label>
+              <Select
+                value={selectedCourseId}
+                onValueChange={(val) => {
+                  setSelectedCourseId(val);
+                  const c = courses.find((x) => x.id === val);
+                  setCourseCode(c?.code || "");
+                }}
                 disabled={!user}
-              />
-              {errors.course_code && (
-                <p className="text-sm text-destructive">
-                  {errors.course_code}
-                </p>
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a course" />
+                </SelectTrigger>
+                <SelectContent className="max-h-72">
+                  {courses.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.code} — {c.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {errors.course_id && (
+                <p className="text-sm text-destructive">{errors.course_id}</p>
               )}
+
               <button
                 type="button"
                 onClick={() => setShowCourseSuggestion(true)}
@@ -321,14 +353,10 @@ export default function Reviews() {
                     <SelectValue placeholder="Select overall rating" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="5">
-                      ⭐⭐⭐⭐⭐ - Excellent
-                    </SelectItem>
+                    <SelectItem value="5">⭐⭐⭐⭐⭐ - Excellent</SelectItem>
                     <SelectItem value="4">⭐⭐⭐⭐ - Good</SelectItem>
                     <SelectItem value="3">⭐⭐⭐ - Average</SelectItem>
-                    <SelectItem value="2">
-                      ⭐⭐ - Below Average
-                    </SelectItem>
+                    <SelectItem value="2">⭐⭐ - Below Average</SelectItem>
                     <SelectItem value="1">⭐ - Poor</SelectItem>
                   </SelectContent>
                 </Select>
@@ -340,9 +368,7 @@ export default function Reviews() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="difficulty-rating">
-                  Difficulty Rating *
-                </Label>
+                <Label htmlFor="difficulty-rating">Difficulty Rating *</Label>
                 <Select
                   value={difficultyRating}
                   onValueChange={setDifficultyRating}
@@ -454,8 +480,7 @@ export default function Reviews() {
               >
                 Post anonymously
                 <span className="block text-xs mt-1">
-                  When enabled, your name and email are hidden from other
-                  users.
+                  When enabled, your name and email are hidden from other users.
                 </span>
               </Label>
             </div>
@@ -467,6 +492,7 @@ export default function Reviews() {
                 ? "Submit Review"
                 : "Login to Submit"}
             </Button>
+
             {!user && (
               <p className="text-sm text-muted-foreground italic">
                 Want to post a review? Log in to participate. You can still post
@@ -546,10 +572,10 @@ export default function Reviews() {
           opinions.
         </div>
       </div>
-      
-      <CourseSuggestionModal 
-        open={showCourseSuggestion} 
-        onOpenChange={setShowCourseSuggestion} 
+
+      <CourseSuggestionModal
+        open={showCourseSuggestion}
+        onOpenChange={setShowCourseSuggestion}
       />
     </div>
   );
