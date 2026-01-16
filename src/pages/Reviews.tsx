@@ -118,6 +118,13 @@ export default function Reviews() {
       const { data: profilesData, error: profilesError } = await supabase
         .from("profiles")
         .select("id, display_name");
+      const dbg = await supabase
+  .from("profiles")
+  .select("id, username, display_name")
+  .eq("id", "180868e1-de2b-4257-be36-1143d08fa2a7")
+  .single();
+
+console.log("DBG profile single:", dbg);
 
       if (profilesError) throw profilesError;
 
