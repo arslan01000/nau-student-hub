@@ -127,13 +127,13 @@ export default function PostDetail() {
 
       // Map replies with author display names
       const mappedReplies = repliesData?.map((reply: any) => {
-        const profile = profilesMap.get(reply.user_id);
-        return {
-          ...reply,
-          display_name: profile?.display_name || null,
-          user_email: profile?.username ? `${profile.username}@` : null,
-        };
-      }) || [];
+  const profile = profilesMap.get(reply.user_id);
+  return {
+    ...reply,
+    display_name: profile?.display_name || null,
+  };
+}) || [];
+
 
       setReplies(mappedReplies);
     } catch (error) {
@@ -228,9 +228,10 @@ export default function PostDetail() {
         <div className="space-y-4">
           {replies.map(reply => {
             // Get author display name - if anonymous, show "Anonymous"
-            const authorName = reply.is_anonymous 
-              ? "Anonymous" 
-              : (reply.display_name || obfuscateEmail(reply.user_email || 'Unknown User'));
+            const authorName = reply.is_anonymous
+  ? "Anonymous"
+  : (reply.display_name || "Unknown User");
+
             
             return (
               <Card key={reply.id} className="p-6">
