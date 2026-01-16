@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ReviewCard } from "@/components/ReviewCard";
 import { Card } from "@/components/ui/card";
+import { CourseSelector } from "@/components/CourseSelector";
 import {
   Select,
   SelectContent,
@@ -303,42 +304,17 @@ export default function Reviews() {
             </div>
 
             {/* Course dropdown */}
-            <div className="space-y-2">
-              <Label>Course *</Label>
-              <Select
-                value={selectedCourseId}
-                onValueChange={(val) => {
-                  setSelectedCourseId(val);
-                  const c = courses.find((x) => x.id === val);
-                  setCourseCode(c?.code || "");
-                }}
-                disabled={!user}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a course" />
-                </SelectTrigger>
-                <SelectContent className="max-h-72">
-                  {courses.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.code} — {c.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <CourseSelector
+  value={selectedCourseId}
+  disabled={!user}
+  error={errors.course_id}
+  onSelect={(course) => {
+    setSelectedCourseId(course.id);
+    setCourseCode(course.code);
+  }}
+  onAddNew={() => setShowCourseSuggestion(true)}
+/>
 
-              {errors.course_id && (
-                <p className="text-sm text-destructive">{errors.course_id}</p>
-              )}
-
-              <button
-                type="button"
-                onClick={() => setShowCourseSuggestion(true)}
-                className="text-xs text-muted-foreground hover:text-primary underline"
-                disabled={!user}
-              >
-                Can't find your course?
-              </button>
-            </div>
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
