@@ -115,7 +115,10 @@ export const ReviewCard = ({
       <p className="text-muted-foreground mb-3">{text}</p>
       <div className="flex items-center justify-between text-sm text-muted-foreground">
         <div className="flex items-center gap-4">
-          <span>Review by {reviewerName}</span>
+          <span>
+  Review by {reviewerName} | raw displayName: {String(displayName)} | raw email: {String(email)}
+</span>
+
           {id && (
             <button
               onClick={handleLikeClick}
