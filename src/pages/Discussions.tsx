@@ -16,7 +16,7 @@ import {
 
 const categories = [
   { value: "all", label: "All Categories" },
-  { value: "professors", label: "Professors & Courses" },
+  { value: "professors", label: "Professors" },
   { value: "courses", label: "Courses" },
   { value: "internships", label: "Internships" },
   { value: "opt_cpt", label: "OPT / CPT" },
