@@ -30,6 +30,7 @@ import Admin from "./pages/Admin";
 import AdminReviews from "./pages/AdminReviews";
 import { AdminLayout } from "@/components/AdminLayout";
 import NotFound from "./pages/NotFound";
+import { AdminGuard } from "@/components/AdminGuard";
 
 const queryClient = new QueryClient();
 
@@ -64,11 +65,19 @@ const AppContent = () => {
               <Route path="/playbooks/:id" element={<PlaybookArticle />} />
             
             {/* Admin Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<Admin />} />
-              <Route path="playbooks" element={<AdminPlaybooks />} />
-              <Route path="reviews" element={<AdminReviews />} />
-            </Route>
+            <Route
+  path="/admin"
+  element={
+    <AdminGuard>
+      <AdminLayout />
+    </AdminGuard>
+  }
+>
+  <Route index element={<Admin />} />
+  <Route path="playbooks" element={<AdminPlaybooks />} />
+  <Route path="reviews" element={<AdminReviews />} />
+</Route>
+
             
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/about" element={<About />} />
