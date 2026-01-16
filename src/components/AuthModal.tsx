@@ -20,30 +20,36 @@ interface AuthModalProps {
 }
 
 const signupSchema = z.object({
-  email: z.string()
+  email: z
+    .string()
     .trim()
     .email("Invalid email address")
     .max(255, "Email must be less than 255 characters"),
-  password: z.string()
+  password: z
+    .string()
     .min(8, "Password must be at least 8 characters")
     .max(100, "Password must be less than 100 characters")
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
     .regex(/[a-z]/, "Password must contain at least one lowercase letter")
     .regex(/[0-9]/, "Password must contain at least one number"),
-  username: z.string()
+  username: z
+    .string()
     .trim()
     .min(3, "Username must be at least 3 characters")
     .max(30, "Username must be less than 30 characters")
-    .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      "Username can only contain letters, numbers, and underscores"
+    ),
 });
 
 const loginSchema = z.object({
-  email: z.string()
+  email: z
+    .string()
     .trim()
     .email("Invalid email address")
     .max(255, "Email must be less than 255 characters"),
-  password: z.string()
-    .min(1, "Password is required"),
+  password: z.string().min(1, "Password is required"),
 });
 
 export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
@@ -53,17 +59,21 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const resetForm = () => {
+    setEmail("");
+    setPassword("");
+    setUsername("");
+    setErrors({});
+  };
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validate input
+
     const result = signupSchema.safeParse({ email, password, username });
     if (!result.success) {
       const newErrors: Record<string, string> = {};
       result.error.issues.forEach((err) => {
-        if (err.path[0]) {
-          newErrors[err.path[0].toString()] = err.message;
-        }
+        if (err.path[0]) newErrors[err.path[0].toString()] = err.message;
       });
       setErrors(newErrors);
       return;
@@ -72,7 +82,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
         options: {
@@ -84,6 +94,26 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       });
 
       if (error) throw error;
+
+      const newUser = data?.user;
+
+      // If confirm-email is enabled, user can be null until email confirmation
+      if (!newUser) {
+        toast.success("Check your email to confirm your account.");
+        onClose();
+        resetForm();
+        return;
+      }
+
+      // ✅ Store username in profiles for display on posts/reviews
+      const { error: profileError } = await supabase.from("profiles").upsert({
+        id: newUser.id,
+        display_name: username.trim(),
+        username: username.trim(),
+      });
+
+      if (profileError) throw profileError;
+
       toast.success("Welcome to NAU Threads!");
       onClose();
       resetForm();
@@ -96,15 +126,12 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validate input
+
     const result = loginSchema.safeParse({ email, password });
     if (!result.success) {
       const newErrors: Record<string, string> = {};
       result.error.issues.forEach((err) => {
-        if (err.path[0]) {
-          newErrors[err.path[0].toString()] = err.message;
-        }
+        if (err.path[0]) newErrors[err.path[0].toString()] = err.message;
       });
       setErrors(newErrors);
       return;
@@ -119,6 +146,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
       });
 
       if (error) throw error;
+
       toast.success("Welcome back!");
       onClose();
       resetForm();
@@ -127,14 +155,6 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
     } finally {
       setLoading(false);
     }
-  };
-
-
-  const resetForm = () => {
-    setEmail("");
-    setPassword("");
-    setUsername("");
-    setErrors({});
   };
 
   return (
@@ -146,11 +166,17 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
             Sign in or create an account to get started
           </DialogDescription>
         </DialogHeader>
+
         <Tabs defaultValue="signin" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="signin" onClick={resetForm}>Sign In</TabsTrigger>
-            <TabsTrigger value="signup" onClick={resetForm}>Sign Up</TabsTrigger>
+            <TabsTrigger value="signin" onClick={resetForm}>
+              Sign In
+            </TabsTrigger>
+            <TabsTrigger value="signup" onClick={resetForm}>
+              Sign Up
+            </TabsTrigger>
           </TabsList>
+
           <TabsContent value="signin">
             <form onSubmit={handleSignIn} className="space-y-4">
               <div className="space-y-2">
@@ -167,6 +193,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   <p className="text-sm text-destructive">{errors.email}</p>
                 )}
               </div>
+
               <div className="space-y-2">
                 <Label htmlFor="signin-password">Password</Label>
                 <Input
@@ -180,16 +207,20 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   <p className="text-sm text-destructive">{errors.password}</p>
                 )}
               </div>
+
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Signing in..." : "Sign In"}
               </Button>
             </form>
           </TabsContent>
+
           <TabsContent value="signup">
             <form onSubmit={handleSignUp} className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                Login is used for basic security and moderation. You can still post anonymously.
+                Login is used for basic security and moderation. You can still
+                post anonymously.
               </p>
+
               <div className="space-y-2">
                 <Label htmlFor="signup-email">Email</Label>
                 <Input
@@ -204,6 +235,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   <p className="text-sm text-destructive">{errors.email}</p>
                 )}
               </div>
+
               <div className="space-y-2">
                 <Label htmlFor="signup-username">Username</Label>
                 <Input
@@ -218,6 +250,7 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   <p className="text-sm text-destructive">{errors.username}</p>
                 )}
               </div>
+
               <div className="space-y-2">
                 <Label htmlFor="signup-password">Password</Label>
                 <Input
@@ -231,9 +264,11 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
                   <p className="text-sm text-destructive">{errors.password}</p>
                 )}
                 <p className="text-xs text-muted-foreground">
-                  Must be at least 8 characters with uppercase, lowercase, and a number
+                  Must be at least 8 characters with uppercase, lowercase, and a
+                  number
                 </p>
               </div>
+
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Creating account..." : "Sign Up"}
               </Button>
