@@ -574,9 +574,22 @@ export default function Reviews() {
       </div>
 
       <CourseSuggestionModal
-        open={showCourseSuggestion}
-        onOpenChange={setShowCourseSuggestion}
-      />
+  open={showCourseSuggestion}
+  onOpenChange={setShowCourseSuggestion}
+  onCourseAdded={(course) => {
+    // добавить в локальный список (чтобы сразу появился)
+    setCourses((prev) => {
+      const exists = prev.some((c) => c.id === course.id);
+      if (exists) return prev;
+      return [course, ...prev];
+    });
+
+    // сразу выбрать
+    setSelectedCourseId(course.id);
+    setCourseCode(course.code);
+  }}
+/>
+
     </div>
   );
 }
