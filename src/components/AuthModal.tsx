@@ -95,26 +95,8 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
 
       if (error) throw error;
 
-      const newUser = data?.user;
-
-      // If confirm-email is enabled, user can be null until email confirmation
-      if (!newUser) {
-        toast.success("Check your email to confirm your account.");
-        onClose();
-        resetForm();
-        return;
-      }
-
-      // ✅ Store username in profiles for display on posts/reviews
-      const { error: profileError } = await supabase.from("profiles").upsert({
-        id: newUser.id,
-        display_name: username.trim(),
-        username: username.trim(),
-      });
-
-      if (profileError) throw profileError;
-
-      toast.success("Welcome to NAU Threads!");
+      
+      toast.success("Check your email to confirm your account.");
       onClose();
       resetForm();
     } catch (error: any) {
