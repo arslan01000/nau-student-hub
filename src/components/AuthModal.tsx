@@ -88,8 +88,9 @@ export const AuthModal = ({ isOpen, onClose }: AuthModalProps) => {
         options: {
           emailRedirectTo: `${window.location.origin}/`,
           data: {
-            username: username.trim(),
-          },
+  username: username.trim(),
+  display_name: username.trim(),
+},
         },
       });
 
