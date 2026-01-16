@@ -124,7 +124,9 @@ export default function Reviews() {
   .eq("id", "180868e1-de2b-4257-be36-1143d08fa2a7")
   .single();
 
-console.log("DBG profile single:", JSON.stringify(dbg, null, 2));
+console.log("DBG profile data:", dbg.data);
+console.log("DBG profile error:", dbg.error);
+
 
 
       if (profilesError) throw profilesError;
