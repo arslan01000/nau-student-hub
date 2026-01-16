@@ -19,7 +19,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useLoginPrompt } from "@/contexts/LoginPromptContext";
 
 const categories = [
-  { value: "professors", label: "Professors & Courses" },
+  { value: "professors", label: "Professors" },
   { value: "courses", label: "Courses" },
   { value: "internships", label: "Internships" },
   { value: "opt_cpt", label: "OPT / CPT" },
