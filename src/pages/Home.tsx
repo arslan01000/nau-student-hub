@@ -229,16 +229,16 @@ export default function Home({ onLoginClick }: HomeProps) {
         <div className="container mx-auto max-w-6xl">
           <div className="grid md:grid-cols-3 gap-12">
             <div className="text-center space-y-2">
-              <div className="text-5xl md:text-6xl font-serif font-bold text-foreground">48%</div>
-              <p className="text-sm text-muted-foreground">of NAU students reached</p>
+              <div className="text-5xl md:text-6xl font-serif font-bold text-foreground">20+</div>
+              <p className="text-sm text-muted-foreground">NAU students reached</p>
             </div>
             <div className="text-center space-y-2 md:border-x border-border">
               <div className="text-5xl md:text-6xl font-serif font-bold text-foreground">30+</div>
               <p className="text-sm text-muted-foreground">real stories, reviews, and discussions</p>
             </div>
             <div className="text-center space-y-2">
-              <div className="text-5xl md:text-6xl font-serif font-bold text-foreground">Across</div>
-              <p className="text-sm text-muted-foreground">multiple NAU departments</p>
+              <div className="text-5xl md:text-6xl font-serif font-bold text-foreground">7</div>
+              <p className="text-sm text-muted-foreground">academic departments represented</p>
             </div>
           </div>
         </div>
