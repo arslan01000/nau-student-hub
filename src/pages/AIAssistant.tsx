@@ -13,6 +13,11 @@ interface Message {
   timestamp: Date;
 }
 
+const SYSTEM_PROMPT =
+  "You are the NAU AI Assistant, embedded in NAU Threads — a student community platform for North American University (NAU) in Houston, TX. NAU is a private non-profit institution offering bachelor's and master's degrees. You help students with questions about courses, professors, campus life, academic requirements, and university policies. NAU Threads features professor reviews, course guides, student discussions, and playbooks written by students.\nYou have knowledge of NAU courses including: ACCT 2311 (Fundamentals of Financial Accounting, 3 credits), ACCT 2312 (Fundamentals of Managerial Accounting, 3 credits), and many others. When students ask about specific courses, answer based on NAU's actual course catalog.\nAlways be helpful and concise. For critical decisions, remind users to verify with official NAU advisors at na.edu.";
+
+const OPENAI_MODEL = "gpt-4o-mini";
+
 export default function AIAssistant() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -20,7 +25,7 @@ export default function AIAssistant() {
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || loading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -29,22 +34,88 @@ export default function AIAssistant() {
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
+    const conversationHistory = [...messages, userMessage];
+    setMessages(conversationHistory);
     setInput("");
     setLoading(true);
 
-    // Mock AI response
-    setTimeout(() => {
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content:
-          "This is a preview of the NAU AI Assistant. In the future, it will answer questions using information from the official North American University (NAU) website, including the academic calendar, course catalog, and more. For now, please always double-check important details with official NAU sources at na.edu.",
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, aiMessage]);
+    const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+    if (!apiKey) {
+      setMessages([
+        ...conversationHistory,
+        {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content:
+            "API key is not configured. Please set VITE_OPENAI_API_KEY in your environment.",
+          timestamp: new Date(),
+        },
+      ]);
       setLoading(false);
-    }, 1000);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: OPENAI_MODEL,
+            max_tokens: 1024,
+            messages: [
+              { role: "system", content: SYSTEM_PROMPT },
+              ...conversationHistory.map(({ role, content }) => ({
+                role,
+                content,
+              })),
+            ],
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorBody = await response.json().catch(() => null);
+        const detail =
+          (errorBody as { error?: { message?: string } })?.error?.message ??
+          `Request failed (${response.status})`;
+        throw new Error(detail);
+      }
+
+      const data = (await response.json()) as {
+        choices?: { message?: { content?: string } }[];
+      };
+      const text = data.choices?.[0]?.message?.content ?? "";
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: text || "No response received.",
+          timestamp: new Date(),
+        },
+      ]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content:
+            err instanceof Error
+              ? `Sorry, something went wrong: ${err.message}`
+              : "Sorry, something went wrong. Please try again.",
+          timestamp: new Date(),
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
