@@ -71,3 +71,44 @@ def get_entries_for_month(year: int, month: int) -> list[list[str]]:
     rows = worksheet.get_all_values()[1:]  # skip header row
     prefix = f"{year:04d}-{month:02d}"
     return [row for row in rows if row and row[0].startswith(prefix)]
+
+
+def get_all_entries() -> list[list[str]]:
+    """Return every saved entry row, in sheet order (excluding the header)."""
+    worksheet = _get_worksheet()
+    return worksheet.get_all_values()[1:]
+
+
+def update_entry_for_date(date_iso: str, values: dict[str, float]) -> bool:
+    """Overwrite the most recent row matching `date_iso` in place.
+
+    Used by /edit so corrections update the existing row instead of
+    appending a duplicate. Returns False if no row for that date exists.
+    """
+    worksheet = _get_worksheet()
+    rows = worksheet.get_all_values()
+
+    row_index = None
+    for i in range(len(rows) - 1, 0, -1):  # search bottom-up, skip header at 0
+        if rows[i] and rows[i][0] == date_iso:
+            row_index = i + 1  # gspread rows are 1-indexed
+            break
+
+    if row_index is None:
+        return False
+
+    worksheet.update(
+        f"A{row_index}:G{row_index}",
+        [
+            [
+                date_iso,
+                values["gross"],
+                values["gas"],
+                values["food"],
+                values["base"],
+                values["percent"],
+                values["clear"],
+            ]
+        ],
+    )
+    return True

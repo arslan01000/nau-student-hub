@@ -6,15 +6,22 @@ no web UI - just Python and a spreadsheet.
 
 ## How it works
 
-- `/new` walks you through entering gross earnings, gas expense, and food
-  expense for the day.
+- A reply-keyboard menu (➕ New Entry, 📅 Today, 📊 This Month, ✏️ Edit
+  Today, 📄 Export CSV) appears after `/start` and after every completed
+  action, so you rarely need to type a command.
+- `/new` (or ➕ New Entry) walks you through entering gross earnings, gas
+  expense, and food expense for the day. Leaving Gas or Food blank counts
+  as $0. If today already has an entry, the bot asks whether to edit it or
+  add another instead of silently creating a duplicate row.
 - The bot calculates:
   - `Base = Gross - Gas`
   - `15% = Base * 0.15`
   - `Clear = Base - 15% - Food`
 - The completed entry is appended as a new row in your Google Sheet.
 - `/today` shows today's latest entry, `/summary` shows totals for the
-  current month.
+  current month, `/edit` lets you correct a value on today's entry
+  (recalculating and overwriting that row in place, never a new one), and
+  `/export` sends every saved entry as a CSV file.
 
 ## Project structure
 
@@ -22,7 +29,7 @@ no web UI - just Python and a spreadsheet.
 main.py           # entry point, starts the bot
 config.py         # the only file you need to edit
 sheet.py          # Google Sheets read/write
-handlers.py       # Telegram commands and the /new conversation
+handlers.py       # Telegram commands, menu, and the /new + /edit conversations
 calculations.py   # Base / 15% / Clear math
 requirements.txt  # dependencies
 ```
@@ -114,12 +121,21 @@ Open Telegram, find your bot, and send `/start`.
 
 ## Commands
 
-- `/start` - show help
-- `/new` - add a new daily entry (gross -> gas -> food)
-- `/cancel` - cancel an in-progress `/new` entry
+- `/start` - show help and the main menu
+- `/new` - add a new daily entry (gross -> gas -> food); warns instead of
+  duplicating if today already has one
+- `/edit` - change Gross, Gas, or Food on today's entry (updates the
+  existing row, does not create a new one)
+- `/cancel` - cancel an in-progress `/new` or `/edit` conversation
 - `/today` - show today's latest entry
 - `/summary` - show totals for the current month (gross, gas, food, 15%,
   clear, working days)
+- `/export` - send a CSV file of every saved entry
+
+Every one of these is also available as a button on the reply keyboard
+that appears after `/start` - no new setup or dependencies are needed for
+this, it's all built from the existing `python-telegram-bot` and Python's
+built-in `csv` module.
 
 ## Notes
 
