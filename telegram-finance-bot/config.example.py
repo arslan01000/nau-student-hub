@@ -1,6 +1,11 @@
-"""Configuration for the personal finance Telegram bot.
+"""Configuration template for the personal finance Telegram bot.
 
-Only the values below need to change. See README.md for setup instructions.
+Copy this file to config.py and fill in your real values. config.py is
+git-ignored so your token and Sheet ID never get committed.
+
+    cp config.example.py config.py
+
+See README.md for setup instructions.
 """
 
 # Telegram bot token from @BotFather

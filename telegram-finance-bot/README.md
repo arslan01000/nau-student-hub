@@ -87,6 +87,13 @@ pip install -r requirements.txt
 
 ### 8. Configure
 
+Copy the template and fill in your real values. `config.py` is git-ignored
+so your token and Sheet ID never get committed:
+
+```bash
+cp config.example.py config.py
+```
+
 Open `config.py` and fill in:
 
 ```python
